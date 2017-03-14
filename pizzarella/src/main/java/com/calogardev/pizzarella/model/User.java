@@ -39,7 +39,6 @@ public class User implements Serializable {
 		
 	}
 	
-	
 	public User(String name, String surnames, String dni, String nickname, String password, UserStatus status) {
 		super();
 		this.name = name;

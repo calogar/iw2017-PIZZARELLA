@@ -29,6 +29,7 @@ public class PizzarellaApplication {
 	@Bean
 	public CommandLineRunner loadData(UserDao userDao) {
 		return (args) -> {
+			/*
 			userDao.save(new User("José", "Jiménez", "12345678A", "user1", "user1", 
 					UserStatus.ACTIVE));
 			userDao.save(new User("Pedro", "Villalejos", "12345678B", "user2", "user2", 
@@ -37,7 +38,8 @@ public class PizzarellaApplication {
 			log.info("### Get all users ###");
 			for(User user : userDao.findAll()) {
 				log.info(user.toString());
-			}	
+			}
+			*/
 		};
 	}
 }
