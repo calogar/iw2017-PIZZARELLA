@@ -17,6 +17,7 @@ import com.calogardev.pizzarella.service.UserService;
 public class PizzarellaApplication {
 
 	private static final Logger log = LoggerFactory.getLogger(PizzarellaApplication.class);
+	
 	@Autowired
 	private UserService userService; 
 	
