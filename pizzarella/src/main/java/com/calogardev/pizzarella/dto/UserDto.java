@@ -4,18 +4,20 @@ import com.calogardev.pizzarella.enums.UserStatus;
 
 public class UserDto {
 
+	private Long id;
+
 	private String name;
-	
+
 	private String surnames;
-	
+
 	private String dni;
-	
+
 	private String nickname;
-	
+
 	private UserStatus status;
-	
+
 	public UserDto() {
-		
+
 	}
 
 	/**
@@ -26,7 +28,8 @@ public class UserDto {
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -40,7 +43,8 @@ public class UserDto {
 	}
 
 	/**
-	 * @param surnames the surnames to set
+	 * @param surnames
+	 *            the surnames to set
 	 */
 	public void setSurnames(String surnames) {
 		this.surnames = surnames;
@@ -54,7 +58,8 @@ public class UserDto {
 	}
 
 	/**
-	 * @param dni the dni to set
+	 * @param dni
+	 *            the dni to set
 	 */
 	public void setDni(String dni) {
 		this.dni = dni;
@@ -68,7 +73,8 @@ public class UserDto {
 	}
 
 	/**
-	 * @param nickname the nickname to set
+	 * @param nickname
+	 *            the nickname to set
 	 */
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
@@ -82,19 +88,37 @@ public class UserDto {
 	}
 
 	/**
-	 * @param status the status to set
+	 * @param status
+	 *            the status to set
 	 */
 	public void setStatus(UserStatus status) {
 		this.status = status;
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "UserDto [name=" + name + ", surnames=" + surnames + ", dni=" + dni + ", nickname=" + nickname
-				+ ", status=" + status + "]";
+		return "UserDto [id=" + id + ", name=" + name + ", surnames=" + surnames + ", dni=" + dni + ", nickname="
+				+ nickname + ", status=" + status + "]";
 	}
 
 }

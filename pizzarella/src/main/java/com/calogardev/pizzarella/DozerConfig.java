@@ -1,4 +1,4 @@
-package com.calogardev;
+package com.calogardev.pizzarella;
 
 import org.dozer.DozerBeanMapper;
 import org.springframework.context.annotation.Bean;
