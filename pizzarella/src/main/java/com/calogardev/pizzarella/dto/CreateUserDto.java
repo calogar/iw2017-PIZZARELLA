@@ -2,9 +2,7 @@ package com.calogardev.pizzarella.dto;
 
 import java.lang.reflect.Field;
 
-import com.calogardev.pizzarella.enums.UserStatus;
-
-public class UserDto implements Dto {
+public class CreateUserDto implements Dto {
 
 	private String name;
 
@@ -14,9 +12,9 @@ public class UserDto implements Dto {
 
 	private String nickname;
 
-	private UserStatus status;
+	private String password;
 
-	public UserDto() {
+	public CreateUserDto() {
 
 	}
 
@@ -80,19 +78,12 @@ public class UserDto implements Dto {
 		this.nickname = nickname;
 	}
 
-	/**
-	 * @return the status
-	 */
-	public UserStatus getStatus() {
-		return status;
+	public String getPassword() {
+		return password;
 	}
 
-	/**
-	 * @param status
-	 *            the status to set
-	 */
-	public void setStatus(UserStatus status) {
-		this.status = status;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	@Override
@@ -107,8 +98,7 @@ public class UserDto implements Dto {
 	 */
 	@Override
 	public String toString() {
-		return "UserDto [name=" + name + ", surnames=" + surnames + ", dni=" + dni + ", nickname=" + nickname
-				+ ", status=" + status + "]";
+		return "CreateUserDto [name=" + name + ", surnames=" + surnames + ", dni=" + dni + ", nickname=" + nickname
+				+ ", password=" + password + "]";
 	}
-
 }
