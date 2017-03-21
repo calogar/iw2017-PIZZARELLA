@@ -2,7 +2,7 @@ package com.calogardev.pizzarella.dto;
 
 import java.lang.reflect.Field;
 
-import com.calogardev.pizzarella.enums.UserStatus;
+import com.calogardev.pizzarella.enums.Status;
 
 /**
  * Dto used for listing objects. Doesn't contain sensitive information like
@@ -21,7 +21,7 @@ public class UserDto implements Dto {
 
     private String nickname;
 
-    private UserStatus status;
+    private Status status;
 
     public UserDto() {
 
@@ -90,7 +90,7 @@ public class UserDto implements Dto {
     /**
      * @return the status
      */
-    public UserStatus getStatus() {
+    public Status getStatus() {
 	return status;
     }
 
@@ -98,7 +98,7 @@ public class UserDto implements Dto {
      * @param status
      *            the status to set
      */
-    public void setStatus(UserStatus status) {
+    public void setStatus(Status status) {
 	this.status = status;
     }
 

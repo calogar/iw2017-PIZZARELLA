@@ -9,7 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import com.calogardev.pizzarella.enums.UserStatus;
+import com.calogardev.pizzarella.enums.Status;
 
 @Entity
 public class User implements Serializable {
@@ -33,13 +33,13 @@ public class User implements Serializable {
 	private String password;
 
 	@Enumerated(EnumType.STRING)
-	private UserStatus status;
+	private Status status;
 
 	public User() {
 		
 	}
 	
-	public User(String name, String surnames, String dni, String nickname, String password, UserStatus status) {
+	public User(String name, String surnames, String dni, String nickname, String password, Status status) {
 		super();
 		this.name = name;
 		this.surnames = surnames;
@@ -137,14 +137,14 @@ public class User implements Serializable {
 	/**
 	 * @return the status
 	 */
-	public UserStatus getStatus() {
+	public Status getStatus() {
 		return status;
 	}
 
 	/**
 	 * @param status the status to set
 	 */
-	public void setStatus(UserStatus status) {
+	public void setStatus(Status status) {
 		this.status = status;
 	} 
 	

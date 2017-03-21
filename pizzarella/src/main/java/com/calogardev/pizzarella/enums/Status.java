@@ -1,5 +1,5 @@
 package com.calogardev.pizzarella.enums;
 
-public enum UserStatus {
+public enum Status {
 	ACTIVE, DELETED
 }

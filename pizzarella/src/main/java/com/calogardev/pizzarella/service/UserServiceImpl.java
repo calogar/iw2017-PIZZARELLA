@@ -12,7 +12,7 @@ import com.calogardev.pizzarella.dao.UserDao;
 import com.calogardev.pizzarella.dto.CreateUserDto;
 import com.calogardev.pizzarella.dto.Dto;
 import com.calogardev.pizzarella.dto.UserDto;
-import com.calogardev.pizzarella.enums.UserStatus;
+import com.calogardev.pizzarella.enums.Status;
 import com.calogardev.pizzarella.exception.DuplicatedUniqueAttributeException;
 import com.calogardev.pizzarella.exception.EmptyAttributeException;
 import com.calogardev.pizzarella.exception.ShortAttributeException;
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteByDni(String dni) {
 	User user = userDao.findByDni(dni);
-	user.setStatus(UserStatus.DELETED);
+	user.setStatus(Status.DELETED);
 	userDao.save(user);
 	log.debug("Deleted User with dni: " + dni);
     }
@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
 	    throw new DuplicatedUniqueAttributeException("Nickname");
 	}
 	User user = utilsService.transform(u, User.class);
-	user.setStatus(UserStatus.ACTIVE);
+	user.setStatus(Status.ACTIVE);
 	userDao.save(user);
 	log.info("Saved User: " + user.toString());
     }
