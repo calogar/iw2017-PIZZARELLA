@@ -2,6 +2,7 @@ package com.calogardev.pizzarella;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.calogardev.pizzarella.view.CreateUserView;
 import com.calogardev.pizzarella.view.DashboardLayout;
 import com.calogardev.pizzarella.view.MainView;
 import com.calogardev.pizzarella.view.OrdersView;
@@ -44,6 +45,7 @@ public class MainUI extends UI implements ViewDisplay {
 		root.addMenuItem(MainView.VIEW_ROUTE, MainView.VIEW_NAME);
 		root.addMenuItem(OrdersView.VIEW_ROUTE, OrdersView.VIEW_NAME);
 		root.addMenuItem(UsersView.VIEW_ROUTE, UsersView.VIEW_NAME);
+		root.addMenuItem(CreateUserView.VIEW_ROUTE, CreateUserView.VIEW_NAME);
 
 		root.build();
 	}

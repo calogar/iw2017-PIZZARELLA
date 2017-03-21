@@ -4,111 +4,118 @@ import java.lang.reflect.Field;
 
 import com.calogardev.pizzarella.enums.UserStatus;
 
+/**
+ * Dto used for listing objects. Doesn't contain sensitive information like
+ * passwords.
+ * 
+ * @author calogar
+ *
+ */
 public class UserDto implements Dto {
 
-	private String name;
+    private String name;
 
-	private String surnames;
+    private String surnames;
 
-	private String dni;
+    private String dni;
 
-	private String nickname;
+    private String nickname;
 
-	private UserStatus status;
+    private UserStatus status;
 
-	public UserDto() {
+    public UserDto() {
 
-	}
+    }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+    /**
+     * @return the name
+     */
+    public String getName() {
+	return name;
+    }
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * @param name
+     *            the name to set
+     */
+    public void setName(String name) {
+	this.name = name;
+    }
 
-	/**
-	 * @return the surnames
-	 */
-	public String getSurnames() {
-		return surnames;
-	}
+    /**
+     * @return the surnames
+     */
+    public String getSurnames() {
+	return surnames;
+    }
 
-	/**
-	 * @param surnames
-	 *            the surnames to set
-	 */
-	public void setSurnames(String surnames) {
-		this.surnames = surnames;
-	}
+    /**
+     * @param surnames
+     *            the surnames to set
+     */
+    public void setSurnames(String surnames) {
+	this.surnames = surnames;
+    }
 
-	/**
-	 * @return the dni
-	 */
-	public String getDni() {
-		return dni;
-	}
+    /**
+     * @return the dni
+     */
+    public String getDni() {
+	return dni;
+    }
 
-	/**
-	 * @param dni
-	 *            the dni to set
-	 */
-	public void setDni(String dni) {
-		this.dni = dni;
-	}
+    /**
+     * @param dni
+     *            the dni to set
+     */
+    public void setDni(String dni) {
+	this.dni = dni;
+    }
 
-	/**
-	 * @return the nickname
-	 */
-	public String getNickname() {
-		return nickname;
-	}
+    /**
+     * @return the nickname
+     */
+    public String getNickname() {
+	return nickname;
+    }
 
-	/**
-	 * @param nickname
-	 *            the nickname to set
-	 */
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
-	}
+    /**
+     * @param nickname
+     *            the nickname to set
+     */
+    public void setNickname(String nickname) {
+	this.nickname = nickname;
+    }
 
-	/**
-	 * @return the status
-	 */
-	public UserStatus getStatus() {
-		return status;
-	}
+    /**
+     * @return the status
+     */
+    public UserStatus getStatus() {
+	return status;
+    }
 
-	/**
-	 * @param status
-	 *            the status to set
-	 */
-	public void setStatus(UserStatus status) {
-		this.status = status;
-	}
+    /**
+     * @param status
+     *            the status to set
+     */
+    public void setStatus(UserStatus status) {
+	this.status = status;
+    }
 
-	@Override
-	public Field[] getDeclaredFields() {
-		return this.getClass().getDeclaredFields();
-	}
+    @Override
+    public Field[] getDeclaredFields() {
+	return this.getClass().getDeclaredFields();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "UserDto [name=" + name + ", surnames=" + surnames + ", dni=" + dni + ", nickname=" + nickname
-				+ ", status=" + status + "]";
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+	return "UserDto [name=" + name + ", surnames=" + surnames + ", dni=" + dni + ", nickname=" + nickname
+		+ ", status=" + status + "]";
+    }
 
 }
