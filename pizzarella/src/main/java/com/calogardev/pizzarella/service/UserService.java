@@ -2,10 +2,14 @@ package com.calogardev.pizzarella.service;
 
 import java.util.List;
 
+import com.calogardev.pizzarella.dto.CreateUserDto;
 import com.calogardev.pizzarella.dto.UserDto;
+import com.calogardev.pizzarella.exception.DuplicatedUniqueAttributeException;
+import com.calogardev.pizzarella.exception.EmptyAttributeException;
+import com.calogardev.pizzarella.exception.ShortAttributeException;
 import com.calogardev.pizzarella.model.User;
 
-public interface UserService {
+public interface UserService extends Service {
 
 	/**
 	 * Gets a User by id
@@ -44,4 +48,15 @@ public interface UserService {
 	 * @param dni
 	 */
 	public void deleteByDni(String dni);
+
+	/**
+	 * Saves a User by its UserDto and password
+	 * 
+	 * @param userDto
+	 * @throws EmptyAttributeException
+	 * @throws ShortAttributeException
+	 * @throws DuplicatedUniqueAttributeException
+	 */
+	public void save(CreateUserDto userDto)
+			throws EmptyAttributeException, ShortAttributeException, DuplicatedUniqueAttributeException;
 }

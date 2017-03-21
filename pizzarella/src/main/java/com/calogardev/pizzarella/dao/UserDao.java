@@ -18,4 +18,13 @@ public interface UserDao extends CrudRepository<User, Long> {
 
 	@Query("SELECT u FROM User u WHERE u.status = 'ACTIVE' AND u.dni = :dni")
 	public User findByDni(@Param("dni") String dni);
+
+	@Query("SELECT u FROM User u WHERE u.status = 'ACTIVE' AND u.nickname = :nickname")
+	public User findByNickname(@Param("nickname") String nickname);
+
+	// TODO: Current policy: we can't create a user with dni = x if a deleted
+	// one with that dni exists
+	public Boolean existsByDni(String dni);
+
+	public Boolean existsByNickname(String nickname);
 }

@@ -9,9 +9,14 @@ import java.util.Map.Entry;
 import org.springframework.util.StringUtils;
 
 import com.calogardev.pizzarella.dto.CreateUserDto;
+import com.calogardev.pizzarella.exception.DuplicatedUniqueAttributeException;
+import com.calogardev.pizzarella.exception.EmptyAttributeException;
+import com.calogardev.pizzarella.exception.PasswordMismatchException;
+import com.calogardev.pizzarella.exception.ShortAttributeException;
 import com.calogardev.pizzarella.service.Service;
 import com.vaadin.data.Binder;
 import com.vaadin.data.ValidationException;
+import com.vaadin.server.Page;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.AbstractTextField;
@@ -87,13 +92,19 @@ public class Form extends FormLayout {
 		Button saveButton = new Button("Save", event -> {
 			try {
 				if (hasPassword() && !passwordMatch()) {
-
+					throw new PasswordMismatchException();
 				} else {
 					binder.writeBean(dto);
 					service.save(dto);
+
+					Notification.show("Record created correctly.");
 				}
 			} catch (ValidationException e) {
 				Notification.show("The data could not be saved, " + "please check the error messages for each field");
+			} catch (PasswordMismatchException | EmptyAttributeException | ShortAttributeException
+					| DuplicatedUniqueAttributeException e) {
+				Notification n = new Notification(e.getMessage(), null, Notification.Type.ERROR_MESSAGE, true);
+				n.show(Page.getCurrent());
 			}
 		});
 
