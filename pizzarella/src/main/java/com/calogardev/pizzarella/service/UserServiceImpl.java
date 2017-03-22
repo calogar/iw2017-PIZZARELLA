@@ -85,7 +85,6 @@ public class UserServiceImpl implements UserService {
      * @param dto
      *            A generic Dto that can be casted to CreateUserDto
      */
-    @Override
     public void save(Dto dto)
 	    throws EmptyAttributeException, ShortAttributeException, DuplicatedUniqueAttributeException {
 	save((CreateUserDto) dto);

@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
+import com.calogardev.pizzarella.enums.Status;
+
 /**
  * Identify how the products are grouped. It's not an enum so we can extend it
  * at runtime. The family with the "ingredient" code is a special family that
@@ -27,6 +29,8 @@ public class ProductFamily {
     @Column(unique = true)
     @NotNull
     private String code;
+
+    private Status status;
 
     public ProductFamily() {
     }
@@ -61,6 +65,40 @@ public class ProductFamily {
 	this.code = code;
     }
 
+    public Boolean isIngredient() {
+	return "ingredient".equals(code);
+    }
+
+    /**
+     * @return the id
+     */
+    public Long getId() {
+	return id;
+    }
+
+    /**
+     * @param id
+     *            the id to set
+     */
+    public void setId(Long id) {
+	this.id = id;
+    }
+
+    /**
+     * @return the status
+     */
+    public Status getStatus() {
+	return status;
+    }
+
+    /**
+     * @param status
+     *            the status to set
+     */
+    public void setStatus(Status status) {
+	this.status = status;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -68,10 +106,6 @@ public class ProductFamily {
      */
     @Override
     public String toString() {
-	return "ProductFamily [id=" + id + ", name=" + name + ", code=" + code + "]";
-    }
-
-    public Boolean isIngredient() {
-	return "ingredient".equals(code);
+	return "ProductFamily [id=" + id + ", name=" + name + ", code=" + code + ", status=" + status + "]";
     }
 }

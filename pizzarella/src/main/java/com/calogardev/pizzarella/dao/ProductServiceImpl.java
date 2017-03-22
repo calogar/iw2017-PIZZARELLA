@@ -52,8 +52,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDto> findAll() {
-	// TODO Auto-generated method stub
-	return null;
+	return utilsService.transform(productDao.findAll(), ProductDto.class);
+    }
+
+    @Override
+    public List<ProductDto> findAllExceptOne(Long id) {
+	return utilsService.transform(productDao.findAllExceptOne(id), ProductDto.class);
     }
 
 }

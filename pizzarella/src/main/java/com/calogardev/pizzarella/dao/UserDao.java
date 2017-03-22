@@ -12,19 +12,20 @@ import com.calogardev.pizzarella.model.User;
 @Repository
 public interface UserDao extends CrudRepository<User, Long> {
 
-	@Override
-	@Query("SELECT u FROM User u WHERE u.status = 'ACTIVE'")
-	public List<User> findAll();
+    @Override
+    @Query("SELECT u FROM User u WHERE u.status = 'ACTIVE'")
+    public List<User> findAll();
 
-	@Query("SELECT u FROM User u WHERE u.status = 'ACTIVE' AND u.dni = :dni")
-	public User findByDni(@Param("dni") String dni);
+    @Query("SELECT u FROM User u WHERE u.status = 'ACTIVE' AND u.dni = :dni")
+    public User findByDni(@Param("dni") String dni);
 
-	@Query("SELECT u FROM User u WHERE u.status = 'ACTIVE' AND u.nickname = :nickname")
-	public User findByNickname(@Param("nickname") String nickname);
+    @Query("SELECT u FROM User u WHERE u.status = 'ACTIVE' AND u.nickname = :nickname")
+    public User findByNickname(@Param("nickname") String nickname);
 
-	// TODO: Current policy: we can't create a user with dni = x if a deleted
-	// one with that dni exists
-	public Boolean existsByDni(String dni);
+    // TODO: Current policy: we can't create a user with dni = x if a deleted
+    // one with that dni exists
+    // TODO: "And different" is so the query works when we are updating
+    public Boolean existsByDni(@Param("dni") String dni);
 
-	public Boolean existsByNickname(String nickname);
+    public Boolean existsByNickname(String nickname);
 }

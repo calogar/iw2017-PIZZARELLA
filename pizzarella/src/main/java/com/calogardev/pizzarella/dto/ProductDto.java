@@ -3,17 +3,23 @@ package com.calogardev.pizzarella.dto;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.calogardev.pizzarella.enums.Status;
 import com.calogardev.pizzarella.model.Product;
 import com.calogardev.pizzarella.model.ProductFamily;
 
+/**
+ * The main Dto for Products. Needs the id because it's the only unique
+ * identifier.
+ * 
+ * @author calogar
+ *
+ */
 public class ProductDto {
+
+    private Long id;
 
     private String name;
 
     private ProductFamily family;
-
-    private Status status;
 
     private BigDecimal price;
 
@@ -25,6 +31,14 @@ public class ProductDto {
 
     public ProductDto() {
 
+    }
+
+    public Long getId() {
+	return id;
+    }
+
+    public void setId(Long id) {
+	this.id = id;
     }
 
     /**
@@ -55,21 +69,6 @@ public class ProductDto {
      */
     public void setFamily(ProductFamily family) {
 	this.family = family;
-    }
-
-    /**
-     * @return the status
-     */
-    public Status getStatus() {
-	return status;
-    }
-
-    /**
-     * @param status
-     *            the status to set
-     */
-    public void setStatus(Status status) {
-	this.status = status;
     }
 
     /**
@@ -139,8 +138,8 @@ public class ProductDto {
      */
     @Override
     public String toString() {
-	return "ProductDto [name=" + name + ", family=" + family + ", status=" + status + ", price=" + price + ", vat="
-		+ vat + ", amount=" + amount + ", products=" + products + "]";
+	return "ProductDto [id=" + id + ", name=" + name + ", family=" + family + ", price=" + price + ", vat=" + vat
+		+ ", amount=" + amount + ", products=" + products + "]";
     }
 
 }

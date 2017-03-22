@@ -2,7 +2,10 @@ package com.calogardev.pizzarella.view;
 
 import javax.annotation.PostConstruct;
 
-import com.calogardev.pizzarella.dto.CreateUserDto;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.calogardev.pizzarella.dto.ProductFamilyDto;
+import com.calogardev.pizzarella.service.ProductFamilyService;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
@@ -12,26 +15,25 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-@SpringView(name = CreateUserView.VIEW_ROUTE)
+@SpringView(name = CreateProductFamilyView.VIEW_ROUTE)
 @UIScope
-public class CreateUserView extends VerticalLayout implements View {
+public class CreateProductFamilyView extends VerticalLayout implements View {
 
-    private static final long serialVersionUID = 7781582716883896923L;
+    private static final long serialVersionUID = -1487637267713557085L;
 
-    public static final String VIEW_ROUTE = "users/new";
-    public static final String VIEW_NAME = "New User";
+    public static final String VIEW_ROUTE = "product_family/new";
+    public static final String VIEW_NAME = "Create new Product Family";
 
-    // If we don't specify the Dto we are using, we cannot get its attributes
-    private UserForm form;
+    private ProductFamilyForm form;
+
+    @Autowired
+    private ProductFamilyService productFamilyService;
 
     @PostConstruct
     public void init() {
 	commonSettings();
 
-	CreateUserDto user = new CreateUserDto();
-	form = new UserForm(user);
-	form.addPassword("password", "Confirm Password");
-	form.build();
+	form = new ProductFamilyForm(new ProductFamilyDto(), productFamilyService);
 	addComponent(form);
     }
 

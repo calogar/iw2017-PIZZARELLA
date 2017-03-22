@@ -14,7 +14,7 @@ import com.calogardev.pizzarella.exception.ShortAttributeException;
  * @author calogar
  *
  */
-public interface UserService extends Service {
+public interface UserService {
 
     /**
      * Gets a User by id

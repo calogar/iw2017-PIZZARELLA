@@ -2,6 +2,8 @@ package com.calogardev.pizzarella.dto;
 
 public class ProductFamilyDto {
 
+    private Long id;
+
     private String name;
 
     private String code;
@@ -39,6 +41,21 @@ public class ProductFamilyDto {
 	this.code = code;
     }
 
+    /**
+     * @return the id
+     */
+    public Long getId() {
+	return id;
+    }
+
+    /**
+     * @param id
+     *            the id to set
+     */
+    public void setId(Long id) {
+	this.id = id;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -46,6 +63,6 @@ public class ProductFamilyDto {
      */
     @Override
     public String toString() {
-	return "ProductFamilyDto [name=" + name + ", code=" + code + "]";
+	return "ProductFamilyDto [id=" + id + ", name=" + name + ", code=" + code + "]";
     }
 }

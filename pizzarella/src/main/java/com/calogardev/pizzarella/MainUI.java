@@ -2,7 +2,8 @@ package com.calogardev.pizzarella;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.calogardev.pizzarella.view.CreateUserView;
+import com.calogardev.pizzarella.view.CreateProductFamilyView;
+import com.calogardev.pizzarella.view.CreateProductView;
 import com.calogardev.pizzarella.view.DashboardLayout;
 import com.calogardev.pizzarella.view.MainView;
 import com.calogardev.pizzarella.view.OrdersView;
@@ -24,36 +25,37 @@ import com.vaadin.ui.UI;
 @SpringViewDisplay
 public class MainUI extends UI implements ViewDisplay {
 
-	DashboardLayout root; // Custom dashboard-like layout
-	ComponentContainer viewDisplay;
-	Navigator navigator;
+    DashboardLayout root; // Custom dashboard-like layout
+    ComponentContainer viewDisplay;
+    Navigator navigator;
 
-	// Automatically handles the views for the navigator
-	@Autowired
-	private SpringViewProvider viewProvider;
+    // Automatically handles the views for the navigator
+    @Autowired
+    private SpringViewProvider viewProvider;
 
-	@Override
-	protected void init(VaadinRequest request) {
-		Responsive.makeResponsive(this);
-		root = new DashboardLayout();
-		setContent(root);
-		getPage().setTitle("Pizzarella");
-		root.setWidth("100%"); // TODO: What happens if we use setFullWidth?
+    @Override
+    protected void init(VaadinRequest request) {
+	Responsive.makeResponsive(this);
+	root = new DashboardLayout();
+	setContent(root);
+	getPage().setTitle("Pizzarella");
+	root.setWidth("100%"); // TODO: What happens if we use setFullWidth?
 
-		navigator = root.getNavigator();
-		navigator.addProvider(viewProvider);
-		root.addMenuItem(MainView.VIEW_ROUTE, MainView.VIEW_NAME);
-		root.addMenuItem(OrdersView.VIEW_ROUTE, OrdersView.VIEW_NAME);
-		root.addMenuItem(UsersView.VIEW_ROUTE, UsersView.VIEW_NAME);
-		root.addMenuItem(CreateUserView.VIEW_ROUTE, CreateUserView.VIEW_NAME);
+	navigator = root.getNavigator();
+	navigator.addProvider(viewProvider);
+	root.addMenuItem(MainView.VIEW_ROUTE, MainView.VIEW_NAME);
+	root.addMenuItem(OrdersView.VIEW_ROUTE, OrdersView.VIEW_NAME);
+	root.addMenuItem(CreateProductView.VIEW_ROUTE, CreateProductView.VIEW_NAME);
+	root.addMenuItem(CreateProductFamilyView.VIEW_ROUTE, CreateProductFamilyView.VIEW_NAME);
+	root.addMenuItem(UsersView.VIEW_ROUTE, UsersView.VIEW_NAME);
 
-		root.build();
-	}
+	root.build();
+    }
 
-	@Override
-	public void showView(View view) {
-		// TODO Auto-generated method stub
+    @Override
+    public void showView(View view) {
+	// TODO Auto-generated method stub
 
-	}
+    }
 
 }
