@@ -9,7 +9,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.calogardev.pizzarella.enums.Status;
 
@@ -21,6 +25,7 @@ public class Product {
     private Long id;
 
     @NotNull
+    @Size(min = 2, max = 50)
     private String name;
 
     @NotNull
@@ -31,12 +36,16 @@ public class Product {
     private Status status;
 
     @NotNull
+    @Digits(integer = 3, fraction = 2)
     private BigDecimal price;
 
     @NotNull
+    @Digits(integer = 3, fraction = 2)
     private BigDecimal vat;
 
     @NotNull
+    @Min(1)
+    @Max(999)
     private Integer amount;
 
     @OneToMany(fetch = FetchType.LAZY)
