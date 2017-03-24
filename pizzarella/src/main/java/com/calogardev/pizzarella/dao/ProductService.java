@@ -5,30 +5,47 @@ import java.util.List;
 import com.calogardev.pizzarella.dto.ProductDto;
 import com.calogardev.pizzarella.exception.IngredientWithProductsException;
 import com.calogardev.pizzarella.exception.ProductWithoutFamilyException;
-import com.calogardev.pizzarella.service.ServiceInterface;
+import com.calogardev.pizzarella.service.GenericService;
 
-public interface ProductService extends ServiceInterface {
+/**
+ * The main service used to control Products.
+ * 
+ * @author calogar
+ *
+ */
+public interface ProductService extends GenericService {
 
-	public List<ProductDto> findAll();
+    /**
+     * Finds all available products
+     * 
+     * @return a list of productDtos
+     */
+    public List<ProductDto> findAll();
 
-	/**
-	 * Saves a product
-	 * 
-	 * @param productDto
-	 *            The dto with the required data
-	 * @throws ProductWithoutFamilyException
-	 * @throws IngredientWithProductsException
-	 */
-	public void save(ProductDto product) throws ProductWithoutFamilyException, IngredientWithProductsException;
+    /**
+     * Finds all available products except the one with the specific id.
+     * 
+     * @param id
+     *            The id of the excluded product
+     * @return a list of productDtos
+     */
+    public List<ProductDto> findAllExceptOne(Long id);
 
-	/**
-	 * Finds all products except the one with the specific id.
-	 * 
-	 * @param id
-	 *            The id of the excluded product
-	 * @return a list of productDtos
-	 */
-	public List<ProductDto> findAllExceptOne(Long id);
+    /**
+     * Saves a product
+     * 
+     * @param productDto
+     *            The dto with the required data
+     * @throws ProductWithoutFamilyException
+     * @throws IngredientWithProductsException
+     */
+    public void save(ProductDto productDto) throws ProductWithoutFamilyException, IngredientWithProductsException;
 
-	public void delete(ProductDto dto);
+    /**
+     * Deletes a product
+     * 
+     * @param productDto
+     *            The product to delete
+     */
+    public void delete(ProductDto productDto);
 }

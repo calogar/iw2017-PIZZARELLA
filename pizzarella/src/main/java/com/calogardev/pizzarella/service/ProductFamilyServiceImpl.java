@@ -7,8 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.calogardev.pizzarella.dao.ProductFamilyDao;
+import com.calogardev.pizzarella.dto.Dto;
 import com.calogardev.pizzarella.dto.ProductFamilyDto;
-import com.calogardev.pizzarella.exception.EmptyAttributeException;
+import com.calogardev.pizzarella.exception.CustomValidationException;
 import com.calogardev.pizzarella.model.ProductFamily;
 
 @Service
@@ -27,11 +28,16 @@ public class ProductFamilyServiceImpl implements ProductFamilyService {
     }
 
     @Override
-    public void save(ProductFamilyDto dto) throws EmptyAttributeException {
+    public void save(ProductFamilyDto dto) throws CustomValidationException {
 	if (isEmpty(dto.getName()) || isEmpty(dto.getCode())) {
-	    throw new EmptyAttributeException();
+	    throw new CustomValidationException("Some fields are empty");
 	}
 	productFamilyDao.save(utilsService.transform(dto, ProductFamily.class));
+    }
+
+    @Override
+    public void save(Dto dto) throws CustomValidationException {
+	save((ProductFamilyDto) dto);
     }
 
     /**

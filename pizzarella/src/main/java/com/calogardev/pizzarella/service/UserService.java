@@ -4,9 +4,7 @@ import java.util.List;
 
 import com.calogardev.pizzarella.dto.CreateUserDto;
 import com.calogardev.pizzarella.dto.UserDto;
-import com.calogardev.pizzarella.exception.DuplicatedUniqueAttributeException;
-import com.calogardev.pizzarella.exception.EmptyAttributeException;
-import com.calogardev.pizzarella.exception.ShortAttributeException;
+import com.calogardev.pizzarella.exception.CustomValidationException;
 
 /**
  * Main interface to handle the User entity. Contains the bussiness logic.
@@ -14,7 +12,7 @@ import com.calogardev.pizzarella.exception.ShortAttributeException;
  * @author calogar
  *
  */
-public interface UserService {
+public interface UserService extends GenericService {
 
     /**
      * Gets a User by id
@@ -43,10 +41,7 @@ public interface UserService {
      * 
      * @param createUserDto
      *            Dto with the needed data
-     * @throws EmptyAttributeException
-     * @throws ShortAttributeException
-     * @throws DuplicatedUniqueAttributeException
+     * @throws CustomValidationException
      */
-    public void save(CreateUserDto userDto)
-	    throws EmptyAttributeException, ShortAttributeException, DuplicatedUniqueAttributeException;
+    public void save(CreateUserDto userDto) throws CustomValidationException;
 }
