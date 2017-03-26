@@ -1,5 +1,6 @@
 package com.calogardev.pizzarella.dto;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import com.calogardev.pizzarella.model.ProductFamily;
  * @author calogar
  *
  */
-public class ProductDto {
+public class ProductDto implements Dto {
 
     private Long id;
 
@@ -140,6 +141,12 @@ public class ProductDto {
     public String toString() {
 	return "ProductDto [id=" + id + ", name=" + name + ", family=" + family + ", price=" + price + ", vat=" + vat
 		+ ", amount=" + amount + ", products=" + products + "]";
+    }
+
+    @Override
+    public Field[] getDeclaredFields() {
+	// TODO Auto-generated method stub
+	return null;
     }
 
 }

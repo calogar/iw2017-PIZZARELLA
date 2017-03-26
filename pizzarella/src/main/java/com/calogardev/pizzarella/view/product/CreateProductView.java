@@ -1,12 +1,10 @@
-package com.calogardev.pizzarella.view;
+package com.calogardev.pizzarella.view.product;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.calogardev.pizzarella.dao.ProductService;
 import com.calogardev.pizzarella.dto.ProductDto;
-import com.calogardev.pizzarella.service.ProductFamilyService;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
@@ -20,26 +18,26 @@ import com.vaadin.ui.themes.ValoTheme;
 @UIScope
 public class CreateProductView extends VerticalLayout implements View {
 
-    private static final long serialVersionUID = -3859786965418555283L;
+    private static final long serialVersionUID = -7719274049830538566L;
 
-    public static final String VIEW_ROUTE = "/products/new";
-    public static final String VIEW_NAME = "Create new Product";
-
-    private ProductForm form;
+    public static final String VIEW_NAME = "New Product";
+    public static final String VIEW_ROUTE = "products/new";
 
     @Autowired
-    private ProductService productService;
-    @Autowired
-    private ProductFamilyService familyService;
+    private ProductForm productForm;
 
     @PostConstruct
     public void init() {
 	commonSettings();
 
-	form = new ProductForm(new ProductDto(), productService, familyService);
-	addComponent(form);
+	ProductDto dto = new ProductDto();
+	productForm.addDto(dto);
+	addComponent(productForm);
     }
 
+    /**
+     * Apply common setting to the page. this will be refactored in the future.
+     */
     private void commonSettings() {
 	Page.getCurrent().setTitle(VIEW_NAME);
 	Label title = new Label(VIEW_NAME);

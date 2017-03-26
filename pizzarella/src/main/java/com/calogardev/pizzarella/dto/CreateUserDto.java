@@ -2,6 +2,9 @@ package com.calogardev.pizzarella.dto;
 
 import java.lang.reflect.Field;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 /**
  * Dto used for creating Users. Doesn't contain auto-generated fields like
  * status.
@@ -11,14 +14,24 @@ import java.lang.reflect.Field;
  */
 public class CreateUserDto implements Dto {
 
+    @NotNull
+    @Size(min = 2, max = 30)
     private String name;
 
+    @NotNull
+    @Size(min = 2, max = 70)
     private String surnames;
 
+    @NotNull
+    @Size(min = 9, max = 9)
     private String dni;
 
+    @NotNull
+    @Size(min = 1, max = 50)
     private String nickname;
 
+    @NotNull
+    @Size(min = 6, max = 70)
     private String password;
 
     public CreateUserDto() {

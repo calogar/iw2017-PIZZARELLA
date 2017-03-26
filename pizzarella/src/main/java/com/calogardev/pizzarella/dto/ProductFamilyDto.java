@@ -1,6 +1,8 @@
 package com.calogardev.pizzarella.dto;
 
-public class ProductFamilyDto {
+import java.lang.reflect.Field;
+
+public class ProductFamilyDto implements Dto {
 
     private Long id;
 
@@ -64,5 +66,11 @@ public class ProductFamilyDto {
     @Override
     public String toString() {
 	return "ProductFamilyDto [id=" + id + ", name=" + name + ", code=" + code + "]";
+    }
+
+    @Override
+    public Field[] getDeclaredFields() {
+	// TODO Auto-generated method stub
+	return null;
     }
 }
