@@ -119,7 +119,7 @@ public class UsersView extends VerticalLayout implements View {
     /**
      * An alternative version of buildColumns that allows for live editing.
      * However, it currently uses set methods to save attributes, so it hasn't
-     * support for validations, with are in the service.
+     * support for validations, which are in the service.
      */
     private void buildEditableColumns() {
 	Binder<UserDto> binder = grid.getEditor().getBinder();

@@ -19,6 +19,8 @@ import com.vaadin.ui.FormLayout;
 @ViewScope
 public class UserForm extends FormLayout {
 
+    private static final long serialVersionUID = -2051066380290976328L;
+
     @Autowired
     private Form<CreateUserDto> form;
 
@@ -29,6 +31,11 @@ public class UserForm extends FormLayout {
     private CreateUserDto dto;
 
     public UserForm() {
+    }
+
+    public void build(CreateUserDto dto) {
+	this.dto = dto;
+
 	form.configure(dto, CreateUserDto.class, userService);
 	form.addTextField("name");
 	form.addTextField("surnames");
@@ -38,9 +45,5 @@ public class UserForm extends FormLayout {
 	form.build();
 
 	addComponent(form);
-    }
-
-    public void addDto(CreateUserDto dto) {
-	this.dto = dto;
     }
 }
