@@ -1,6 +1,5 @@
 package com.calogardev.pizzarella.model;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -37,11 +36,11 @@ public class Product {
 
     @NotNull
     @Digits(integer = 3, fraction = 2)
-    private BigDecimal price;
+    private Float price;
 
     @NotNull
     @Digits(integer = 3, fraction = 2)
-    private BigDecimal vat;
+    private Float vat;
 
     @NotNull
     @Min(1)
@@ -115,36 +114,6 @@ public class Product {
     }
 
     /**
-     * @return the price
-     */
-    public BigDecimal getPrice() {
-	return price;
-    }
-
-    /**
-     * @param price
-     *            the price to set
-     */
-    public void setPrice(BigDecimal price) {
-	this.price = price;
-    }
-
-    /**
-     * @return the vat
-     */
-    public BigDecimal getVat() {
-	return vat;
-    }
-
-    /**
-     * @param vat
-     *            the vat to set
-     */
-    public void setVat(BigDecimal vat) {
-	this.vat = vat;
-    }
-
-    /**
      * @return the amount
      */
     public Integer getAmount() {
@@ -183,5 +152,35 @@ public class Product {
     public String toString() {
 	return "Product [id=" + id + ", name=" + name + ", family=" + family + ", status=" + status + ", price=" + price
 		+ ", vat=" + vat + ", amount=" + amount + ", products=" + products + "]";
+    }
+
+    /**
+     * @return the price
+     */
+    public Float getPrice() {
+	return price;
+    }
+
+    /**
+     * @param price
+     *            the price to set
+     */
+    public void setPrice(Float price) {
+	this.price = price;
+    }
+
+    /**
+     * @return the vat
+     */
+    public Float getVat() {
+	return vat;
+    }
+
+    /**
+     * @param vat
+     *            the vat to set
+     */
+    public void setVat(Float vat) {
+	this.vat = vat;
     }
 }
