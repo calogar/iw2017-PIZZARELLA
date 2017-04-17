@@ -1,6 +1,6 @@
 package com.calogardev.pizzarella.model;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -48,7 +48,7 @@ public class Product {
     private Integer amount;
 
     @OneToMany(fetch = FetchType.LAZY)
-    private List<Product> products;
+    private Set<Product> products;
 
     public Product() {
     }
@@ -128,21 +128,6 @@ public class Product {
 	this.amount = amount;
     }
 
-    /**
-     * @return the products
-     */
-    public List<Product> getProducts() {
-	return products;
-    }
-
-    /**
-     * @param products
-     *            the products to set
-     */
-    public void setProducts(List<Product> products) {
-	this.products = products;
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -182,5 +167,20 @@ public class Product {
      */
     public void setVat(Float vat) {
 	this.vat = vat;
+    }
+
+    /**
+     * @return the products
+     */
+    public Set<Product> getProducts() {
+	return products;
+    }
+
+    /**
+     * @param products
+     *            the products to set
+     */
+    public void setProducts(Set<Product> products) {
+	this.products = products;
     }
 }

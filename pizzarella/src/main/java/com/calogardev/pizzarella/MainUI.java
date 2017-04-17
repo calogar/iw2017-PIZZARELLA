@@ -6,6 +6,7 @@ import com.calogardev.pizzarella.view.DashboardLayout;
 import com.calogardev.pizzarella.view.MainView;
 import com.calogardev.pizzarella.view.order.OrdersView;
 import com.calogardev.pizzarella.view.product.ProductsView;
+import com.calogardev.pizzarella.view.productfamily.ProductFamiliesView;
 import com.calogardev.pizzarella.view.user.UsersView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.Navigator;
@@ -46,6 +47,7 @@ public class MainUI extends UI implements ViewDisplay {
 	root.addMenuItem(OrdersView.VIEW_ROUTE, OrdersView.VIEW_NAME);
 	root.addMenuItem(UsersView.VIEW_ROUTE, UsersView.VIEW_NAME);
 	root.addMenuItem(ProductsView.VIEW_ROUTE, ProductsView.VIEW_NAME);
+	root.addMenuItem(ProductFamiliesView.VIEW_ROUTE, ProductFamiliesView.VIEW_NAME);
 
 	root.build();
     }

@@ -2,6 +2,8 @@ package com.calogardev.pizzarella.view.product;
 
 import javax.annotation.PostConstruct;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.calogardev.pizzarella.dto.ProductDto;
@@ -25,6 +27,7 @@ import com.vaadin.ui.themes.ValoTheme;
 public class CreateProductView extends VerticalLayout implements View {
 
     private static final long serialVersionUID = -7719274049830538566L;
+    private static final Logger log = LoggerFactory.getLogger(CreateProductView.class);
 
     public static final String VIEW_NAME = "New Product";
     public static final String VIEW_ROUTE = "createProduct";

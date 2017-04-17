@@ -12,6 +12,8 @@ import com.calogardev.pizzarella.service.GenericService;
 import com.vaadin.data.BeanValidationBinder;
 import com.vaadin.data.Binder;
 import com.vaadin.data.ValidationException;
+import com.vaadin.data.converter.StringToFloatConverter;
+import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.server.Page;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
@@ -40,19 +42,35 @@ public class Form<T extends Dto> extends FormLayout {
     }
 
     public void configure(T dto, Class<T> klass, GenericService service) {
+
 	binder = new BeanValidationBinder<>(klass);
 	this.dto = dto;
 	this.service = service;
     }
 
-    public void addTextField(String attributeName, String caption) {
-	TextField field = new TextField(caption);
-	binder.bind(field, attributeName);
+    public void addFloatField(String attributeName) {
+	TextField field = new TextField(StringUtils.capitalize(attributeName));
+	binder.forField(field).withNullRepresentation("0")
+		.withConverter(new StringToFloatConverter("Must be a decimal number")).bind(attributeName);
 	addToForm(field);
     }
 
-    public void addTextField(String attributeName) {
-	addTextField(attributeName, StringUtils.capitalize(attributeName));
+    public void addIntegerField(String attributeName) {
+	TextField field = new TextField(StringUtils.capitalize(attributeName));
+	binder.forField(field).withNullRepresentation("0")
+		.withConverter(new StringToIntegerConverter("Must be a number")).bind(attributeName);
+	addToForm(field);
+    }
+
+    public TextField addTextField(String attributeName, String caption) {
+	TextField field = new TextField(caption);
+	binder.bind(field, attributeName);
+	addToForm(field);
+	return field;
+    }
+
+    public TextField addTextField(String attributeName) {
+	return addTextField(attributeName, StringUtils.capitalize(attributeName));
     }
 
     // Not working because we can't pass an ItemCaptionGenerator<Dto>, we must
@@ -66,6 +84,12 @@ public class Form<T extends Dto> extends FormLayout {
     // addToForm(comboBox);
     // }
 
+    /**
+     * TODO: Not working because of generic dto
+     * 
+     * @param attributeName
+     * @param dtos
+     */
     public void addTwinColSelect(String attributeName, List<Dto> dtos) {
 	TwinColSelect<Dto> select = new TwinColSelect<>();
 	// We don't want to be able to select our own product (on updating)

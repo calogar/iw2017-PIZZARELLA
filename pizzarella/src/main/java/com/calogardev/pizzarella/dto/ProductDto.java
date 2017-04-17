@@ -1,7 +1,7 @@
 package com.calogardev.pizzarella.dto;
 
 import java.lang.reflect.Field;
-import java.util.List;
+import java.util.Set;
 
 /**
  * The main Dto for Products. Needs the id because it's the only unique
@@ -24,10 +24,25 @@ public class ProductDto implements Dto {
 
     private Integer amount;
 
-    private List<ProductDto> products;
+    private Set<ProductDto> products;
 
     public ProductDto() {
 
+    }
+
+    public String getFormattedIngredients() {
+	String result;
+	if (products.size() == 0) {
+	    result = "This product has no ingredients.";
+	} else {
+	    result = "";
+	    for (ProductDto product : products) {
+		result = product.getName() + ", ";
+	    }
+	    // Remove the last separator
+	    result.substring(0, result.length() - 3);
+	}
+	return result;
     }
 
     /**
@@ -91,38 +106,6 @@ public class ProductDto implements Dto {
     }
 
     /**
-     * @return the products
-     */
-    public List<ProductDto> getProducts() {
-	return products;
-    }
-
-    /**
-     * @param products
-     *            the products to set
-     */
-    public void setProducts(List<ProductDto> products) {
-	this.products = products;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-	return "ProductDto [id=" + id + ", name=" + name + ", family=" + family + ", price=" + price + ", vat=" + vat
-		+ ", amount=" + amount + ", products=" + products + "]";
-    }
-
-    @Override
-    public Field[] getDeclaredFields() {
-	// TODO Auto-generated method stub
-	return null;
-    }
-
-    /**
      * @return the price
      */
     public Float getPrice() {
@@ -150,6 +133,37 @@ public class ProductDto implements Dto {
      */
     public void setVat(Float vat) {
 	this.vat = vat;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+	return name + " (" + family.getName() + ")";
+    }
+
+    @Override
+    public Field[] getDeclaredFields() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    /**
+     * @return the products
+     */
+    public Set<ProductDto> getProducts() {
+	return products;
+    }
+
+    /**
+     * @param products
+     *            the products to set
+     */
+    public void setProducts(Set<ProductDto> products) {
+	this.products = products;
     }
 
 }

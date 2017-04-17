@@ -1,5 +1,7 @@
 package com.calogardev.pizzarella.view.product;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.calogardev.pizzarella.dao.ProductService;
@@ -11,6 +13,7 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.TwinColSelect;
 
 /**
  * Uses the (custom) Form API to build a form for Products
@@ -23,6 +26,7 @@ import com.vaadin.ui.FormLayout;
 public class ProductForm extends FormLayout {
 
     private static final long serialVersionUID = 5189417294392398723L;
+    private static final Logger log = LoggerFactory.getLogger(ProductForm.class);
 
     @Autowired
     private Form<ProductDto> form;
@@ -37,19 +41,33 @@ public class ProductForm extends FormLayout {
     private ProductDto dto;
 
     public ProductForm() {
+    }
 
-	form.configure(new ProductDto(), ProductDto.class, productService);
+    public void build(ProductDto dto) {
+	this.dto = dto;
+
+	form.configure(dto, ProductDto.class, productService);
 	form.addTextField("name");
 
 	// Currently we have to add comboboxes ourselves
-	ComboBox<ProductFamilyDto> comboBox = new ComboBox<ProductFamilyDto>();
+	ComboBox<ProductFamilyDto> comboBox = new ComboBox<>("Product Family");
 	comboBox.setItems(familyService.findAll());
 	comboBox.setItemCaptionGenerator(ProductFamilyDto::getName);
 	form.getBinder().bind(comboBox, "family");
 	form.addToForm(comboBox);
-    }
 
-    public void addDto(ProductDto dto) {
-	this.dto = dto;
+	form.addFloatField("price");
+	form.addFloatField("vat");
+	form.addIntegerField("amount");
+
+	TwinColSelect<ProductDto> select = new TwinColSelect<>();
+	// We don't want to be able to select our own product (on updating)
+	// TODO: this should be checked in the service
+	select.setItems(productService.findAll());
+	form.getBinder().bind(select, "products");
+	form.addToForm(select);
+	form.build();
+
+	addComponent(form);
     }
 }

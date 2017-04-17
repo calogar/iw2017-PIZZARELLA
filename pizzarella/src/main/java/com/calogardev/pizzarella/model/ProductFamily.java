@@ -35,6 +35,7 @@ public class ProductFamily {
     @Column(unique = true)
     private String code;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private Status status;
 

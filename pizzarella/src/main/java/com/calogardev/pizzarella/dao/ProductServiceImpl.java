@@ -1,5 +1,6 @@
 package com.calogardev.pizzarella.dao;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -53,7 +54,11 @@ public class ProductServiceImpl implements ProductService {
 	    throw new ProductWithoutFamilyException();
 	} else if (product.getFamily().isIngredient() && product.getProducts() == null) {
 	    throw new IngredientWithProductsException();
+	} else if (!product.getFamily().isIngredient() && product.getProducts() == null) {
+	    product.setProducts(new LinkedHashSet<Product>()); // Set an empty
+							       // set
 	}
+	// Add comprobation that product doesn't have itself as ingredient
 
 	product.setStatus(Status.ACTIVE);
 	productDao.save(product);
@@ -79,6 +84,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ProductDto findOne(Long id) {
 	return utilsService.transform(productDao.findOne(id), ProductDto.class);
     }

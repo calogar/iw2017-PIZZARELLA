@@ -2,12 +2,21 @@ package com.calogardev.pizzarella.dto;
 
 import java.lang.reflect.Field;
 
+import javax.persistence.Column;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class ProductFamilyDto implements Dto {
 
     private Long id;
 
+    @NotNull
+    @Size(min = 2, max = 50)
     private String name;
 
+    @NotNull
+    @Size(min = 2, max = 50)
+    @Column(unique = true)
     private String code;
 
     public ProductFamilyDto() {
