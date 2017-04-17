@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.calogardev.pizzarella.dao.UserDao;
 import com.calogardev.pizzarella.dto.CreateUserDto;
@@ -34,12 +35,14 @@ public class UserServiceImpl implements UserService {
     UtilsService utilsService;
 
     @Override
+    @Transactional(readOnly = true)
     public UserDto findOne(Long id) {
 	final User user = userDao.findOne(id);
 	return utilsService.transform(user, UserDto.class);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserDto> findAll() {
 	log.info("Finding all active users");
 	List<User> users = userDao.findAll();

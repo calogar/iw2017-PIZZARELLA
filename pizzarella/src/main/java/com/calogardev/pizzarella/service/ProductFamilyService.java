@@ -28,4 +28,6 @@ public interface ProductFamilyService extends GenericService {
      * @throws CustomValidationException
      */
     public void save(ProductFamilyDto dto) throws CustomValidationException;
+
+    public void deleteByCode(String code);
 }

@@ -3,17 +3,23 @@ package com.calogardev.pizzarella.service;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.calogardev.pizzarella.dao.ProductFamilyDao;
 import com.calogardev.pizzarella.dto.Dto;
 import com.calogardev.pizzarella.dto.ProductFamilyDto;
+import com.calogardev.pizzarella.enums.Status;
 import com.calogardev.pizzarella.exception.CustomValidationException;
 import com.calogardev.pizzarella.model.ProductFamily;
 
 @Service
 public class ProductFamilyServiceImpl implements ProductFamilyService {
+
+    private static final Logger log = LoggerFactory.getLogger(ProductFamilyServiceImpl.class);
 
     @Autowired
     private ProductFamilyDao productFamilyDao;
@@ -22,6 +28,7 @@ public class ProductFamilyServiceImpl implements ProductFamilyService {
     private UtilsService utilsService;
 
     @Override
+    @Transactional(readOnly = true)
     public List<ProductFamilyDto> findAll() {
 	List<ProductFamily> productFamilies = productFamilyDao.findAll();
 	return utilsService.transform(productFamilies, ProductFamilyDto.class);
@@ -31,8 +38,13 @@ public class ProductFamilyServiceImpl implements ProductFamilyService {
     public void save(ProductFamilyDto dto) throws CustomValidationException {
 	if (isEmpty(dto.getName()) || isEmpty(dto.getCode())) {
 	    throw new CustomValidationException("Some fields are empty");
+	} else if (productFamilyDao.existsByCode(dto.getCode())) {
+	    throw new CustomValidationException("A product family already has this code");
 	}
-	productFamilyDao.save(utilsService.transform(dto, ProductFamily.class));
+	ProductFamily productFamily = utilsService.transform(dto, ProductFamily.class);
+	productFamily.setStatus(Status.ACTIVE);
+	productFamilyDao.save(productFamily);
+	log.info("Saved Product: " + productFamily.toString());
     }
 
     @Override
@@ -49,6 +61,11 @@ public class ProductFamilyServiceImpl implements ProductFamilyService {
      */
     private Boolean isEmpty(String str) {
 	return StringUtils.isEmpty(str);
+    }
+
+    @Override
+    public void deleteByCode(String code) {
+	productFamilyDao.deleteByCode(code);
     }
 
 }

@@ -48,4 +48,6 @@ public interface ProductService extends GenericService {
      *            The product to delete
      */
     public void delete(ProductDto productDto);
+
+    public ProductDto findOne(Long id);
 }

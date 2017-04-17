@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.calogardev.pizzarella.dto.Dto;
 import com.calogardev.pizzarella.dto.ProductDto;
@@ -34,11 +35,13 @@ public class ProductServiceImpl implements ProductService {
     private UtilsService utilsService;
 
     @Override
+    @Transactional(readOnly = true)
     public List<ProductDto> findAll() {
 	return utilsService.transform(productDao.findAll(), ProductDto.class);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ProductDto> findAllExceptOne(Long id) {
 	return utilsService.transform(productDao.findAllExceptOne(id), ProductDto.class);
     }
@@ -73,5 +76,10 @@ public class ProductServiceImpl implements ProductService {
     public void save(Dto dto)
 	    throws CustomValidationException, ProductWithoutFamilyException, IngredientWithProductsException {
 	save((ProductDto) dto);
+    }
+
+    @Override
+    public ProductDto findOne(Long id) {
+	return utilsService.transform(productDao.findOne(id), ProductDto.class);
     }
 }
