@@ -1,5 +1,7 @@
 package com.calogardev.pizzarella.view.user;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.calogardev.pizzarella.dto.CreateUserDto;
@@ -24,19 +26,19 @@ public class CreateUserView extends VerticalLayout implements View {
 
     private static final long serialVersionUID = 7781582716883896923L;
 
-    public static final String VIEW_ROUTE = "users/new";
+    public static final String VIEW_ROUTE = "createUser";
     public static final String VIEW_NAME = "New User";
 
     @Autowired
     private UserForm userForm;
 
-    @Override
-    public void enter(ViewChangeEvent event) {
+    @PostConstruct
+    public void init() {
 	commonSettings();
 
 	CreateUserDto dto = new CreateUserDto();
 	// Delegates how the form is constructed to UserForm
-	userForm.addDto(dto);
+	userForm.build(dto);
 	addComponent(userForm);
     }
 
@@ -48,5 +50,9 @@ public class CreateUserView extends VerticalLayout implements View {
 	Label title = new Label(VIEW_NAME);
 	title.addStyleName(ValoTheme.LABEL_H1);
 	addComponent(title);
+    }
+
+    @Override
+    public void enter(ViewChangeEvent event) {
     }
 }

@@ -1,10 +1,10 @@
-package com.calogardev.pizzarella.view.product;
+package com.calogardev.pizzarella.view.productfamily;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.calogardev.pizzarella.dto.ProductDto;
+import com.calogardev.pizzarella.dto.ProductFamilyDto;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
@@ -14,36 +14,27 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-/**
- * View used to create Products.
- * 
- * @author calogar
- *
- */
-@SpringView(name = CreateProductView.VIEW_ROUTE)
+@SpringView(name = CreateProductFamilyView.VIEW_ROUTE)
 @UIScope
-public class CreateProductView extends VerticalLayout implements View {
+public class CreateProductFamilyView extends VerticalLayout implements View {
 
-    private static final long serialVersionUID = -7719274049830538566L;
+    private static final long serialVersionUID = -1487637267713557085L;
 
-    public static final String VIEW_NAME = "New Product";
-    public static final String VIEW_ROUTE = "createProduct";
+    public static final String VIEW_ROUTE = "createProductFamily";
+    public static final String VIEW_NAME = "Create new Product Family";
 
     @Autowired
-    private ProductForm productForm;
+    private ProductFamilyForm form;
 
     @PostConstruct
     public void init() {
 	commonSettings();
 
-	ProductDto dto = new ProductDto();
-	productForm.build(dto);
-	addComponent(productForm);
+	ProductFamilyDto dto = new ProductFamilyDto();
+	form.build(dto);
+	addComponent(form);
     }
 
-    /**
-     * Apply common setting to the page. this will be refactored in the future.
-     */
     private void commonSettings() {
 	Page.getCurrent().setTitle(VIEW_NAME);
 	Label title = new Label(VIEW_NAME);

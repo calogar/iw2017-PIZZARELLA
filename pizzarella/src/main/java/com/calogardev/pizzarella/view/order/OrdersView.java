@@ -18,23 +18,23 @@ import com.vaadin.ui.themes.ValoTheme;
 @UIScope
 public class OrdersView extends VerticalLayout implements View {
 
-	private static final Logger log = LoggerFactory.getLogger(OrdersView.class);
-	private static final long serialVersionUID = 3427287639695107332L;
-	public static final String VIEW_ROUTE = "orders";
-	public static final String VIEW_NAME = "Orders";
+    private static final Logger log = LoggerFactory.getLogger(OrdersView.class);
+    private static final long serialVersionUID = 3427287639695107332L;
+    public static final String VIEW_ROUTE = "orders";
+    public static final String VIEW_NAME = "Orders";
 
-	@PostConstruct
-	void init() {
-		Page.getCurrent().setTitle(VIEW_NAME);
-		Label title = new Label(VIEW_NAME);
-		title.addStyleName(ValoTheme.LABEL_H1);
-		addComponent(title);
-	}
+    @PostConstruct
+    void init() {
+	Page.getCurrent().setTitle(VIEW_NAME);
+	Label title = new Label(VIEW_NAME);
+	title.addStyleName(ValoTheme.LABEL_H1);
+	addComponent(title);
+    }
 
-	@Override
-	public void enter(ViewChangeEvent event) {
-		// TODO Auto-generated method stub
+    @Override
+    public void enter(ViewChangeEvent event) {
+	// TODO Auto-generated method stub
 
-	}
+    }
 
 }
