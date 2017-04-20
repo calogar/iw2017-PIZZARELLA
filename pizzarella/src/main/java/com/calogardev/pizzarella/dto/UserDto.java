@@ -2,120 +2,132 @@ package com.calogardev.pizzarella.dto;
 
 import java.lang.reflect.Field;
 
-import com.calogardev.pizzarella.enums.Status;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
- * Dto used for listing objects. Doesn't contain sensitive information like
- * passwords.
+ * Dto used for creating Users. Doesn't contain auto-generated fields like
+ * status.
  * 
  * @author calogar
  *
  */
 public class UserDto implements Dto {
 
-    private String name;
+	@NotNull
+	@Size(min = 2, max = 30)
+	private String name;
 
-    private String surnames;
+	@NotNull
+	@Size(min = 2, max = 70)
+	private String surnames;
 
-    private String dni;
+	@NotNull
+	@Size(min = 9, max = 9)
+	private String dni;
 
-    private String nickname;
+	@NotNull
+	@Size(min = 1, max = 50)
+	private String nickname;
 
-    private Status status;
+	@NotNull
+	@Size(min = 6, max = 70)
+	private String password;
 
-    public UserDto() {
+	public UserDto() {
 
-    }
+	}
 
-    /**
-     * @return the name
-     */
-    public String getName() {
-	return name;
-    }
+	public UserDto(String name, String surnames, String dni, String nickname, String password) {
+		super();
+		this.name = name;
+		this.surnames = surnames;
+		this.dni = dni;
+		this.nickname = nickname;
+		this.password = password;
+	}
 
-    /**
-     * @param name
-     *            the name to set
-     */
-    public void setName(String name) {
-	this.name = name;
-    }
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
 
-    /**
-     * @return the surnames
-     */
-    public String getSurnames() {
-	return surnames;
-    }
+	/**
+	 * @param name
+	 *            the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    /**
-     * @param surnames
-     *            the surnames to set
-     */
-    public void setSurnames(String surnames) {
-	this.surnames = surnames;
-    }
+	/**
+	 * @return the surnames
+	 */
+	public String getSurnames() {
+		return surnames;
+	}
 
-    /**
-     * @return the dni
-     */
-    public String getDni() {
-	return dni;
-    }
+	/**
+	 * @param surnames
+	 *            the surnames to set
+	 */
+	public void setSurnames(String surnames) {
+		this.surnames = surnames;
+	}
 
-    /**
-     * @param dni
-     *            the dni to set
-     */
-    public void setDni(String dni) {
-	this.dni = dni;
-    }
+	/**
+	 * @return the dni
+	 */
+	public String getDni() {
+		return dni;
+	}
 
-    /**
-     * @return the nickname
-     */
-    public String getNickname() {
-	return nickname;
-    }
+	/**
+	 * @param dni
+	 *            the dni to set
+	 */
+	public void setDni(String dni) {
+		this.dni = dni;
+	}
 
-    /**
-     * @param nickname
-     *            the nickname to set
-     */
-    public void setNickname(String nickname) {
-	this.nickname = nickname;
-    }
+	/**
+	 * @return the nickname
+	 */
+	public String getNickname() {
+		return nickname;
+	}
 
-    /**
-     * @return the status
-     */
-    public Status getStatus() {
-	return status;
-    }
+	/**
+	 * @param nickname
+	 *            the nickname to set
+	 */
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
 
-    /**
-     * @param status
-     *            the status to set
-     */
-    public void setStatus(Status status) {
-	this.status = status;
-    }
+	public String getPassword() {
+		return password;
+	}
 
-    @Override
-    public Field[] getDeclaredFields() {
-	return this.getClass().getDeclaredFields();
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-	return "UserDto [name=" + name + ", surnames=" + surnames + ", dni=" + dni + ", nickname=" + nickname
-		+ ", status=" + status + "]";
-    }
+	@Override
+	public Field[] getDeclaredFields() {
+		return this.getClass().getDeclaredFields();
+	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "CreateUserDto [name=" + name + ", surnames=" + surnames + ", dni=" + dni + ", nickname=" + nickname
+				+ ", password=" + password + "]";
+	}
 }

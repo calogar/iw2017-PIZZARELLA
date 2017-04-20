@@ -4,7 +4,7 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.calogardev.pizzarella.dto.CreateUserDto;
+import com.calogardev.pizzarella.dto.UserDto;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
@@ -36,7 +36,7 @@ public class CreateUserView extends VerticalLayout implements View {
     public void init() {
 	commonSettings();
 
-	CreateUserDto dto = new CreateUserDto();
+	UserDto dto = new UserDto();
 	// Delegates how the form is constructed to UserForm
 	userForm.build(dto);
 	addComponent(userForm);
