@@ -31,99 +31,99 @@ import com.vaadin.ui.themes.ValoTheme;
 @UIScope
 public class ProductsView extends VerticalLayout implements View {
 
-    private static final long serialVersionUID = -8090435519281970500L;
-    private final static Logger log = LoggerFactory.getLogger(ProductsView.class);
+	private static final long serialVersionUID = -8090435519281970500L;
+	private final static Logger log = LoggerFactory.getLogger(ProductsView.class);
 
-    public static final String VIEW_NAME = "Products";
-    public static final String VIEW_ROUTE = "products";
+	public static final String VIEW_NAME = "Products";
+	public static final String VIEW_ROUTE = "products";
 
-    @Autowired
-    private ProductService productService;
+	@Autowired
+	private ProductService productService;
 
-    private Grid<ProductDto> grid;
+	private Grid<ProductDto> grid;
 
-    @PostConstruct
-    public void init() {
-	commonsSettings();
+	@PostConstruct
+	public void init() {
+		commonsSettings();
 
-	setSizeFull();
+		setSizeFull();
 
-	// Create the view options, like creating new products
+		// Create the view options, like creating new products
 
-	HorizontalLayout options = new HorizontalLayout();
-	options.setWidth("100%");
+		HorizontalLayout options = new HorizontalLayout();
+		options.setWidth("100%");
 
-	addComponent(options);
+		addComponent(options);
 
-	Button createButton = new Button("Create new Product", new ClickListener() {
-	    @Override
-	    public void buttonClick(ClickEvent event) {
-		UI.getCurrent().getNavigator().navigateTo(CreateProductView.VIEW_ROUTE);
-	    }
-	});
-	// Using an empty expanding label to align the button to the right
-	Label spacer = new Label();
-	options.addComponent(spacer);
-	options.setExpandRatio(spacer, 1f);
-	options.addComponent(createButton);
+		Button createButton = new Button("Create new Product", new ClickListener() {
+			@Override
+			public void buttonClick(ClickEvent event) {
+				UI.getCurrent().getNavigator().navigateTo(CreateProductView.VIEW_ROUTE);
+			}
+		});
+		// Using an empty expanding label to align the button to the right
+		Label spacer = new Label();
+		options.addComponent(spacer);
+		options.setExpandRatio(spacer, 1f);
+		options.addComponent(createButton);
 
-	// Create the grid
+		// Create the grid
 
-	grid = new Grid<ProductDto>();
-	grid.setSizeFull();
-	addComponent(grid);
-	setExpandRatio(grid, 1);
+		grid = new Grid<ProductDto>();
+		grid.setSizeFull();
+		addComponent(grid);
+		setExpandRatio(grid, 1);
 
-	List<ProductDto> products = productService.findAll();
-	grid.setItems(products);
-	buildColumns();
+		List<ProductDto> products = productService.findAll();
+		grid.setItems(products);
+		buildColumns();
 
-	ButtonRenderer<ProductDto> deleteButton = new ButtonRenderer<ProductDto>(clickEvent -> {
-	    ConfirmDialog.show(UI.getCurrent(), "Are you sure?", new ConfirmDialog.Listener() {
+		ButtonRenderer<ProductDto> deleteButton = new ButtonRenderer<ProductDto>(clickEvent -> {
+			ConfirmDialog.show(UI.getCurrent(), "Are you sure?", new ConfirmDialog.Listener() {
 
-		@Override
-		public void onClose(ConfirmDialog dialog) {
-		    if (dialog.isConfirmed()) {
-			// Confirmed to continue
-			Long id = clickEvent.getItem().getId();
-			log.info("THIS: " + productService.findOne(id));
-			productService.delete(productService.findOne(id));
-			grid.setItems(productService.findAll());
-		    }
-		}
-	    });
-	});
-	grid.addColumn(userDto -> "Delete", deleteButton);
+				@Override
+				public void onClose(ConfirmDialog dialog) {
+					if (dialog.isConfirmed()) {
+						// Confirmed to continue
+						Long id = clickEvent.getItem().getId();
+						log.info("THIS: " + productService.findOne(id));
+						productService.delete(productService.findOne(id));
+						grid.setItems(productService.findAll());
+					}
+				}
+			});
+		});
+		grid.addColumn(userDto -> "Delete", deleteButton);
 
-    }
+	}
 
-    /**
-     * Apply common setting to the page. this will be refactored in the future.
-     */
-    private void commonsSettings() {
-	Page.getCurrent().setTitle(VIEW_NAME);
-	Label title = new Label(VIEW_NAME);
-	title.addStyleName(ValoTheme.LABEL_H1);
-	addComponent(title);
-    }
+	/**
+	 * Apply common setting to the page. this will be refactored in the future.
+	 */
+	private void commonsSettings() {
+		Page.getCurrent().setTitle(VIEW_NAME);
+		Label title = new Label(VIEW_NAME);
+		title.addStyleName(ValoTheme.LABEL_H1);
+		addComponent(title);
+	}
 
-    /**
-     * Declares which columns are going to be displayed.
-     */
-    private void buildColumns() {
-	grid.addColumn(ProductDto::getId).setCaption("Id");
-	grid.addColumn(ProductDto::getName).setCaption("Name");
+	/**
+	 * Declares which columns are going to be displayed.
+	 */
+	private void buildColumns() {
+		grid.addColumn(ProductDto::getId).setCaption("Id");
+		grid.addColumn(ProductDto::getName).setCaption("Name");
 
-	grid.addColumn(product -> product.getFamily().getName()).setCaption("Family");
-	grid.addColumn(ProductDto::getPrice).setCaption("Price");
-	grid.addColumn(ProductDto::getVat).setCaption("VAT");
-	grid.addColumn(ProductDto::getAmount).setCaption("Amount");
-	grid.addColumn(ProductDto::getFormattedIngredients).setCaption("Ingredients");
-    }
+		grid.addColumn(product -> product.getFamily().getName()).setCaption("Family");
+		grid.addColumn(ProductDto::getPrice).setCaption("Price");
+		grid.addColumn(ProductDto::getVat).setCaption("VAT");
+		grid.addColumn(ProductDto::getAmount).setCaption("Amount");
+		grid.addColumn(ProductDto::getFormattedIngredients).setCaption("Ingredients");
+	}
 
-    @Override
-    public void enter(ViewChangeEvent event) {
-	// TODO Auto-generated method stub
+	@Override
+	public void enter(ViewChangeEvent event) {
+		// TODO Auto-generated method stub
 
-    }
+	}
 }

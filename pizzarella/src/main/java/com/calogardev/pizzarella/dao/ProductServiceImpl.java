@@ -27,65 +27,65 @@ import com.calogardev.pizzarella.service.UtilsService;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private static final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
 
-    @Autowired
-    private ProductDao productDao;
+	@Autowired
+	private ProductDao productDao;
 
-    @Autowired
-    private UtilsService utilsService;
+	@Autowired
+	private UtilsService utilsService;
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<ProductDto> findAll() {
-	return utilsService.transform(productDao.findAll(), ProductDto.class);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<ProductDto> findAllExceptOne(Long id) {
-	return utilsService.transform(productDao.findAllExceptOne(id), ProductDto.class);
-    }
-
-    @Override
-    public void save(ProductDto productDto) throws ProductWithoutFamilyException, IngredientWithProductsException {
-	Product product = utilsService.transform(productDto, Product.class);
-	if (product.getFamily() == null) {
-	    throw new ProductWithoutFamilyException();
-	} else if (product.getFamily().isIngredient() && product.getProducts() == null) {
-	    throw new IngredientWithProductsException();
-	} else if (!product.getFamily().isIngredient() && product.getProducts() == null) {
-	    product.setProducts(new LinkedHashSet<Product>()); // Set an empty
-							       // set
+	@Override
+	@Transactional(readOnly = true)
+	public List<ProductDto> findAll() {
+		return utilsService.transform(productDao.findAll(), ProductDto.class);
 	}
-	// Add comprobation that product doesn't have itself as ingredient
 
-	product.setStatus(Status.ACTIVE);
-	productDao.save(product);
-	log.info("Saved Product: " + product.toString());
-    }
+	@Override
+	@Transactional(readOnly = true)
+	public List<ProductDto> findAllExceptOne(Long id) {
+		return utilsService.transform(productDao.findAllExceptOne(id), ProductDto.class);
+	}
 
-    @Override
-    public void delete(ProductDto dto) {
-	productDao.delete(utilsService.transform(dto, Product.class));
-    }
+	@Override
+	public void save(ProductDto productDto) throws ProductWithoutFamilyException, IngredientWithProductsException {
+		Product product = utilsService.transform(productDto, Product.class);
+		if (product.getFamily() == null) {
+			throw new ProductWithoutFamilyException();
+		} else if (product.getFamily().isIngredient() && product.getProducts() == null) {
+			throw new IngredientWithProductsException();
+		} else if (!product.getFamily().isIngredient() && product.getProducts() == null) {
+			product.setProducts(new LinkedHashSet<Product>()); // Set an empty
+			// set
+		}
+		// Add comprobation that product doesn't have itself as ingredient
 
-    /**
-     * Implementation of the generic Service interface.
-     * 
-     * @throws CustomValidationException
-     * @throws IngredientWithProductsException
-     * @throws ProductWithoutFamilyException
-     */
-    @Override
-    public void save(Dto dto)
-	    throws CustomValidationException, ProductWithoutFamilyException, IngredientWithProductsException {
-	save((ProductDto) dto);
-    }
+		product.setStatus(Status.ACTIVE);
+		productDao.save(product);
+		log.info("Saved Product: " + product.toString());
+	}
 
-    @Override
-    @Transactional(readOnly = true)
-    public ProductDto findOne(Long id) {
-	return utilsService.transform(productDao.findOne(id), ProductDto.class);
-    }
+	@Override
+	public void delete(ProductDto dto) {
+		productDao.delete(utilsService.transform(dto, Product.class));
+	}
+
+	/**
+	 * Implementation of the generic Service interface.
+	 * 
+	 * @throws CustomValidationException
+	 * @throws IngredientWithProductsException
+	 * @throws ProductWithoutFamilyException
+	 */
+	@Override
+	public void save(Dto dto)
+			throws CustomValidationException, ProductWithoutFamilyException, IngredientWithProductsException {
+		save((ProductDto) dto);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public ProductDto findOne(Long id) {
+		return utilsService.transform(productDao.findOne(id), ProductDto.class);
+	}
 }
