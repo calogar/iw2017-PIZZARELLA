@@ -33,6 +33,7 @@ public class MainUI extends UI implements ViewDisplay {
 	// Automatically handles the views for the navigator
 	@Autowired
 	private SpringViewProvider viewProvider;
+	private SecurityService securityService;
 
 	@Override
 	protected void init(VaadinRequest request) {
@@ -54,10 +55,30 @@ public class MainUI extends UI implements ViewDisplay {
 		root.build();
 	}
 
-	@Override
-	public void showView(View view) {
+	/**
+	 * Method used inside the login view by using @FunctionalInterface. It's on
+	 * MainUI so it can render different views depending on the result.
+	 * 
+	 * @param username
+	 * @param password
+	 * @return boolean result of the login
+	 */
+	private boolean login(String username, String password) {
+		if (securityService.login(username, password)) {
+			renderMainView();
+			return true;
+		}
+		return false;
+	}
+
+	}
+
+	private void renderMainView() {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
+	public void showView(View view) {
+	}
 }

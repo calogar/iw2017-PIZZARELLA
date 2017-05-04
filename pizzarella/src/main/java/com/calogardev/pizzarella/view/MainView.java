@@ -21,7 +21,6 @@ public class MainView extends VerticalLayout implements View {
 
 	@PostConstruct
 	void init() {
-		// TODO: do this with AOP?
 		Page.getCurrent().setTitle(VIEW_NAME);
 		Label title = new Label(VIEW_NAME);
 		title.addStyleName(ValoTheme.LABEL_H1);
@@ -30,8 +29,5 @@ public class MainView extends VerticalLayout implements View {
 
 	@Override
 	public void enter(ViewChangeEvent event) {
-		// TODO Auto-generated method stub
-
 	}
-
 }
