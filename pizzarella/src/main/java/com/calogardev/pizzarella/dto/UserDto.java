@@ -14,6 +14,8 @@ import javax.validation.constraints.Size;
  */
 public class UserDto implements Dto {
 
+	private Long id;
+
 	@NotNull
 	@Size(min = 2, max = 30)
 	private String name;
@@ -129,5 +131,13 @@ public class UserDto implements Dto {
 	public String toString() {
 		return "CreateUserDto [name=" + name + ", surnames=" + surnames + ", dni=" + dni + ", nickname=" + nickname
 				+ ", password=" + password + "]";
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 }

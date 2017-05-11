@@ -1,7 +1,11 @@
 package com.calogardev.pizzarella.dto;
 
 import java.lang.reflect.Field;
-import java.util.Set;
+import java.util.List;
+
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * The main Dto for Products. Needs the id because it's the only unique
@@ -12,158 +16,158 @@ import java.util.Set;
  */
 public class ProductDto implements Dto {
 
-    private Long id;
+	private Long id;
 
-    private String name;
+	@NotNull
+	@Size(min = 2, max = 30)
+	private String name;
 
-    private ProductFamilyDto family;
+	@NotNull
+	@Digits(integer = 3, fraction = 2)
+	private Float price;
 
-    private Float price;
+	@NotNull
+	@Digits(integer = 3, fraction = 2)
+	private Float vat;
 
-    private Float vat;
+	@NotNull
+	@Size(min = 1, max = 999)
+	private Integer amount;
 
-    private Integer amount;
+	private List<ProductDto> products;
 
-    private Set<ProductDto> products;
+	private ProductFamilyDto family;
 
-    public ProductDto() {
+	public ProductDto() {
 
-    }
-
-    public String getFormattedIngredients() {
-	String result;
-	if (products.size() == 0) {
-	    result = "This product has no ingredients.";
-	} else {
-	    result = "";
-	    for (ProductDto product : products) {
-		result = product.getName() + ", ";
-	    }
-	    // Remove the last separator
-	    result.substring(0, result.length() - 3);
 	}
-	return result;
-    }
 
-    /**
-     * @return the id
-     */
-    public Long getId() {
-	return id;
-    }
+	public String getFormattedIngredients() {
+		String result;
+		if (products.size() == 0) {
+			result = "This product has no ingredients.";
+		} else {
+			result = "";
+			for (ProductDto product : products) {
+				result = product.getName() + ", ";
+			}
+			// Remove the last separator
+			result.substring(0, result.length() - 3);
+		}
+		return result;
+	}
 
-    /**
-     * @param id
-     *            the id to set
-     */
-    public void setId(Long id) {
-	this.id = id;
-    }
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
 
-    /**
-     * @return the name
-     */
-    public String getName() {
-	return name;
-    }
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    /**
-     * @param name
-     *            the name to set
-     */
-    public void setName(String name) {
-	this.name = name;
-    }
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
 
-    /**
-     * @return the family
-     */
-    public ProductFamilyDto getFamily() {
-	return family;
-    }
+	/**
+	 * @param name
+	 *            the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    /**
-     * @param family
-     *            the family to set
-     */
-    public void setFamily(ProductFamilyDto family) {
-	this.family = family;
-    }
+	/**
+	 * @return the family
+	 */
+	public ProductFamilyDto getFamily() {
+		return family;
+	}
 
-    /**
-     * @return the amount
-     */
-    public Integer getAmount() {
-	return amount;
-    }
+	/**
+	 * @param family
+	 *            the family to set
+	 */
+	public void setFamily(ProductFamilyDto family) {
+		this.family = family;
+	}
 
-    /**
-     * @param amount
-     *            the amount to set
-     */
-    public void setAmount(Integer amount) {
-	this.amount = amount;
-    }
+	/**
+	 * @return the amount
+	 */
+	public Integer getAmount() {
+		return amount;
+	}
 
-    /**
-     * @return the price
-     */
-    public Float getPrice() {
-	return price;
-    }
+	/**
+	 * @param amount
+	 *            the amount to set
+	 */
+	public void setAmount(Integer amount) {
+		this.amount = amount;
+	}
 
-    /**
-     * @param price
-     *            the price to set
-     */
-    public void setPrice(Float price) {
-	this.price = price;
-    }
+	/**
+	 * @return the price
+	 */
+	public Float getPrice() {
+		return price;
+	}
 
-    /**
-     * @return the vat
-     */
-    public Float getVat() {
-	return vat;
-    }
+	/**
+	 * @param price
+	 *            the price to set
+	 */
+	public void setPrice(Float price) {
+		this.price = price;
+	}
 
-    /**
-     * @param vat
-     *            the vat to set
-     */
-    public void setVat(Float vat) {
-	this.vat = vat;
-    }
+	/**
+	 * @return the vat
+	 */
+	public Float getVat() {
+		return vat;
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-	return name + " (" + family.getName() + ")";
-    }
+	/**
+	 * @param vat
+	 *            the vat to set
+	 */
+	public void setVat(Float vat) {
+		this.vat = vat;
+	}
 
-    @Override
-    public Field[] getDeclaredFields() {
-	// TODO Auto-generated method stub
-	return null;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return name + " (" + family.getName() + ")";
+	}
 
-    /**
-     * @return the products
-     */
-    public Set<ProductDto> getProducts() {
-	return products;
-    }
+	@Override
+	public Field[] getDeclaredFields() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    /**
-     * @param products
-     *            the products to set
-     */
-    public void setProducts(Set<ProductDto> products) {
-	this.products = products;
-    }
+	public List<ProductDto> getProducts() {
+		return products;
+	}
 
+	public void setProducts(List<ProductDto> products) {
+		this.products = products;
+	}
 }
