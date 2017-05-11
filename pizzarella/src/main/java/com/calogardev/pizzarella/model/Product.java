@@ -1,186 +1,173 @@
 package com.calogardev.pizzarella.model;
 
-import java.util.Set;
+import java.io.Serializable;
+import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import com.calogardev.pizzarella.enums.Status;
 
 @Entity
-public class Product {
+public class Product implements Serializable {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+	private static final long serialVersionUID = 6794921999078255153L;
 
-    @NotNull
-    @Size(min = 2, max = 50)
-    private String name;
+	@Id
+	@GeneratedValue
+	private Long id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
-    private ProductFamily family;
+	@Column(length = 50, nullable = false)
+	private String name;
 
-    @NotNull
-    private Status status;
+	@Column(nullable = false)
+	private Status status;
 
-    @NotNull
-    @Digits(integer = 3, fraction = 2)
-    private Float price;
+	@Column(nullable = false, precision = 3, scale = 2)
+	private Float price;
 
-    @NotNull
-    @Digits(integer = 3, fraction = 2)
-    private Float vat;
+	@Column(nullable = false, precision = 3, scale = 2)
+	private Float vat;
 
-    @NotNull
-    @Min(1)
-    @Max(999)
-    private Integer amount;
+	@Column(length = 999, nullable = false)
+	private Integer amount;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private Set<Product> products;
+	@OneToMany(fetch = FetchType.LAZY)
+	private List<Product> products;
 
-    public Product() {
-    }
+	@ManyToOne(fetch = FetchType.EAGER)
+	private ProductFamily family;
 
-    /**
-     * @return the id
-     */
-    public Long getId() {
-	return id;
-    }
+	public Product() {
+	}
 
-    /**
-     * @param id
-     *            the id to set
-     */
-    public void setId(Long id) {
-	this.id = id;
-    }
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
 
-    /**
-     * @return the name
-     */
-    public String getName() {
-	return name;
-    }
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    /**
-     * @param name
-     *            the name to set
-     */
-    public void setName(String name) {
-	this.name = name;
-    }
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
 
-    /**
-     * @return the family
-     */
-    public ProductFamily getFamily() {
-	return family;
-    }
+	/**
+	 * @param name
+	 *            the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    /**
-     * @param family
-     *            the family to set
-     */
-    public void setFamily(ProductFamily family) {
-	this.family = family;
-    }
+	/**
+	 * @return the family
+	 */
+	public ProductFamily getFamily() {
+		return family;
+	}
 
-    /**
-     * @return the status
-     */
-    public Status getStatus() {
-	return status;
-    }
+	/**
+	 * @param family
+	 *            the family to set
+	 */
+	public void setFamily(ProductFamily family) {
+		this.family = family;
+	}
 
-    /**
-     * @param status
-     *            the status to set
-     */
-    public void setStatus(Status status) {
-	this.status = status;
-    }
+	/**
+	 * @return the status
+	 */
+	public Status getStatus() {
+		return status;
+	}
 
-    /**
-     * @return the amount
-     */
-    public Integer getAmount() {
-	return amount;
-    }
+	/**
+	 * @param status
+	 *            the status to set
+	 */
+	public void setStatus(Status status) {
+		this.status = status;
+	}
 
-    /**
-     * @param amount
-     *            the amount to set
-     */
-    public void setAmount(Integer amount) {
-	this.amount = amount;
-    }
+	/**
+	 * @return the amount
+	 */
+	public Integer getAmount() {
+		return amount;
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-	return "Product [id=" + id + ", name=" + name + ", family=" + family + ", status=" + status + ", price=" + price
-		+ ", vat=" + vat + ", amount=" + amount + ", products=" + products + "]";
-    }
+	/**
+	 * @param amount
+	 *            the amount to set
+	 */
+	public void setAmount(Integer amount) {
+		this.amount = amount;
+	}
 
-    /**
-     * @return the price
-     */
-    public Float getPrice() {
-	return price;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Product [id=" + id + ", name=" + name + ", family=" + family + ", status=" + status + ", price=" + price
+				+ ", vat=" + vat + ", amount=" + amount + ", products=" + products + "]";
+	}
 
-    /**
-     * @param price
-     *            the price to set
-     */
-    public void setPrice(Float price) {
-	this.price = price;
-    }
+	/**
+	 * @return the price
+	 */
+	public Float getPrice() {
+		return price;
+	}
 
-    /**
-     * @return the vat
-     */
-    public Float getVat() {
-	return vat;
-    }
+	/**
+	 * @param price
+	 *            the price to set
+	 */
+	public void setPrice(Float price) {
+		this.price = price;
+	}
 
-    /**
-     * @param vat
-     *            the vat to set
-     */
-    public void setVat(Float vat) {
-	this.vat = vat;
-    }
+	/**
+	 * @return the vat
+	 */
+	public Float getVat() {
+		return vat;
+	}
 
-    /**
-     * @return the products
-     */
-    public Set<Product> getProducts() {
-	return products;
-    }
+	/**
+	 * @param vat
+	 *            the vat to set
+	 */
+	public void setVat(Float vat) {
+		this.vat = vat;
+	}
 
-    /**
-     * @param products
-     *            the products to set
-     */
-    public void setProducts(Set<Product> products) {
-	this.products = products;
-    }
+	public List<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<Product> products) {
+		this.products = products;
+	}
+
 }

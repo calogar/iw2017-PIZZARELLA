@@ -1,13 +1,13 @@
 package com.calogardev.pizzarella.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import com.calogardev.pizzarella.enums.Status;
 
@@ -20,99 +20,98 @@ import com.calogardev.pizzarella.enums.Status;
  *
  */
 @Entity
-public class ProductFamily {
+public class ProductFamily implements Serializable {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+	private static final long serialVersionUID = -8921817738107980342L;
 
-    @NotNull
-    @Size(min = 2, max = 50)
-    private String name;
+	@Id
+	@GeneratedValue
+	private Long id;
 
-    @NotNull
-    @Size(min = 2, max = 50)
-    @Column(unique = true)
-    private String code;
+	@Column(length = 50, nullable = false)
+	private String name;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private Status status;
+	@Column(length = 50, nullable = false, unique = true)
+	private String code;
 
-    public ProductFamily() {
-    }
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Status status;
 
-    /**
-     * @return the name
-     */
-    public String getName() {
-	return name;
-    }
+	public ProductFamily() {
+	}
 
-    /**
-     * @param name
-     *            the name to set
-     */
-    public void setName(String name) {
-	this.name = name;
-    }
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
 
-    /**
-     * @return the code
-     */
-    public String getCode() {
-	return code;
-    }
+	/**
+	 * @param name
+	 *            the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    /**
-     * @param code
-     *            the code to set
-     */
-    public void setCode(String code) {
-	this.code = code;
-    }
+	/**
+	 * @return the code
+	 */
+	public String getCode() {
+		return code;
+	}
 
-    public Boolean isIngredient() {
-	return "ingredient".equals(code);
-    }
+	/**
+	 * @param code
+	 *            the code to set
+	 */
+	public void setCode(String code) {
+		this.code = code;
+	}
 
-    /**
-     * @return the id
-     */
-    public Long getId() {
-	return id;
-    }
+	public Boolean isIngredient() {
+		return "ingredient".equals(code);
+	}
 
-    /**
-     * @param id
-     *            the id to set
-     */
-    public void setId(Long id) {
-	this.id = id;
-    }
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
 
-    /**
-     * @return the status
-     */
-    public Status getStatus() {
-	return status;
-    }
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    /**
-     * @param status
-     *            the status to set
-     */
-    public void setStatus(Status status) {
-	this.status = status;
-    }
+	/**
+	 * @return the status
+	 */
+	public Status getStatus() {
+		return status;
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-	return "ProductFamily [id=" + id + ", name=" + name + ", code=" + code + ", status=" + status + "]";
-    }
+	/**
+	 * @param status
+	 *            the status to set
+	 */
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "ProductFamily [id=" + id + ", name=" + name + ", code=" + code + ", status=" + status + "]";
+	}
 }

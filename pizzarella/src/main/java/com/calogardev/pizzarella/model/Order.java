@@ -1,5 +1,6 @@
 package com.calogardev.pizzarella.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -9,44 +10,40 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import com.calogardev.pizzarella.enums.OrderPlace;
+import com.calogardev.pizzarella.enums.OrderStatus;
 import com.calogardev.pizzarella.enums.Status;
 
 @Entity
-public class Order {
+public class Order implements Serializable {
+
+	private static final long serialVersionUID = 3311526638346833028L;
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@Column(nullable = false)
-	private List<Product> products;
-
 	@Enumerated(EnumType.STRING)
-	@NotNull
+	@Column(nullable = false)
 	private OrderPlace place;
 
-	@NotNull
-	@Size(min = 1, max = 10)
+	@Column(length = 10, nullable = false)
 	private Integer tableNumber;
 
-	@NotNull
-	@Digits(integer = 3, fraction = 2)
+	@Column(nullable = false, precision = 3, scale = 2)
 	private Float totalPrice;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date orderedAt;
 
-	@Size(max = 255)
+	@Column(length = 255)
 	private String notes;
 
 	@Enumerated(EnumType.STRING)
@@ -54,6 +51,12 @@ public class Order {
 
 	@Enumerated(EnumType.STRING)
 	private Status status;
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	private List<Product> products;
+
+	@ManyToOne
+	private Client client;
 
 	/**
 	 * @return the id
