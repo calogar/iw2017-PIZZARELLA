@@ -6,7 +6,7 @@ import com.calogardev.pizzarella.dto.UserDto;
 import com.calogardev.pizzarella.exception.CustomValidationException;
 
 /**
- * Main interface to handle the User entity. Contains the bussiness logic.
+ * Main interface to handle the User entity. Contains the business logic.
  * 
  * @author calogar
  *

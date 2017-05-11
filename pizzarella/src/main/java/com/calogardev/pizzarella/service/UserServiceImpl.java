@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.calogardev.pizzarella.dao.UserDao;
-import com.calogardev.pizzarella.dto.UserDto;
 import com.calogardev.pizzarella.dto.Dto;
 import com.calogardev.pizzarella.dto.UserDto;
 import com.calogardev.pizzarella.enums.Status;
@@ -38,6 +37,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional(readOnly = true)
 	public UserDto findOne(Long id) {
 		final User user = userDao.findOne(id);
+		// TODO check if the user exists
 		return utilsService.transform(user, UserDto.class);
 	}
 
