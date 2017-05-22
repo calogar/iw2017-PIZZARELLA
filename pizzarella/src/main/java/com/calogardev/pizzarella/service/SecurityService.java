@@ -19,8 +19,14 @@ public interface SecurityService {
 	public Boolean isLoggedIn();
 
 	/**
-	 * Logs out a User.
+	 * Logs out a User
 	 */
 	public void logout();
 
+	/**
+	 * Finds the username of the current logged in user
+	 * 
+	 * @return
+	 */
+	public String findLoggedInUsername();
 }
