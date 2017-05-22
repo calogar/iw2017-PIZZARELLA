@@ -1,58 +1,66 @@
 package com.calogardev.pizzarella;
 
+import javax.servlet.annotation.WebServlet;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.calogardev.pizzarella.view.DashboardLayout;
-import com.calogardev.pizzarella.view.LoginView;
-import com.calogardev.pizzarella.view.MainView;
-import com.calogardev.pizzarella.view.order.OrdersView;
-import com.calogardev.pizzarella.view.product.ProductsView;
-import com.calogardev.pizzarella.view.productfamily.ProductFamiliesView;
-import com.calogardev.pizzarella.view.user.UsersView;
+import com.calogardev.pizzarella.service.SecurityService;
+import com.calogardev.pizzarella.view.ErrorView;
+import com.calogardev.pizzarella.view.UnauthorizedView;
+import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
-import com.vaadin.navigator.Navigator;
-import com.vaadin.navigator.View;
-import com.vaadin.navigator.ViewDisplay;
+import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.annotations.Viewport;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinServlet;
 import com.vaadin.spring.annotation.SpringUI;
-import com.vaadin.spring.annotation.SpringViewDisplay;
 import com.vaadin.spring.navigator.SpringViewProvider;
-import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.UI;
 
+/**
+ * The main UI of the project. Handles Screens, which are not Spring Views in
+ * order to integrate them with Spring Security.
+ * 
+ * @author calogar
+ *
+ */
+@Viewport("user-scalable=no,initial-scale=1.0")
 @Theme("valo")
 @SpringUI
-@SpringViewDisplay
-public class MainUI extends UI implements ViewDisplay {
+// @SpringViewDisplay
+@PreserveOnRefresh
+public class MainUI extends UI {
 
-	DashboardLayout root; // Custom dashboard-like layout
-	ComponentContainer viewDisplay;
-	Navigator navigator;
+	private static final long serialVersionUID = -330824958198789601L;
 
-	// Automatically handles the views for the navigator
 	@Autowired
 	private SpringViewProvider viewProvider;
+
+	@Autowired
+	private MainScreen mainScreen;
+
+	// TODO Add this in the security service
+	// @Autowired
+	// private AuthenticationManager authenticationManager;
+
+	@Autowired
 	private SecurityService securityService;
 
 	@Override
 	protected void init(VaadinRequest request) {
+
 		Responsive.makeResponsive(this);
-		root = new DashboardLayout();
-		setContent(root);
 		getPage().setTitle("Pizzarella");
-		root.setWidth("100%"); // TODO: What happens if we use setFullWidth?
 
-		navigator = root.getNavigator();
-		navigator.addProvider(viewProvider);
-		root.addMenuItem(MainView.VIEW_ROUTE, MainView.VIEW_NAME);
-		root.addMenuItem(OrdersView.VIEW_ROUTE, OrdersView.VIEW_NAME);
-		root.addMenuItem(UsersView.VIEW_ROUTE, UsersView.VIEW_NAME);
-		root.addMenuItem(ProductsView.VIEW_ROUTE, ProductsView.VIEW_NAME);
-		root.addMenuItem(ProductFamiliesView.VIEW_ROUTE, ProductFamiliesView.VIEW_NAME);
-		root.addMenuItem(LoginView.VIEW_ROUTE, LoginView.VIEW_NAME);
+		getUI().getNavigator().setErrorView(ErrorView.class);
+		viewProvider.setAccessDeniedViewClass(UnauthorizedView.class);
 
-		root.build();
+		if (securityService.isLoggedIn()) {
+			renderMainScreen();
+		} else {
+			renderLoginScreen();
+		}
 	}
 
 	/**
@@ -63,22 +71,26 @@ public class MainUI extends UI implements ViewDisplay {
 	 * @param password
 	 * @return boolean result of the login
 	 */
-	private boolean login(String username, String password) {
+	private boolean renderMainIfLogin(String username, String password) {
+
 		if (securityService.login(username, password)) {
-			renderMainView();
+			renderMainScreen();
 			return true;
 		}
 		return false;
 	}
 
+	private void renderMainScreen() {
+		setContent(mainScreen);
 	}
 
-	private void renderMainView() {
-		// TODO Auto-generated method stub
-
+	private void renderLoginScreen() {
+		setContent(new LoginScreen(this::renderMainIfLogin));
 	}
 
-	@Override
-	public void showView(View view) {
+	@WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
+	@VaadinServletConfiguration(ui = MainUI.class, productionMode = true)
+	public static class MyUIServlet extends VaadinServlet {
+		private static final long serialVersionUID = -742708883191539430L;
 	}
 }

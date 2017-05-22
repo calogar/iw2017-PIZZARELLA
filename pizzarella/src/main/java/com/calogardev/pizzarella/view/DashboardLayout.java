@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.calogardev.pizzarella.MainScreen;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.Page;
@@ -120,7 +121,7 @@ public class DashboardLayout extends HorizontalLayout {
     private void buildNavigator() {
 	String f = Page.getCurrent().getUriFragment();
 	if (f == null || f.equals("")) {
-	    navigator.navigateTo(MainView.VIEW_ROUTE);
+	    navigator.navigateTo(MainScreen.VIEW_ROUTE);
 	}
 
 	navigator.addViewChangeListener(new ViewChangeListener() {
