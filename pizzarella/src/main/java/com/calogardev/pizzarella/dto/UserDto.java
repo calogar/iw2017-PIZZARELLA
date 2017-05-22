@@ -1,6 +1,7 @@
 package com.calogardev.pizzarella.dto;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -36,17 +37,37 @@ public class UserDto implements Dto {
 	@Size(min = 6, max = 70)
 	private String password;
 
+	@NotNull
+	private List<RoleDto> roles;
+
 	public UserDto() {
 
 	}
 
-	public UserDto(String name, String surnames, String dni, String nickname, String password) {
+	public UserDto(String name, String surnames, String dni, String nickname, String password, List<RoleDto> roles) {
 		super();
 		this.name = name;
 		this.surnames = surnames;
 		this.dni = dni;
 		this.nickname = nickname;
 		this.password = password;
+		this.roles = roles;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public List<RoleDto> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<RoleDto> roles) {
+		this.roles = roles;
 	}
 
 	/**
@@ -122,22 +143,9 @@ public class UserDto implements Dto {
 		return this.getClass().getDeclaredFields();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		return "CreateUserDto [name=" + name + ", surnames=" + surnames + ", dni=" + dni + ", nickname=" + nickname
-				+ ", password=" + password + "]";
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
+		return "UserDto [id=" + id + ", name=" + name + ", surnames=" + surnames + ", dni=" + dni + ", nickname="
+				+ nickname + ", password=" + password + ", roles=" + roles + "]";
 	}
 }

@@ -1,6 +1,7 @@
 package com.calogardev.pizzarella.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +9,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 import com.calogardev.pizzarella.enums.Status;
 
@@ -39,8 +41,11 @@ public class User implements Serializable {
 	@Column(nullable = false)
 	private Status status;
 
-	public User() {
+	@ManyToMany
+	private List<Role> roles;
 
+	public User() {
+		super();
 	}
 
 	public User(String name, String surnames, String dni, String nickname, String password, Status status) {

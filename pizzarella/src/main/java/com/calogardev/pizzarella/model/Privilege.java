@@ -7,6 +7,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
+import com.calogardev.pizzarella.enums.Status;
+
 @Entity
 public class Privilege {
 
@@ -15,6 +17,8 @@ public class Privilege {
 	private Long id;
 
 	private String name;
+
+	private Status status;
 
 	@ManyToMany(mappedBy = "privileges")
 	private List<Role> roles;
@@ -47,8 +51,17 @@ public class Privilege {
 		this.roles = roles;
 	}
 
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
 	@Override
 	public String toString() {
-		return "Privilege [id=" + id + ", name=" + name + ", roles=" + roles + "]";
+		return "Privilege [id=" + id + ", name=" + name + ", status=" + status + ", roles=" + roles + "]";
 	}
+
 }

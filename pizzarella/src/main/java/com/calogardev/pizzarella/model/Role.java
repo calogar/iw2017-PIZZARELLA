@@ -9,6 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
+import com.calogardev.pizzarella.enums.Status;
+
 @Entity
 public class Role {
 
@@ -24,6 +26,8 @@ public class Role {
 	@ManyToMany
 	@JoinTable(name = "role_privilege", joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "privilege_id", referencedColumnName = "id"))
 	private List<Privilege> privileges;
+
+	private Status status;
 
 	public Role() {
 		super();
@@ -61,8 +65,17 @@ public class Role {
 		this.privileges = privileges;
 	}
 
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
 	@Override
 	public String toString() {
-		return "Role [id=" + id + ", name=" + name + ", users=" + users + ", privileges=" + privileges + "]";
+		return "Role [id=" + id + ", name=" + name + ", users=" + users + ", privileges=" + privileges + ", status="
+				+ status + "]";
 	}
 }

@@ -14,6 +14,7 @@ import com.calogardev.pizzarella.dto.Dto;
 import com.calogardev.pizzarella.dto.UserDto;
 import com.calogardev.pizzarella.enums.Status;
 import com.calogardev.pizzarella.exception.CustomValidationException;
+import com.calogardev.pizzarella.exception.UserNotFoundException;
 import com.calogardev.pizzarella.model.User;
 
 /**
@@ -90,6 +91,17 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void save(Dto dto) throws CustomValidationException {
 		save((UserDto) dto);
+	}
+
+	@Override
+	public UserDto findByUsername(String username) throws UserNotFoundException {
+		User user = userDao.findByNickname(username);
+		if (user == null) {
+			throw new UserNotFoundException();
+		} else {
+			UserDto userDto = utilsService.transform(user, UserDto.class);
+			return userDto;
+		}
 	}
 
 	/**

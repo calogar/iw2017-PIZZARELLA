@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.calogardev.pizzarella.dto.UserDto;
 import com.calogardev.pizzarella.exception.CustomValidationException;
+import com.calogardev.pizzarella.exception.UserNotFoundException;
 
 /**
  * Main interface to handle the User entity. Contains the business logic.
@@ -43,4 +44,13 @@ public interface UserService extends GenericService {
 	 * @throws CustomValidationException
 	 */
 	public void save(UserDto userDto) throws CustomValidationException;
+
+	/**
+	 * Finds a User by its nickname (username)
+	 * 
+	 * @param username
+	 * @return the User Dto
+	 * @throws UserNotFoundException
+	 */
+	UserDto findByUsername(String username) throws UserNotFoundException;
 }
