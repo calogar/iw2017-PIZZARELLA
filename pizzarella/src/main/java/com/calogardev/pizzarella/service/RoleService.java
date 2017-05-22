@@ -11,26 +11,26 @@ import com.calogardev.pizzarella.exception.RoleNotFoundException;
  */
 public interface RoleService {
 
-	/*
-	 * Saves a Role by its dto
-	 * 
-	 * @param roleDto
-	 */
-	public void save(RoleDto roleDto);
+    /*
+     * Saves a Role by its dto
+     * 
+     * @param roleDto
+     */
+    public void save(RoleDto roleDto);
 
-	/**
-	 * Finds an active Role by its name
-	 * 
-	 * @param name
-	 * @return roleDto
-	 * @throws RoleNotFoundException
-	 */
-	RoleDto findByName(String name);
+    /**
+     * Finds an active Role by its name
+     * 
+     * @param name
+     * @return roleDto
+     * @throws RoleNotFoundException
+     */
+    RoleDto findByName(String name) throws RoleNotFoundException;
 
-	/**
-	 * Finds all active roles
-	 * 
-	 * @return list of RoleDto
-	 */
-	List<RoleDto> findAll();
+    /**
+     * Finds all active roles
+     * 
+     * @return list of RoleDto
+     */
+    List<RoleDto> findAll();
 }

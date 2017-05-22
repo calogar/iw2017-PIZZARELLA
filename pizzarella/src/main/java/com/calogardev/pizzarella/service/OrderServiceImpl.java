@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.calogardev.pizzarella.dao.OrderDao;
-import com.calogardev.pizzarella.model.Order;
+import com.calogardev.pizzarella.model.FoodOrder;
 
 /**
  * OrderService implementation.
@@ -33,7 +33,7 @@ public class OrderServiceImpl implements OrderService {
 	public void save(OrderDto orderDto) {
 		// We send the Dto with OrderStatus to OPEN, which is set by Vaadin
 		// TODO Add validation
-		Order order = utilsService.transform(orderDto, Order.class);
+		FoodOrder order = utilsService.transform(orderDto, FoodOrder.class);
 		orderDao.save(order);
 		log.info("Saved Order: " + order);
 	}
@@ -41,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	@Transactional(readOnly = true)
 	public OrderDto findOne(Long id) {
-		final Order order = orderDao.findOne(id);
+		final FoodOrder order = orderDao.findOne(id);
 		// TODO check if the user exists
 		log.info("Finding Order: " + order);
 		return utilsService.transform(order, OrderDto.class);
@@ -50,7 +50,7 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public List<OrderDto> findAll() {
 		log.info("Finding all active Orders");
-		final List<Order> orders = orderDao.findAll();
+		final List<FoodOrder> orders = orderDao.findAll();
 		return utilsService.transform(orders, OrderDto.class);
 	}
 }

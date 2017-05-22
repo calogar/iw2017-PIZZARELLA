@@ -21,7 +21,7 @@ public class ProductLine implements Serializable {
 	private Product product;
 
 	@ManyToOne
-	private Order order;
+	private FoodOrder order;
 
 	@Column(nullable = false, length = 999)
 	private Integer amount;
@@ -30,7 +30,7 @@ public class ProductLine implements Serializable {
 
 	}
 
-	public ProductLine(Long id, Product product, Order order, Integer amount) {
+	public ProductLine(Long id, Product product, FoodOrder order, Integer amount) {
 		super();
 		this.id = id;
 		this.product = product;
@@ -54,11 +54,11 @@ public class ProductLine implements Serializable {
 		this.product = product;
 	}
 
-	public Order getOrder() {
+	public FoodOrder getOrder() {
 		return order;
 	}
 
-	public void setOrder(Order order) {
+	public void setOrder(FoodOrder order) {
 		this.order = order;
 	}
 

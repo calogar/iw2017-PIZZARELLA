@@ -15,137 +15,144 @@ import javax.validation.constraints.Size;
  */
 public class UserDto implements Dto {
 
-	private Long id;
+    private Long id;
 
-	@NotNull
-	@Size(min = 2, max = 30)
-	private String name;
+    @NotNull
+    @Size(min = 2, max = 30)
+    private String name;
 
-	@NotNull
-	@Size(min = 2, max = 70)
-	private String surnames;
+    @NotNull
+    @Size(min = 2, max = 70)
+    private String surnames;
 
-	@NotNull
-	@Size(min = 9, max = 9)
-	private String dni;
+    @NotNull
+    @Size(min = 9, max = 9)
+    private String dni;
 
-	@NotNull
-	@Size(min = 1, max = 50)
-	private String nickname;
+    @NotNull
+    @Size(min = 1, max = 50)
+    private String nickname;
 
-	@NotNull
-	@Size(min = 6, max = 70)
-	private String password;
+    @NotNull
+    @Size(min = 5, max = 100)
+    private String password;
 
-	@NotNull
-	private List<RoleDto> roles;
+    @NotNull
+    private List<RoleDto> roles;
 
-	public UserDto() {
+    public UserDto() {
 
-	}
+    }
 
-	public UserDto(String name, String surnames, String dni, String nickname, String password, List<RoleDto> roles) {
-		super();
-		this.name = name;
-		this.surnames = surnames;
-		this.dni = dni;
-		this.nickname = nickname;
-		this.password = password;
-		this.roles = roles;
-	}
+    public UserDto(String name, String surnames, String dni, String nickname, String password, List<RoleDto> roles) {
+	super();
+	this.name = name;
+	this.surnames = surnames;
+	this.dni = dni;
+	this.nickname = nickname;
+	this.password = password;
+	this.roles = roles;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+	return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+	this.id = id;
+    }
 
-	public List<RoleDto> getRoles() {
-		return roles;
-	}
+    /**
+     * @return the name
+     */
+    public String getName() {
+	return name;
+    }
 
-	public void setRoles(List<RoleDto> roles) {
-		this.roles = roles;
-	}
+    /**
+     * @param name
+     *            the name to set
+     */
+    public void setName(String name) {
+	this.name = name;
+    }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+    /**
+     * @return the surnames
+     */
+    public String getSurnames() {
+	return surnames;
+    }
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * @param surnames
+     *            the surnames to set
+     */
+    public void setSurnames(String surnames) {
+	this.surnames = surnames;
+    }
 
-	/**
-	 * @return the surnames
-	 */
-	public String getSurnames() {
-		return surnames;
-	}
+    /**
+     * @return the dni
+     */
+    public String getDni() {
+	return dni;
+    }
 
-	/**
-	 * @param surnames
-	 *            the surnames to set
-	 */
-	public void setSurnames(String surnames) {
-		this.surnames = surnames;
-	}
+    /**
+     * @param dni
+     *            the dni to set
+     */
+    public void setDni(String dni) {
+	this.dni = dni;
+    }
 
-	/**
-	 * @return the dni
-	 */
-	public String getDni() {
-		return dni;
-	}
+    /**
+     * @return the nickname
+     */
+    public String getNickname() {
+	return nickname;
+    }
 
-	/**
-	 * @param dni
-	 *            the dni to set
-	 */
-	public void setDni(String dni) {
-		this.dni = dni;
-	}
+    /**
+     * @param nickname
+     *            the nickname to set
+     */
+    public void setNickname(String nickname) {
+	this.nickname = nickname;
+    }
 
-	/**
-	 * @return the nickname
-	 */
-	public String getNickname() {
-		return nickname;
-	}
+    public String getPassword() {
+	return password;
+    }
 
-	/**
-	 * @param nickname
-	 *            the nickname to set
-	 */
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
-	}
+    public void setPassword(String password) {
+	this.password = password;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    @Override
+    public Field[] getDeclaredFields() {
+	return this.getClass().getDeclaredFields();
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    @Override
+    public String toString() {
+	return "UserDto [id=" + id + ", name=" + name + ", surnames=" + surnames + ", dni=" + dni + ", nickname="
+		+ nickname + ", password=" + password + ", roles=" + roles + "]";
+    }
 
-	@Override
-	public Field[] getDeclaredFields() {
-		return this.getClass().getDeclaredFields();
-	}
+    /**
+     * @return the roles
+     */
+    public List<RoleDto> getRoles() {
+	return roles;
+    }
 
-	@Override
-	public String toString() {
-		return "UserDto [id=" + id + ", name=" + name + ", surnames=" + surnames + ", dni=" + dni + ", nickname="
-				+ nickname + ", password=" + password + ", roles=" + roles + "]";
-	}
+    /**
+     * @param roles
+     *            the roles to set
+     */
+    public void setRoles(List<RoleDto> roles) {
+	this.roles = roles;
+    }
 }

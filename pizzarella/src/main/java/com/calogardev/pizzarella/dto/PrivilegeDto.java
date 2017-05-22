@@ -2,52 +2,62 @@ package com.calogardev.pizzarella.dto;
 
 import java.util.List;
 
-import com.calogardev.pizzarella.model.Role;
-
 public class PrivilegeDto {
 
-	private Long id;
+    private Long id;
 
-	private String name;
+    private String name;
 
-	private List<Role> roles;
+    private List<RoleDto> roles;
 
-	public PrivilegeDto() {
-		super();
-	}
+    public PrivilegeDto() {
+	super();
+    }
 
-	public PrivilegeDto(String name) {
-		super();
-		this.name = name;
-	}
+    public PrivilegeDto(String name) {
+	super();
+	this.name = name;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+	return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+	this.id = id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+	return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+	this.name = name;
+    }
 
-	public List<Role> getRoles() {
-		return roles;
-	}
+    /**
+     * @return the roles
+     */
+    public List<RoleDto> getRoles() {
+	return roles;
+    }
 
-	public void setRoles(List<Role> roles) {
-		this.roles = roles;
-	}
+    /**
+     * @param roles
+     *            the roles to set
+     */
+    public void setRoles(List<RoleDto> roles) {
+	this.roles = roles;
+    }
 
-	@Override
-	public String toString() {
-		return "PrivilegeDto [id=" + id + ", name=" + name + "]";
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+	return "PrivilegeDto [id=" + id + ", name=" + name + ", roles=" + roles + "]";
+    }
 
 }
