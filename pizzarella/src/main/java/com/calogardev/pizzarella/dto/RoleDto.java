@@ -16,6 +16,11 @@ public class RoleDto {
 		super();
 	}
 
+	public RoleDto(String name) {
+		super();
+		this.name = name;
+	}
+
 	public RoleDto(String name, List<PrivilegeDto> privileges) {
 		super();
 		this.name = name;

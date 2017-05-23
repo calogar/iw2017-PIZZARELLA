@@ -78,6 +78,6 @@ public class Privilege {
 	 */
 	@Override
 	public String toString() {
-		return "Privilege [id=" + id + ", name=" + name + ", status=" + status + ", roles=" + roles + "]";
+		return "Privilege [id=" + id + ", name=" + name + ", status=" + status + "]";
 	}
 }
