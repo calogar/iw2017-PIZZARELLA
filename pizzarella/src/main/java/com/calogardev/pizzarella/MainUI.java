@@ -32,65 +32,66 @@ import com.vaadin.ui.UI;
 @PreserveOnRefresh
 public class MainUI extends UI {
 
-	private static final long serialVersionUID = -330824958198789601L;
+    private static final long serialVersionUID = -330824958198789601L;
 
-	@Autowired
-	private SpringViewProvider viewProvider;
+    @Autowired
+    private SpringViewProvider viewProvider;
 
-	@Autowired
-	private MainScreen mainScreen;
+    @Autowired
+    private MainScreen mainScreen;
 
-	// TODO Add this in the security service
-	// @Autowired
-	// private AuthenticationManager authenticationManager;
+    // TODO Add this in the security service
+    // @Autowired
+    // private AuthenticationManager authenticationManager;
 
-	@Autowired
-	private SecurityService securityService;
+    @Autowired
+    private SecurityService securityService;
 
-	@Override
-	protected void init(VaadinRequest request) {
+    @Override
+    protected void init(VaadinRequest request) {
 
-		Responsive.makeResponsive(this);
-		getPage().setTitle("Pizzarella");
+	Responsive.makeResponsive(this);
+	getPage().setTitle("Pizzarella");
 
-		getUI().getNavigator().setErrorView(ErrorView.class);
-		viewProvider.setAccessDeniedViewClass(UnauthorizedView.class);
+	getUI().getNavigator().setErrorView(ErrorView.class);
+	viewProvider.setAccessDeniedViewClass(UnauthorizedView.class);
 
-		if (securityService.isLoggedIn()) {
-			renderMainScreen();
-		} else {
-			renderLoginScreen();
-		}
-	}
+	renderMainScreen();
 
-	/**
-	 * Method used inside the login view by using @FunctionalInterface. It's on
-	 * MainUI so it can render different views depending on the result.
-	 * 
-	 * @param username
-	 * @param password
-	 * @return boolean result of the login
+	/*
+	 * if (securityService.isLoggedIn()) { renderMainScreen(); } else {
+	 * renderLoginScreen(); }
 	 */
-	private boolean renderMainIfLogin(String username, String password) {
+    }
 
-		if (securityService.login(username, password)) {
-			renderMainScreen();
-			return true;
-		}
-		return false;
-	}
+    /**
+     * Method used inside the login view by using @FunctionalInterface. It's on
+     * MainUI so it can render different views depending on the result.
+     * 
+     * @param username
+     * @param password
+     * @return boolean result of the login
+     */
+    private boolean renderMainIfLogin(String username, String password) {
 
-	private void renderMainScreen() {
-		setContent(mainScreen);
+	if (securityService.login(username, password)) {
+	    renderMainScreen();
+	    return true;
 	}
+	return false;
+    }
 
-	private void renderLoginScreen() {
-		setContent(new LoginScreen(this::renderMainIfLogin));
-	}
+    private void renderMainScreen() {
+	setContent(mainScreen);
+    }
 
-	@WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
-	@VaadinServletConfiguration(ui = MainUI.class, productionMode = true)
-	public static class MyUIServlet extends VaadinServlet {
-		private static final long serialVersionUID = -742708883191539430L;
-	}
+    private void renderLoginScreen() {
+	setContent(new LoginScreen(this::renderMainIfLogin));
+    }
+
+    @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
+    @VaadinServletConfiguration(ui = MainUI.class, productionMode = true)
+    public static class MyUIServlet extends VaadinServlet {
+	private static final long serialVersionUID = -742708883191539430L;
+    }
 }

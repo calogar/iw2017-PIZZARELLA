@@ -20,7 +20,7 @@ public class OrdersView extends VerticalLayout implements View {
 
     private static final Logger log = LoggerFactory.getLogger(OrdersView.class);
     private static final long serialVersionUID = 3427287639695107332L;
-    public static final String VIEW_ROUTE = "orders";
+    public static final String VIEW_ROUTE = "";
     public static final String VIEW_NAME = "Orders";
 
     @PostConstruct
