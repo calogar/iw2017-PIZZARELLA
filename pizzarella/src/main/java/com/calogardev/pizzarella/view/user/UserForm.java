@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.calogardev.pizzarella.dto.UserDto;
 import com.calogardev.pizzarella.service.UserService;
-import com.calogardev.pizzarella.view.Form;
+import com.calogardev.pizzarella.view.GridForm;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
-import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.CssLayout;
 
 /**
  * Uses the (custom) Form API to build a form for Users
@@ -17,33 +17,26 @@ import com.vaadin.ui.FormLayout;
  */
 @SpringComponent
 @ViewScope
-public class UserForm extends FormLayout {
+public class UserForm extends CssLayout {
 
     private static final long serialVersionUID = -2051066380290976328L;
 
     @Autowired
-    private Form<UserDto> form;
-
-    @Autowired
     private UserService userService;
 
-    // Can't be autowired because it's from DB when editing
-    private UserDto dto;
+    private GridForm<UserDto> form;
 
-    public UserForm() {
-    }
+    public UserForm(UserDto dto) {
 
-    public void build(UserDto dto) {
-	this.dto = dto;
+	form = new GridForm(dto, UserDto.class, userService, 4, 2);
 
-	form.configure(dto, UserDto.class, userService);
-	form.addTextField("name");
-	form.addTextField("surnames");
-	form.addTextField("nickname");
-	form.addTextField("dni");
-	form.addPasswordField("password", "Confirm password");
-	form.build();
+	form.addTextField("name", "Name", 0, 0);
+	form.addTextField("surnames", "Surnames", 1, 0);
+	form.addTextField("nickname", "Username", 2, 0);
+	form.addTextField("dni", "DNI", 3, 0);
+	form.addPasswordField("password", "Confirm password", 0, 1, 1, 1);
+	form.addSaveButton(2, 1);
 
-	addComponent(form);
+	addComponent(form.getForm());
     }
 }

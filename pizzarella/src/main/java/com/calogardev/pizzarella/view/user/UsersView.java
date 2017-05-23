@@ -40,7 +40,12 @@ public class UsersView extends VerticalLayout implements View {
     public static final String VIEW_ROUTE = "users";
     public static final String VIEW_NAME = "Users";
 
+    // Contains the grid and the form
+    // private HorizontalLayout mainArea = new HorizontalLayout();
+
     private Grid<UserDto> grid;
+
+    private UserForm form;
 
     @Autowired
     private UserService userService;
@@ -51,7 +56,25 @@ public class UsersView extends VerticalLayout implements View {
 	setSizeFull();
 
 	// Create the view options, like creating new users
+	buildNavbar();
 
+	// addComponent(mainArea);
+
+	// Create the grid
+	buildGrid();
+    }
+
+    /**
+     * Apply common setting to the page. this will be refactored in the future.
+     */
+    private void commonsSettings() {
+	Page.getCurrent().setTitle(VIEW_NAME);
+	Label title = new Label(VIEW_NAME);
+	title.addStyleName(ValoTheme.LABEL_H1);
+	addComponent(title);
+    }
+
+    private void buildNavbar() {
 	HorizontalLayout options = new HorizontalLayout();
 	options.setWidth("100%");
 	addComponent(options);
@@ -59,7 +82,11 @@ public class UsersView extends VerticalLayout implements View {
 	Button createUserButton = new Button("Create new User", new ClickListener() {
 	    @Override
 	    public void buttonClick(ClickEvent event) {
-		UI.getCurrent().getNavigator().navigateTo(CreateUserView.VIEW_ROUTE);
+		// UI.getCurrent().getNavigator().navigateTo(CreateUserView.VIEW_ROUTE);
+
+		// Create new User
+		form = new UserForm(new UserDto());
+		addComponent(form);
 	    }
 	});
 	// Using an empty expanding label to align the button to the right
@@ -67,9 +94,9 @@ public class UsersView extends VerticalLayout implements View {
 	options.addComponent(spacer);
 	options.setExpandRatio(spacer, 1f);
 	options.addComponent(createUserButton);
+    }
 
-	// Create the grid
-
+    private void buildGrid() {
 	grid = new Grid<UserDto>();
 	grid.setSizeFull();
 	addComponent(grid);
@@ -79,6 +106,26 @@ public class UsersView extends VerticalLayout implements View {
 	grid.setItems(users);
 	buildColumns();
 
+	grid.addColumn(userDto -> "Delete", createDeleteButton());
+    }
+
+    /**
+     * Declares which columns are going to be displayed.
+     */
+    private void buildColumns() {
+	grid.addColumn(UserDto::getName).setCaption("Name");
+	grid.addColumn(UserDto::getSurnames).setCaption("Surnames");
+	grid.addColumn(UserDto::getNickname).setCaption("Nickname");
+	grid.addColumn(UserDto::getDni).setCaption("DNI");
+    }
+
+    /**
+     * This version creates a button that is set inline of the table. But the
+     * display is not too good and lot of space is occupied.
+     * 
+     * @return
+     */
+    private ButtonRenderer<UserDto> createDeleteButton() {
 	ButtonRenderer<UserDto> deleteButton = new ButtonRenderer<UserDto>(clickEvent -> {
 	    ConfirmDialog.show(UI.getCurrent(), "Are you sure?", new ConfirmDialog.Listener() {
 
@@ -93,27 +140,7 @@ public class UsersView extends VerticalLayout implements View {
 		}
 	    });
 	});
-	grid.addColumn(userDto -> "Delete", deleteButton);
-    }
-
-    /**
-     * Apply common setting to the page. this will be refactored in the future.
-     */
-    private void commonsSettings() {
-	Page.getCurrent().setTitle(VIEW_NAME);
-	Label title = new Label(VIEW_NAME);
-	title.addStyleName(ValoTheme.LABEL_H1);
-	addComponent(title);
-    }
-
-    /**
-     * Declares which columns are going to be displayed.
-     */
-    private void buildColumns() {
-	grid.addColumn(UserDto::getName).setCaption("Name");
-	grid.addColumn(UserDto::getSurnames).setCaption("Surnames");
-	grid.addColumn(UserDto::getNickname).setCaption("Nickname");
-	grid.addColumn(UserDto::getDni).setCaption("DNI");
+	return deleteButton;
     }
 
     /**

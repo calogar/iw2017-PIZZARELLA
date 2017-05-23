@@ -48,7 +48,7 @@ public class DashboardLayout extends HorizontalLayout {
 	contentPanel = displayPanel;
 	contentArea.setSizeFull();
 	contentPanel.setPrimaryStyleName("valo-content"); // Like an html id
-	contentPanel.addStyleName("v-scrollable"); // Like an html class
+	contentArea.addStyleName("v-scrollable"); // Like an html class
 	contentArea.addComponent(contentPanel);
 	contentArea.setExpandRatio(contentPanel, 1.0f);
 

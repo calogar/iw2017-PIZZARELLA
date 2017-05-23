@@ -36,9 +36,10 @@ public class CreateUserView extends VerticalLayout implements View {
     public void init() {
 	commonSettings();
 
+	addComponent(new Label("En construcción"));
 	UserDto dto = new UserDto();
 	// Delegates how the form is constructed to UserForm
-	userForm.build(dto);
+	// userForm.build(dto);
 	addComponent(userForm);
     }
 
