@@ -46,8 +46,8 @@
     	<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>    
-		<dependency>
+		</dependency>
+    	<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
@@ -74,6 +74,13 @@
 
 	<dependencyManagement>
 		<dependencies>
+		<!-- https://mvnrepository.com/artifact/com.vaadin/vaadin-server -->
+<dependency>
+    <groupId>com.vaadin</groupId>
+    <artifactId>vaadin-server</artifactId>
+    <version>8.0.6</version>
+</dependency>
+		
 			<dependency>
 				<groupId>com.vaadin</groupId>
 				<artifactId>vaadin-bom</artifactId>
@@ -98,6 +105,4 @@
 			<url>http://maven.vaadin.com/vaadin-addons</url>
 		</repository>
 	</repositories>
-
-
 </project>
