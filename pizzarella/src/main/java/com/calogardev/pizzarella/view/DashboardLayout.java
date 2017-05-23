@@ -38,7 +38,7 @@ public class DashboardLayout extends HorizontalLayout {
 	menuArea = new CssLayout();
 	menuArea.setPrimaryStyleName(ValoTheme.MENU_ROOT);
 	addComponent(menuArea);
-	setExpandRatio(menuArea, 1.0f);
+	// setExpandRatio(menuArea, 1.0f);
 
 	contentArea = new VerticalLayout();
 	contentArea.setSizeFull();
@@ -50,7 +50,7 @@ public class DashboardLayout extends HorizontalLayout {
 	contentPanel.setPrimaryStyleName("valo-content"); // Like an html id
 	contentPanel.addStyleName("v-scrollable"); // Like an html class
 	contentArea.addComponent(contentPanel);
-	setExpandRatio(contentArea, 1.0f);
+	contentArea.setExpandRatio(contentPanel, 1.0f);
 
 	menu = new CssLayout();
 	menuArea.addComponent(menu);
@@ -61,6 +61,7 @@ public class DashboardLayout extends HorizontalLayout {
 
 	menuItems = navigationBar;
 	menu.addComponent(menuItems);
+	menu.removeStyleName("valo-menu-visible");
 	menuItems.setPrimaryStyleName("valo-menuitems");
     }
 

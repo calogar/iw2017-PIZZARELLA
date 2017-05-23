@@ -66,7 +66,7 @@ public class MainScreen extends HorizontalLayout implements ViewDisplay {
 	dashboard = new DashboardLayout(navigationBar, viewDisplayPanel);
 	dashboard.setWidth("100%");
 	addComponent(dashboard);
-	setExpandRatio(dashboard, 1.0f);
+	// setExpandRatio(dashboard, 1.0f);
 
     }
 
