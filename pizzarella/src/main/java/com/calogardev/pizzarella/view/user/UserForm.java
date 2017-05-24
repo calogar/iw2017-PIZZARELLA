@@ -19,24 +19,35 @@ import com.vaadin.ui.CssLayout;
 @ViewScope
 public class UserForm extends CssLayout {
 
-    private static final long serialVersionUID = -2051066380290976328L;
+	private static final long serialVersionUID = -2051066380290976328L;
 
-    @Autowired
-    private UserService userService;
+	@Autowired
+	private UserService userService;
 
-    private GridForm<UserDto> form;
+	@Autowired
+	private GridForm<UserDto> form;
 
-    public UserForm(UserDto dto) {
+	private static Boolean isVisible = false;
 
-	form = new GridForm(dto, UserDto.class, userService, 4, 2);
+	public UserForm() {
+	}
 
-	form.addTextField("name", "Name", 0, 0);
-	form.addTextField("surnames", "Surnames", 1, 0);
-	form.addTextField("nickname", "Username", 2, 0);
-	form.addTextField("dni", "DNI", 3, 0);
-	form.addPasswordField("password", "Confirm password", 0, 1, 1, 1);
-	form.addSaveButton(2, 1);
+	/**
+	 * We need this method in order to allow empty constructor and autowire the
+	 * service
+	 * 
+	 * @param dto
+	 */
+	public GridForm<UserDto> build(UserDto dto) {
 
-	addComponent(form.getForm());
-    }
+		form.configure(dto, UserDto.class, userService, 4, 2);
+		form.addTextField("name", "Name", 0, 0);
+		form.addTextField("surnames", "Surnames", 1, 0);
+		form.addTextField("nickname", "Username", 2, 0);
+		form.addTextField("dni", "DNI", 3, 0);
+		form.addPasswordField("password", "Confirm password", 0, 1, 1, 1);
+		form.addSaveButton(2, 1);
+
+		return form;
+	}
 }
