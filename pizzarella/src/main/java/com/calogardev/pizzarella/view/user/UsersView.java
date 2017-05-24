@@ -5,196 +5,128 @@ import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.vaadin.dialogs.ConfirmDialog;
 
 import com.calogardev.pizzarella.dto.UserDto;
 import com.calogardev.pizzarella.service.UserService;
-import com.calogardev.pizzarella.view.GridForm;
-import com.vaadin.data.Binder;
-import com.vaadin.data.Binder.Binding;
+import com.calogardev.pizzarella.view.UserEditor;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
+import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.UIScope;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SpringView(name = UsersView.VIEW_ROUTE)
 @UIScope
 public class UsersView extends VerticalLayout implements View {
 
-	private static final Logger log = LoggerFactory.getLogger(UsersView.class);
-	private static final long serialVersionUID = 7020396938463815254L;
-	public static final String VIEW_ROUTE = "users";
-	public static final String VIEW_NAME = "Users";
+    private static final Logger log = LoggerFactory.getLogger(UsersView.class);
+    private static final long serialVersionUID = 7020396938463815254L;
+    public static final String VIEW_ROUTE = "users";
+    public static final String VIEW_NAME = "Users";
 
-	// Contains the grid and the form
-	// private HorizontalLayout mainArea = new HorizontalLayout();
+    private Grid<UserDto> grid;
 
-	private Grid<UserDto> grid;
+    @Autowired
+    private UserService userService;
 
-	@Autowired
-	private GridForm<UserDto> form;
+    @Autowired
+    private UserEditor userEditor;
 
-	@Autowired
-	private UserService userService;
+    private TextField filterBySurnames;
 
-	@PostConstruct
-	void init() {
-		commonsSettings();
-		setSizeFull();
+    @PostConstruct
+    void init() {
+	commonsSettings();
+	setSizeFull();
 
-		// buildNavbar();
+	Button addNewButton = new Button("New user", FontAwesome.PLUS);
+	addNewButton.addClickListener(e -> userEditor.editUser(new UserDto()));
 
-		buildForm(new UserDto());
-		addComponent(form);
+	buildFilterBySurnames();
+	HorizontalLayout menu = new HorizontalLayout(addNewButton, filterBySurnames);
+	addComponent(menu);
 
-		// Create the grid
-		buildGrid();
-	}
+	// Build the grid
+	buildGrid();
 
-	/**
-	 * Apply common setting to the page. this will be refactored in the future.
-	 */
-	private void commonsSettings() {
-		Page.getCurrent().setTitle(VIEW_NAME);
-		Label title = new Label(VIEW_NAME);
-		title.addStyleName(ValoTheme.LABEL_H1);
-		addComponent(title);
-	}
+	addComponent(userEditor);
 
-	private void buildForm(UserDto dto) {
-		form.configure(dto, UserDto.class, userService, 4, 2);
-		form.addTextField("name", "Name", 0, 0);
-		form.addTextField("surnames", "Surnames", 1, 0);
-		form.addTextField("nickname", "Username", 2, 0);
-		form.addTextField("dni", "DNI", 3, 0);
-		form.addPasswordField("password", "Confirm password", 0, 1, 1, 1);
-		form.addSaveButton(2, 1);
-	}
+	// Populate grid with all the data
+	listUsers(null);
+    }
 
+    /**
+     * Apply common setting to the page. this will be refactored in the future.
+     */
+    private void commonsSettings() {
+	Page.getCurrent().setTitle(VIEW_NAME);
+	Label title = new Label(VIEW_NAME);
+	title.addStyleName(ValoTheme.LABEL_H1);
+	addComponent(title);
+    }
+
+    private void buildGrid() {
+	grid = new Grid<UserDto>();
+	grid.setHeight(300, Unit.PIXELS);
+	grid.setSizeFull();
+	addComponent(grid);
+	setExpandRatio(grid, 1);
+	grid.setItems(userService.findAll());
+	buildColumns();
+
+	// Connect selected User to editor or hide if none is selected
+	grid.asSingleSelect().addValueChangeListener(e -> {
+	    userEditor.editUser(e.getValue());
+	});
+    }
+
+    /**
+     * Declares which columns are going to be displayed.
+     */
+    private void buildColumns() {
+	grid.addColumn(UserDto::getName).setCaption("Name");
+	grid.addColumn(UserDto::getSurnames).setCaption("Surnames");
+	grid.addColumn(UserDto::getNickname).setCaption("Username");
+	grid.addColumn(UserDto::getDni).setCaption("DNI");
+    }
+
+    private void buildFilterBySurnames() {
+	filterBySurnames = new TextField();
+	filterBySurnames.setPlaceholder("Filter by surname");
+	filterBySurnames.setValueChangeMode(ValueChangeMode.LAZY);
+	filterBySurnames.addValueChangeListener(e -> listUsers(e.getValue()));
+
+	// Listen changes made by the editor, refresh data from backend
+	userEditor.setChangeHandler(() -> {
+	    userEditor.setVisible(false);
+	    listUsers(filterBySurnames.getValue());
+	});
+    }
+
+    // TODO: add querydsl to implement filtering
+    private void listUsers(String filterText) {
 	//
-	// private void buildNavbar() {
-	// HorizontalLayout options = new HorizontalLayout();
-	// options.setWidth("100%");
-	// addComponent(options);
-	//
-	// Button createUserButton = new Button("Create new User", new
-	// ClickListener() {
-	// @Override
-	// public void buttonClick(ClickEvent event) {
-	// // UI.getCurrent().getNavigator().navigateTo(CreateUserView.VIEW_ROUTE);
-	//
-	// // Create new User
-	// form.build(new UserDto());
-	// setForm(form);
+	// if (StringUtils.isEmpty(filterText)) {
+	// grid.setItems(userService.findAll());
+	// } else {
+	// grid.setItems(userService.findByLastNameStartsWithIgnoreCase(filterText));
 	// }
-	// });
-	//
-	// // Using an empty expanding label to align the button to the right
-	// Label spacer = new Label();
-	// options.addComponent(spacer);
-	// options.setExpandRatio(spacer, 1f);
-	// options.addComponent(createUserButton);
-	// }
+	grid.setItems(userService.findAll());
 
-	private void buildGrid() {
-		grid = new Grid<UserDto>();
-		grid.setSizeFull();
-		addComponent(grid);
-		setExpandRatio(grid, 1);
+    }
 
-		grid.setItems(userService.findAll());
-		buildColumns();
+    @Override
+    public void enter(ViewChangeEvent event) {
+	// TODO Auto-generated method stub
 
-		grid.addItemClickListener(event -> {
-
-			// Edit User
-			UserDto dto = userService.findOne(event.getItem().getId());
-			buildForm(dto);
-		});
-		grid.addColumn(userDto -> "Delete", createDeleteButton());
-	}
-
-	/**
-	 * Declares which columns are going to be displayed.
-	 */
-	private void buildColumns() {
-		grid.addColumn(UserDto::getName).setCaption("Name");
-		grid.addColumn(UserDto::getSurnames).setCaption("Surnames");
-		grid.addColumn(UserDto::getNickname).setCaption("Nickname");
-		grid.addColumn(UserDto::getDni).setCaption("DNI");
-	}
-
-	/**
-	 * This version creates a button that is set inline of the table. But the
-	 * display is not too good and lot of space is occupied.
-	 * 
-	 * @return
-	 */
-	private ButtonRenderer<UserDto> createDeleteButton() {
-		ButtonRenderer<UserDto> deleteButton = new ButtonRenderer<UserDto>(clickEvent -> {
-			ConfirmDialog.show(UI.getCurrent(), "Are you sure?", new ConfirmDialog.Listener() {
-
-				@Override
-				public void onClose(ConfirmDialog dialog) {
-					if (dialog.isConfirmed()) {
-						// Confirmed to continue
-						String dni = clickEvent.getItem().getDni();
-						userService.deleteByDni(dni);
-						grid.setItems(userService.findAll());
-					}
-				}
-			});
-		});
-		return deleteButton;
-	}
-
-	/**
-	 * An alternative version of buildColumns that allows for live editing.
-	 * However, it currently uses set methods to save attributes, so it hasn't
-	 * support for validations, which are in the service.
-	 */
-	private void buildEditableColumns() {
-		Binder<UserDto> binder = grid.getEditor().getBinder();
-
-		Column<UserDto, String> column;
-		Binding<UserDto, String> doneBinding;
-
-		// Name
-		doneBinding = binder.bind(new TextField(), UserDto::getName, UserDto::setName);
-		column = grid.addColumn(user -> user.getName());
-		column.setEditorBinding(doneBinding).setCaption("Name");
-
-		// Surnames
-		doneBinding = binder.bind(new TextField(), UserDto::getSurnames, UserDto::setSurnames);
-		column = grid.addColumn(user -> user.getSurnames());
-		column.setEditorBinding(doneBinding).setCaption("Surnames");
-
-		// Dni
-		doneBinding = binder.bind(new TextField(), UserDto::getDni, UserDto::setDni);
-		column = grid.addColumn(user -> user.getDni());
-		column.setEditorBinding(doneBinding).setCaption("DNI");
-
-		// Nickname
-		doneBinding = binder.bind(new TextField(), UserDto::getNickname, UserDto::setNickname);
-		column = grid.addColumn(user -> user.getNickname());
-		column.setEditorBinding(doneBinding).setCaption("Nickname");
-
-		// Must enable editing for it to work
-		grid.getEditor().setEnabled(true);
-	}
-
-	@Override
-	public void enter(ViewChangeEvent event) {
-		// TODO Auto-generated method stub
-
-	}
+    }
 }

@@ -70,6 +70,9 @@
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
 		</dependency>
+		<dependency>
+    
+</dependency>
 	</dependencies>
 
 	<dependencyManagement>
@@ -98,6 +101,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		
 	</build>
 	<repositories>
 		<repository>

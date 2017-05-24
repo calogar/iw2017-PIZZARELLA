@@ -59,7 +59,7 @@ public class FoodOrder implements Serializable {
     private Status status;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    private List<Product> products;
+    private List<ProductLine> productLines;
 
     @ManyToOne
     private Client client;
@@ -77,21 +77,6 @@ public class FoodOrder implements Serializable {
      */
     public void setId(Long id) {
 	this.id = id;
-    }
-
-    /**
-     * @return the products
-     */
-    public List<Product> getProducts() {
-	return products;
-    }
-
-    /**
-     * @param products
-     *            the products to set
-     */
-    public void setProducts(List<Product> products) {
-	this.products = products;
     }
 
     /**
@@ -184,11 +169,60 @@ public class FoodOrder implements Serializable {
 	this.orderStatus = orderStatus;
     }
 
-    @Override
-    public String toString() {
-	return "Order [id=" + id + ", products=" + products + ", place=" + place + ", tableNumber=" + tableNumber
-		+ ", totalPrice=" + totalPrice + ", orderedAt=" + orderedAt + ", notes=" + notes + ", orderStatus="
-		+ orderStatus + "]";
+    /**
+     * @return the status
+     */
+    public Status getStatus() {
+	return status;
     }
 
+    /**
+     * @param status
+     *            the status to set
+     */
+    public void setStatus(Status status) {
+	this.status = status;
+    }
+
+    /**
+     * @return the productLines
+     */
+    public List<ProductLine> getProductLines() {
+	return productLines;
+    }
+
+    /**
+     * @param productLines
+     *            the productLines to set
+     */
+    public void setProductLines(List<ProductLine> productLines) {
+	this.productLines = productLines;
+    }
+
+    /**
+     * @return the client
+     */
+    public Client getClient() {
+	return client;
+    }
+
+    /**
+     * @param client
+     *            the client to set
+     */
+    public void setClient(Client client) {
+	this.client = client;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+	return "FoodOrder [id=" + id + ", place=" + place + ", tableNumber=" + tableNumber + ", totalPrice="
+		+ totalPrice + ", orderedAt=" + orderedAt + ", notes=" + notes + ", orderStatus=" + orderStatus
+		+ ", status=" + status + ", productLines=" + productLines + ", client=" + client + "]";
+    }
 }

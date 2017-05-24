@@ -65,20 +65,21 @@ public class UserServiceImpl implements UserService {
     // TODO: Check if some fields contain numbers
     @Override
     public void save(UserDto u) throws CustomValidationException {
-	/*
-	 * if (isEmpty(u.getName()) || isEmpty(u.getSurnames()) ||
-	 * isEmpty(u.getDni()) || isEmpty(u.getNickname()) ||
-	 * isEmpty(u.getPassword())) { throw new
-	 * CustomValidationException("Some attributes are empty."); } else if
-	 * (u.getPassword().length() < 6) { throw new
-	 * CustomValidationException("Password must be at least 6 characters long."
-	 * ); } else if (u.getDni().length() != 9) { throw new
-	 * CustomValidationException("DNI must have 9 characters."); } else if
-	 * (userDao.existsByDni(u.getDni()) == null) { throw new
-	 * CustomValidationException("That DNI is already registered."); } else
-	 * if (userDao.existsByNickname(u.getNickname()) == null) { throw new
-	 * CustomValidationException("That Nickname is already registered"); }
-	 */
+
+	Boolean bool = userDao.existsByNickname(u.getNickname());
+
+	if (isEmpty(u.getName()) || isEmpty(u.getSurnames()) || isEmpty(u.getDni()) || isEmpty(u.getNickname())
+		|| isEmpty(u.getPassword())) {
+	    throw new CustomValidationException("Some attributes are empty.");
+	} else if (u.getPassword().length() < 6) {
+	    throw new CustomValidationException("Password must be at least 6 characters long.");
+	} else if (u.getDni().length() != 9) {
+	    throw new CustomValidationException("DNI must have 9 characters.");
+	} else if (userDao.existsByDni(u.getDni())) {
+	    throw new CustomValidationException("That DNI is already registered.");
+	} else if (userDao.existsByNickname(u.getNickname())) {
+	    throw new CustomValidationException("That Nickname is already registered");
+	}
 
 	User user = utilsService.transform(u, User.class);
 	user.setStatus(Status.ACTIVE);
@@ -86,6 +87,27 @@ public class UserServiceImpl implements UserService {
 	user.setPassword(bcrypt.encode(u.getPassword()));
 	userDao.save(user);
 	log.info("Saved User: " + user.toString());
+    }
+
+    @Override
+    public UserDto findByUsername(String username) throws UserNotFoundException {
+	User user = userDao.findByNickname(username);
+	if (user == null) {
+	    throw new UserNotFoundException();
+	} else {
+	    UserDto userDto = utilsService.transform(user, UserDto.class);
+	    return userDto;
+	}
+    }
+
+    @Override
+    public void delete(UserDto dto) throws UserNotFoundException {
+	User user = userDao.findByDni(dto.getDni());
+	if (user == null) {
+	    throw new UserNotFoundException();
+	}
+	user.setStatus(Status.DELETED);
+	userDao.save(user);
     }
 
     /**
@@ -100,17 +122,6 @@ public class UserServiceImpl implements UserService {
 	save((UserDto) dto);
     }
 
-    @Override
-    public UserDto findByUsername(String username) throws UserNotFoundException {
-	User user = userDao.findByNickname(username);
-	if (user == null) {
-	    throw new UserNotFoundException();
-	} else {
-	    UserDto userDto = utilsService.transform(user, UserDto.class);
-	    return userDto;
-	}
-    }
-
     /**
      * Checks if string is null or "" (blank)
      * 
@@ -121,4 +132,10 @@ public class UserServiceImpl implements UserService {
     private Boolean isEmpty(String str) {
 	return StringUtils.isEmpty(str);
     }
+
+    /*
+     * @Override public Collection<UserDto>
+     * findByLastNameStartsWithIgnoreCase(String filterText) { Collection<User>
+     * users = userDao.findByNicknameStartsWithIgnoreCase(filterText); }
+     */
 }
