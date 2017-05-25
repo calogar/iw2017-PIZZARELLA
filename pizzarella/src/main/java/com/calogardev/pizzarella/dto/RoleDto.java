@@ -1,66 +1,43 @@
 package com.calogardev.pizzarella.dto;
 
-import java.util.List;
-
 public class RoleDto {
 
-	private Long id;
+    private Long id;
 
-	private String name;
+    private String name;
 
-	private List<UserDto> users;
+    public RoleDto() {
+	super();
+    }
 
-	private List<PrivilegeDto> privileges;
+    public RoleDto(String name) {
+	super();
+	this.name = name;
+    }
 
-	public RoleDto() {
-		super();
-	}
+    public Long getId() {
+	return id;
+    }
 
-	public RoleDto(String name) {
-		super();
-		this.name = name;
-	}
+    public void setId(Long id) {
+	this.id = id;
+    }
 
-	public RoleDto(String name, List<PrivilegeDto> privileges) {
-		super();
-		this.name = name;
-		this.privileges = privileges;
-	}
+    public String getName() {
+	return name;
+    }
 
-	public List<PrivilegeDto> getPrivileges() {
-		return privileges;
-	}
+    public void setName(String name) {
+	this.name = name;
+    }
 
-	public void setPrivileges(List<PrivilegeDto> privileges) {
-		this.privileges = privileges;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public List<UserDto> getUsers() {
-		return users;
-	}
-
-	public void setUsers(List<UserDto> users) {
-		this.users = users;
-	}
-
-	@Override
-	public String toString() {
-		return "RoleDto [id=" + id + ", name=" + name + ", users=" + users + "]";
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+	return "RoleDto [id=" + id + ", name=" + name + "]";
+    }
 }

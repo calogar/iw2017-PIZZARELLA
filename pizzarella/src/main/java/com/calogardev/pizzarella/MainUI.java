@@ -56,12 +56,14 @@ public class MainUI extends UI {
 	getUI().getNavigator().setErrorView(ErrorView.class);
 	viewProvider.setAccessDeniedViewClass(UnauthorizedView.class);
 
-	renderMainScreen();
+	// renderMainScreen();
 
-	/*
-	 * if (securityService.isLoggedIn()) { renderMainScreen(); } else {
-	 * renderLoginScreen(); }
-	 */
+	if (securityService.isLoggedIn()) {
+	    renderMainScreen();
+	} else {
+	    renderLoginScreen();
+	}
+
     }
 
     /**
