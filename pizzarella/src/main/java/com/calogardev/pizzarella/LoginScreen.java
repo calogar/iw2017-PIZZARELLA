@@ -1,5 +1,6 @@
 package com.calogardev.pizzarella;
 
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.vaadin.event.ShortcutAction;
@@ -67,7 +68,7 @@ public class LoginScreen extends CssLayout {
 
 	    try {
 		callback.renderMainIfLogin(usernameField.getValue(), inputPassword);
-	    } catch (UsernameNotFoundException ex) {
+	    } catch (UsernameNotFoundException | BadCredentialsException ex) {
 		showNotification(new Notification(ex.getMessage()));
 	    } finally {
 		loginButton.setEnabled(true); // Can login again
