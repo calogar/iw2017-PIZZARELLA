@@ -2,7 +2,11 @@ package com.calogardev.pizzarella;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.calogardev.pizzarella.service.SecurityService;
 import com.calogardev.pizzarella.view.DashboardLayout;
+import com.calogardev.pizzarella.view.order.AltOrdersView;
 import com.calogardev.pizzarella.view.order.OrdersView;
 import com.calogardev.pizzarella.view.product.ProductsView;
 import com.calogardev.pizzarella.view.productfamily.ProductFamiliesView;
@@ -32,6 +36,9 @@ public class MainScreen extends HorizontalLayout implements ViewDisplay {
     public static final String VIEW_ROUTE = "home";
     public static final String VIEW_NAME = "Home";
 
+    @Autowired
+    private SecurityService securityService;
+
     DashboardLayout dashboard; // Custom dashboard-like layout
 
     // Where all the views are placed
@@ -55,9 +62,19 @@ public class MainScreen extends HorizontalLayout implements ViewDisplay {
 	final CssLayout navigationBar = new CssLayout();
 	navigationBar.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
 	navigationBar.addComponent(createNavButton(OrdersView.VIEW_NAME, OrdersView.VIEW_ROUTE));
-	navigationBar.addComponent(createNavButton(ProductsView.VIEW_NAME, ProductsView.VIEW_ROUTE));
-	navigationBar.addComponent(createNavButton(ProductFamiliesView.VIEW_NAME, ProductFamiliesView.VIEW_ROUTE));
-	navigationBar.addComponent(createNavButton(UsersView.VIEW_NAME, UsersView.VIEW_ROUTE));
+	navigationBar.addComponent(createNavButton(AltOrdersView.VIEW_NAME, AltOrdersView.VIEW_ROUTE));
+
+	if (securityService.currentUserHasRole("ROLE_MANAGER")) {
+	    Button button = new Button("Manager Panel");
+	    button.setPrimaryStyleName(ValoTheme.MENU_ITEM);
+	    button.setEnabled(false);
+	    navigationBar.addComponent(button);
+
+	    navigationBar.addComponent(createNavButton(ProductsView.VIEW_NAME, ProductsView.VIEW_ROUTE));
+	    navigationBar.addComponent(createNavButton(ProductFamiliesView.VIEW_NAME, ProductFamiliesView.VIEW_ROUTE));
+	    navigationBar.addComponent(createNavButton(UsersView.VIEW_NAME, UsersView.VIEW_ROUTE));
+
+	}
 
 	// Create the panel
 	viewDisplayPanel = new Panel();

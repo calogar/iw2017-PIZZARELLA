@@ -56,8 +56,6 @@ public class MainUI extends UI {
 	getUI().getNavigator().setErrorView(ErrorView.class);
 	viewProvider.setAccessDeniedViewClass(UnauthorizedView.class);
 
-	// renderMainScreen();
-
 	if (securityService.isLoggedIn()) {
 	    renderMainScreen();
 	} else {
@@ -74,13 +72,14 @@ public class MainUI extends UI {
      * @param password
      * @return boolean result of the login
      */
-    private boolean renderMainIfLogin(String username, String password) {
+    private Boolean renderMainIfLogin(String username, String password) {
 
 	if (securityService.login(username, password)) {
 	    renderMainScreen();
 	    return true;
+	} else {
+	    return false;
 	}
-	return false;
     }
 
     private void renderMainScreen() {
