@@ -1,6 +1,8 @@
 package com.calogardev.pizzarella;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -36,20 +38,26 @@ public class PizzarellaApplication implements CommandLineRunner {
     public void run(String... arg0) throws Exception {
 
 	RoleDto roleAdmin = new RoleDto("ROLE_MANAGER");
-	roleService.save(roleAdmin);
-	RoleDto persistedRoleAdmin = roleService.findByName(roleAdmin.getName());
-	UserDto admin = new UserDto("Carlos", "López García", "12345678M", "carlos", "123456",
-		Arrays.asList(persistedRoleAdmin));
-	userService.save(admin);
+	RoleDto roleAtt = new RoleDto("ROLE_ATTENDANT");
+	RoleDto roleWaiter = new RoleDto("ROLE_WAITER");
 
-	// createUser(new UserDto("Carlos", "López García", "12345678M",
-	// "carlos", "123456", Arrays.asList(roleManager)));
-	// createUser(new UserDto("Alejandro", "Tosso Bustelo", "87654321A",
-	// "aleco", "123456", Arrays.asList(roleEmpty)));
-	// createUser(new UserDto("Adrián", "Porras González", "12346978E",
-	// "adrian", "123456", Arrays.asList(roleEmpty)));
-	// createUser(new UserDto("Sara", "Rodríguez Vega", "42347569W", "sara",
-	// "123456", Arrays.asList(roleEmpty)));
+	roleService.save(roleAdmin);
+	roleService.save(roleAtt);
+	roleService.save(roleWaiter);
+
+	roleAdmin = roleService.findByName(roleAdmin.getName());
+	roleAtt = roleService.findByName(roleAtt.getName());
+	roleWaiter = roleService.findByName(roleWaiter.getName());
+
+	List<UserDto> users = new ArrayList();
+	users.add(new UserDto("Carlos", "López García", "12345678M", "carlos", "123456", Arrays.asList(roleAdmin)));
+	users.add(new UserDto("Alejandro", "Tosso Bustelo", "87654321A", "aleco", "123456", Arrays.asList(roleAtt)));
+	users.add(new UserDto("Adrián", "Porras González", "12346978E", "adrian", "123456", Arrays.asList(roleWaiter)));
+	users.add(new UserDto("Sara", "Rodríguez Vega", "42347569W", "sara", "123456", Arrays.asList(roleAdmin)));
+
+	for (UserDto u : users) {
+	    userService.save(u);
+	}
 
     }
 }

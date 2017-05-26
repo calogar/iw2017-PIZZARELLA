@@ -67,8 +67,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public void save(UserDto u) throws CustomValidationException {
 
-	Boolean bool = userDao.existsByNickname(u.getNickname());
+	if (u.getId() == null) {
 
+	    // Perform create action (check uniqueness)
+	    if (userDao.existsByDni(u.getDni()))
+		throw new CustomValidationException("That DNI is already registered.");
+	    else if (userDao.existsByNickname(u.getNickname()))
+		throw new CustomValidationException("That Nickname is already registered");
+	} else {
+	    // Perform update action (check active)
+	    if (userDao.findOne(u.getId()).getStatus() != Status.ACTIVE) {
+		throw new CustomValidationException("That User is deleted and cannot be updated");
+	    }
+	}
+
+	// Perform update action (don't check uniqueness)
 	if (isEmpty(u.getName()) || isEmpty(u.getSurnames()) || isEmpty(u.getDni()) || isEmpty(u.getNickname())
 		|| isEmpty(u.getPassword())) {
 	    throw new CustomValidationException("Some attributes are empty.");
@@ -76,10 +89,6 @@ public class UserServiceImpl implements UserService {
 	    throw new CustomValidationException("Password must be at least 6 characters long.");
 	} else if (u.getDni().length() != 9) {
 	    throw new CustomValidationException("DNI must have 9 characters.");
-	} else if (userDao.existsByDni(u.getDni())) {
-	    throw new CustomValidationException("That DNI is already registered.");
-	} else if (userDao.existsByNickname(u.getNickname())) {
-	    throw new CustomValidationException("That Nickname is already registered");
 	}
 
 	User user = utilsService.transform(u, User.class);

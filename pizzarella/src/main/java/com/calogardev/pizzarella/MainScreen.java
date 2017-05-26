@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.calogardev.pizzarella.service.SecurityService;
 import com.calogardev.pizzarella.view.DashboardLayout;
 import com.calogardev.pizzarella.view.order.AltOrdersView;
-import com.calogardev.pizzarella.view.order.OrdersView;
 import com.calogardev.pizzarella.view.product.ProductsView;
 import com.calogardev.pizzarella.view.productfamily.ProductFamiliesView;
 import com.calogardev.pizzarella.view.user.UsersView;
@@ -48,7 +47,7 @@ public class MainScreen extends HorizontalLayout implements ViewDisplay {
     public void attach() {
 	super.attach();
 	// Go to root
-	this.getUI().getNavigator().navigateTo("");
+	this.getUI().getNavigator().navigateTo("home");
     }
 
     @PostConstruct
@@ -66,7 +65,8 @@ public class MainScreen extends HorizontalLayout implements ViewDisplay {
 	// Create navigation bar
 	final CssLayout navigationBar = new CssLayout();
 	navigationBar.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
-	navigationBar.addComponent(createNavButton(OrdersView.VIEW_NAME, OrdersView.VIEW_ROUTE));
+	// navigationBar.addComponent(createNavButton(OrdersView.VIEW_NAME,
+	// OrdersView.VIEW_ROUTE));
 	navigationBar.addComponent(createNavButton(AltOrdersView.VIEW_NAME, AltOrdersView.VIEW_ROUTE));
 
 	if (securityService.currentUserHasRole("ROLE_MANAGER")) {

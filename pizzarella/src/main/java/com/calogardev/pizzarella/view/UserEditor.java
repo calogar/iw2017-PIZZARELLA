@@ -41,6 +41,9 @@ public class UserEditor extends VerticalLayout {
     Button delete = new Button("Delete", FontAwesome.TRASH_O);
     CssLayout actions = new CssLayout(save, cancel, delete);
 
+    private PasswordField password;
+    private PasswordField passwordConfirm;
+
     @Autowired
     public UserEditor() {
 
@@ -66,45 +69,44 @@ public class UserEditor extends VerticalLayout {
     }
 
     public interface ChangeHandler {
-
 	void onChange();
     }
 
     public void editUser(UserDto dto) {
+
 	if (dto == null) {
 	    setVisible(false);
 	    return;
 	}
 	final boolean persisted = dto.getId() != null;
 	if (persisted) {
-	    // Find fresh entity for editing
-	    dto = userService.findOne(dto.getId());
+	    // Perform update (needs id)
+	    userDto = userService.findOne(dto.getId());
 	} else {
+	    // Perform create
 	    userDto = dto;
 	}
 	cancel.setVisible(persisted);
 
-	// Bind userDto properties to similarly named fields
-	// Could also use annotation or "manual binding" or programmatically
-	// moving values from fields to entities before saving
-	// TODO Do we need this? Were are we doing the read and write binding?
 	binder.setBean(userDto);
-	// try {
-	// binder.writeBean(userDto);
-	// } catch (ValidationException e) {
-	// // TODO HANDLE THIS
-	// e.printStackTrace();
-	// }
 
 	setVisible(true);
-
 	// A hack to ensure the whole form is visible
 	save.focus();
-	// Select all text in firstName field automatically
-	// firstName.selectAll();
     }
 
     private void saveUser(UserDto userDto) {
+
+	// Check password again for safety
+	System.out.println(password.getValue());
+	System.out.println(passwordConfirm.getValue());
+
+	if (!password.getValue().equals(passwordConfirm.getValue())) {
+	    Notification n = new Notification("Passwords don't match", null, Notification.Type.ERROR_MESSAGE, true);
+	    n.show(Page.getCurrent());
+	    return;
+	}
+
 	if (binder.validate().isOk()) {
 	    try {
 		binder.writeBean(userDto);
@@ -114,6 +116,7 @@ public class UserEditor extends VerticalLayout {
 	    } catch (CustomValidationException | ValidationException e) {
 		Notification n = new Notification(e.getMessage(), null, Notification.Type.ERROR_MESSAGE, true);
 		n.show(Page.getCurrent());
+		return;
 	    }
 	}
     }
@@ -159,9 +162,9 @@ public class UserEditor extends VerticalLayout {
 
     public void addPasswordField(String attributeName, String confirmMessage) {
 
-	PasswordField password = new PasswordField("Password");
+	password = new PasswordField("Password");
 	addComponent(password);
-	PasswordField passwordConfirm = new PasswordField(confirmMessage);
+	passwordConfirm = new PasswordField(confirmMessage);
 	addComponent(passwordConfirm);
 	// We don't bind it because it doesn't belong to the dto
 
