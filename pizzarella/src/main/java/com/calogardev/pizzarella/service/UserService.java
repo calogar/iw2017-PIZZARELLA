@@ -2,6 +2,8 @@ package com.calogardev.pizzarella.service;
 
 import java.util.List;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import com.calogardev.pizzarella.dto.UserDto;
 import com.calogardev.pizzarella.exception.CustomValidationException;
 import com.calogardev.pizzarella.exception.UserNotFoundException;
@@ -52,7 +54,7 @@ public interface UserService extends GenericService {
      * @return the User Dto
      * @throws UserNotFoundException
      */
-    UserDto findByUsername(String username) throws UserNotFoundException;
+    UserDto findByUsername(String username) throws UsernameNotFoundException;
 
     /**
      * Performs logical delete on user

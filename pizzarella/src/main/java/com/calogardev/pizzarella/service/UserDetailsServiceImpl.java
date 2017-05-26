@@ -8,11 +8,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.calogardev.pizzarella.dto.RoleDto;
 import com.calogardev.pizzarella.dto.UserDto;
-import com.calogardev.pizzarella.exception.UserNotFoundException;
 
 /**
  * Implementation of the UserDetailsService by Spring Security
@@ -39,20 +39,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * @return
      */
     @Override
-    public UserDetails loadUserByUsername(String username) {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-	UserDto user = new UserDto();
-	try {
-	    user = userService.findByUsername(username);
-	} catch (UserNotFoundException e) {
-	    e.printStackTrace();
-	}
+	UserDto user = userService.findByUsername(username);
 
 	Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
 	for (RoleDto role : user.getRoles()) {
 	    grantedAuthorities.add(new SimpleGrantedAuthority(role.getName().toString()));
 	}
-
 	return new org.springframework.security.core.userdetails.User(user.getNickname(), user.getPassword(),
 		grantedAuthorities);
 

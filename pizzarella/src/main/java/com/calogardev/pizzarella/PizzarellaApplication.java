@@ -2,7 +2,6 @@ package com.calogardev.pizzarella;
 
 import java.util.Arrays;
 
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
@@ -27,9 +26,6 @@ public class PizzarellaApplication implements CommandLineRunner {
 
     @Autowired
     private RoleService roleService;
-
-    @Autowired
-    private EntityManager entityManager;
 
     public static void main(String[] args) {
 	SpringApplication.run(PizzarellaApplication.class, args);

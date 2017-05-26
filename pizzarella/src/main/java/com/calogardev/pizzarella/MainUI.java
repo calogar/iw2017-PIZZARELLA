@@ -61,7 +61,6 @@ public class MainUI extends UI {
 	} else {
 	    renderLoginScreen();
 	}
-
     }
 
     /**
@@ -83,6 +82,7 @@ public class MainUI extends UI {
     }
 
     private void renderMainScreen() {
+	mainScreen.build();
 	setContent(mainScreen);
     }
 

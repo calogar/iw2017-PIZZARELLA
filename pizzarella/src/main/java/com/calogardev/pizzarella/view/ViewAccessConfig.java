@@ -15,6 +15,9 @@ public class ViewAccessConfig implements ViewAccessControl {
 
     @Override
     public boolean isAccessGranted(UI ui, String beanName) {
+	// System.out.println("bean name: " + beanName);
+	// System.out.println("User: " +
+	// securityService.findLoggedInUsername());
 	if (securityService.currentUserHasRole("ROLE_MANAGER")) {
 	    // Managers can access all the views
 	    return true;
@@ -23,10 +26,6 @@ public class ViewAccessConfig implements ViewAccessControl {
 	    // Only managers and waiters can do orders
 	    return securityService.currentUserHasRole("ROLE_MANAGER")
 		    || securityService.currentUserHasRole("ROLE_WAITER");
-	} else if (beanName.equals("usersView") || beanName.equals("productsView")
-		|| beanName.equals("productFamiliesView")) {
-	    // Only managers can create new users, products, product families...
-	    return securityService.currentUserHasRole("ROLE_MANAGER");
 	} else
 	    return true;
     }

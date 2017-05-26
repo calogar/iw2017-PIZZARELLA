@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -90,10 +91,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto findByUsername(String username) throws UserNotFoundException {
+    public UserDto findByUsername(String username) throws UsernameNotFoundException {
 	User user = userDao.findByNickname(username);
 	if (user == null) {
-	    throw new UserNotFoundException();
+	    // We are using a spring security exception in order to comply with
+	    // the SecurityService implementation
+	    throw new UsernameNotFoundException(username);
 	} else {
 	    UserDto userDto = utilsService.transform(user, UserDto.class);
 	    return userDto;

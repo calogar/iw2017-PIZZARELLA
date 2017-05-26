@@ -53,7 +53,12 @@ public class MainScreen extends HorizontalLayout implements ViewDisplay {
 
     @PostConstruct
     void init() {
+	// Create the panel
+	viewDisplayPanel = new Panel();
+    }
 
+    // TODO for building mainscreen only when attached
+    public void build() {
 	setSizeFull();
 	Responsive.makeResponsive(this);
 	// getUI().getPage().setTitle("Pizzarella");
@@ -73,18 +78,14 @@ public class MainScreen extends HorizontalLayout implements ViewDisplay {
 	    navigationBar.addComponent(createNavButton(ProductsView.VIEW_NAME, ProductsView.VIEW_ROUTE));
 	    navigationBar.addComponent(createNavButton(ProductFamiliesView.VIEW_NAME, ProductFamiliesView.VIEW_ROUTE));
 	    navigationBar.addComponent(createNavButton(UsersView.VIEW_NAME, UsersView.VIEW_ROUTE));
-
 	}
-
-	// Create the panel
-	viewDisplayPanel = new Panel();
 
 	// Create the dashboard
 	dashboard = new DashboardLayout(navigationBar, viewDisplayPanel);
 	dashboard.setWidth("100%");
+
 	addComponent(dashboard);
 	// setExpandRatio(dashboard, 1.0f);
-
     }
 
     /**
