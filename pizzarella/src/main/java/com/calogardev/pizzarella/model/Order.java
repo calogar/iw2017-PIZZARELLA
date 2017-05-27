@@ -11,8 +11,9 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -28,7 +29,8 @@ import com.calogardev.pizzarella.enums.Status;
  *
  */
 @Entity
-public class FoodOrder implements Serializable {
+@Table(name = "orders") // To avoid keyword conflicts in SQL
+public class Order implements Serializable {
 
     private static final long serialVersionUID = 3311526638346833028L;
 
@@ -40,7 +42,7 @@ public class FoodOrder implements Serializable {
     @Column(nullable = false)
     private OrderPlace place;
 
-    @Column(length = 10, nullable = false)
+    @Column(length = 10)
     private Integer tableNumber;
 
     @Column(nullable = false, precision = 3, scale = 2)
@@ -58,7 +60,7 @@ public class FoodOrder implements Serializable {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     private List<ProductLine> productLines;
 
     @ManyToOne

@@ -12,6 +12,7 @@ import com.calogardev.pizzarella.view.productfamily.ProductFamiliesView;
 import com.calogardev.pizzarella.view.user.UsersView;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewDisplay;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Responsive;
 import com.vaadin.spring.annotation.SpringViewDisplay;
 import com.vaadin.ui.Button;
@@ -70,15 +71,21 @@ public class MainScreen extends HorizontalLayout implements ViewDisplay {
 	navigationBar.addComponent(createNavButton(AltOrdersView.VIEW_NAME, AltOrdersView.VIEW_ROUTE));
 
 	if (securityService.currentUserHasRole("ROLE_MANAGER")) {
-	    Button button = new Button("Manager Panel");
-	    button.setPrimaryStyleName(ValoTheme.MENU_ITEM);
-	    button.setEnabled(false);
-	    navigationBar.addComponent(button);
+	    Button managerOptions = new Button("MANAGER OPTIONS");
+	    managerOptions.setPrimaryStyleName(ValoTheme.MENU_ITEM);
+	    managerOptions.setEnabled(false);
+	    navigationBar.addComponent(managerOptions);
 
 	    navigationBar.addComponent(createNavButton(ProductsView.VIEW_NAME, ProductsView.VIEW_ROUTE));
 	    navigationBar.addComponent(createNavButton(ProductFamiliesView.VIEW_NAME, ProductFamiliesView.VIEW_ROUTE));
 	    navigationBar.addComponent(createNavButton(UsersView.VIEW_NAME, UsersView.VIEW_ROUTE));
 	}
+
+	Button logout = new Button("Log out", FontAwesome.SIGN_OUT);
+	logout.addClickListener(e -> {
+	    logout();
+	});
+	navigationBar.addComponent(logout);
 
 	// Create the dashboard
 	dashboard = new DashboardLayout(navigationBar, viewDisplayPanel);
@@ -100,6 +107,17 @@ public class MainScreen extends HorizontalLayout implements ViewDisplay {
 	button.setPrimaryStyleName(ValoTheme.MENU_ITEM);
 	button.addClickListener(event -> getUI().getNavigator().navigateTo(route));
 	return button;
+    }
+
+    private void logout() {
+	securityService.logout();
+	getSession().close();
+	// SecurityContextHolder.getContext().setAuthentication(null);
+	getUI().getPage().reload();
+	// getUI().getNavigator().navigateTo("");
+
+	MainUI ui = (MainUI) getUI();
+	ui.renderLoginScreen();
     }
 
     /**

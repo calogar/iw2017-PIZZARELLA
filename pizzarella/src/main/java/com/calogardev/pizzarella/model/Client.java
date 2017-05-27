@@ -25,7 +25,7 @@ public class Client implements Serializable {
 	private String surnames;
 
 	@OneToMany
-	private List<FoodOrder> orders;
+	private List<Order> orders;
 
 	public Client() {
 
@@ -62,11 +62,11 @@ public class Client implements Serializable {
 		this.surnames = surnames;
 	}
 
-	public List<FoodOrder> getOrders() {
+	public List<Order> getOrders() {
 		return orders;
 	}
 
-	public void setOrders(List<FoodOrder> orders) {
+	public void setOrders(List<Order> orders) {
 		this.orders = orders;
 	}
 

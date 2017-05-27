@@ -86,7 +86,7 @@ public class MainUI extends UI {
 	setContent(mainScreen);
     }
 
-    private void renderLoginScreen() {
+    public void renderLoginScreen() {
 	setContent(new LoginScreen(this::renderMainIfLogin));
     }
 
