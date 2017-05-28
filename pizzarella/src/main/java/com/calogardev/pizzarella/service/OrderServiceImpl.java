@@ -1,5 +1,6 @@
 package com.calogardev.pizzarella.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -10,9 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.calogardev.pizzarella.dao.OrderDao;
 import com.calogardev.pizzarella.dto.OrderDto;
+import com.calogardev.pizzarella.dto.ProductLineDto;
 import com.calogardev.pizzarella.enums.OrderPlace;
+import com.calogardev.pizzarella.enums.OrderStatus;
+import com.calogardev.pizzarella.enums.Status;
+import com.calogardev.pizzarella.exception.CustomValidationException;
 import com.calogardev.pizzarella.exception.OrderNotFoundException;
 import com.calogardev.pizzarella.model.Order;
+import com.calogardev.pizzarella.model.ProductLine;
 
 /**
  * OrderService implementation.
@@ -29,13 +35,27 @@ public class OrderServiceImpl implements OrderService {
     private OrderDao orderDao;
 
     @Autowired
+    private ProductLineService productLineService;
+
+    @Autowired
     private UtilsService utilsService;
 
     @Override
-    public void save(OrderDto orderDto) {
-	// We send the Dto with OrderStatus to OPEN, which is set by Vaadin
-	// TODO Add validation
-	Order order = utilsService.transform(orderDto, Order.class);
+    public void save(OrderDto dto) throws CustomValidationException {
+
+	if (dto.getId() == null) {
+	    // Perform create
+	} else {
+	    // Perform update
+	    if (orderDao.findOne(dto.getId()).getStatus() != Status.ACTIVE) {
+		throw new CustomValidationException("That Order is deleted and cannot be updated");
+	    }
+	}
+
+	Order order = utilsService.transform(dto, Order.class);
+	order.setOrderedAt(new Date());
+	order.setStatus(Status.ACTIVE);
+	order.setOrderStatus(OrderStatus.SENT_TO_KITCHEN);
 	orderDao.save(order);
 	log.info("Saved Order: " + order);
     }
@@ -94,5 +114,22 @@ public class OrderServiceImpl implements OrderService {
 	} else {
 	    return "the terrace";
 	}
+    }
+
+    @Override
+    public void delete(OrderDto orderDto) {
+	if (orderDto.getId() == null) {
+	    return;
+	}
+	Order order = orderDao.findOne(orderDto.getId());
+
+	// Delete all product lines
+	for (ProductLine pl : order.getProductLines()) {
+	    productLineService.delete(utilsService.transform(pl, ProductLineDto.class));
+
+	}
+	order.setStatus(Status.DELETED);
+	orderDao.save(order);
+
     }
 }

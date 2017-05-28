@@ -7,6 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import com.calogardev.pizzarella.model.Product;
+import com.calogardev.pizzarella.model.ProductFamily;
 
 public interface ProductDao extends CrudRepository<Product, Long> {
 
@@ -23,11 +24,14 @@ public interface ProductDao extends CrudRepository<Product, Long> {
     @Query("SELECT p FROM Product p WHERE p.isIngredient = true AND p.status = 'ACTIVE'")
     public List<Product> findAllIngredients();
 
+    @Query("SELECT p FROM Product p WHERE p.isIngredient = true AND p.id = :id AND p.status = 'ACTIVE'")
+    public List<Product> findAllIngredientsExcept(@Param("id") Long id);
+
     @Query("SELECT p FROM Product p WHERE p.isIngredient = false AND p.family = :family AND p.status = 'ACTIVE'")
-    public List<Product> findAllSellableFromFamily(@Param("family") String family);
+    public List<Product> findAllSellableFromFamily(@Param("family") ProductFamily family);
 
     @Query("SELECT p FROM Product p WHERE p.isIngredient = true AND p.family = :family AND p.status = 'ACTIVE'")
-    public List<Product> findAllIngredientsFromFamily(@Param("family") String family);
+    public List<Product> findAllIngredientsFromFamily(@Param("family") ProductFamily family);
 
     @Query("SELECT p FROM Product p WHERE p.id != :id")
     public List<Product> findAllExceptOne(@Param("id") Long id);

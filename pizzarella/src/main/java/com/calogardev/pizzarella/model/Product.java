@@ -47,6 +47,9 @@ public class Product implements Serializable, Dto {
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "ingredient_id")
+    // @JoinTable(name = "product_ingredient", joinColumns = @JoinColumn(name =
+    // "composed_id", referencedColumnName = "id"), inverseJoinColumns =
+    // @JoinColumn(name = "ingredient_id", referencedColumnName = "id"))
     private Set<Product> ingredients;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -192,18 +195,6 @@ public class Product implements Serializable, Dto {
 	this.family = family;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-	return "Product [id=" + id + ", name=" + name + ", status=" + status + ", price=" + price + ", vat=" + vat
-		+ ", amount=" + amount + ", isIngredient=" + isIngredient + ", ingredients=" + ingredients + ", family="
-		+ family + "]";
-    }
-
     @Override
     public Field[] getDeclaredFields() {
 	// TODO Auto-generated method stub
@@ -279,6 +270,18 @@ public class Product implements Serializable, Dto {
 	} else if (!vat.equals(other.vat))
 	    return false;
 	return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+	return "Product [id=" + id + ", name=" + name + ", status=" + status + ", price=" + price + ", vat=" + vat
+		+ ", amount=" + amount + ", isIngredient=" + isIngredient + ", ingredients=" + ingredients + ", family="
+		+ family + "]";
     }
 
 }

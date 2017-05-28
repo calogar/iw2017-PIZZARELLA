@@ -196,18 +196,6 @@ public class ProductDto implements Serializable {
 	this.family = family;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-	return "ProductDto [id=" + id + ", name=" + name + ", price=" + price + ", vat=" + vat + ", amount=" + amount
-		+ ", status=" + status + ", isIngredient=" + isIngredient + ", ingredients=" + ingredients + ", family="
-		+ family + "]";
-    }
-
     /**
      * @return the status
      */
@@ -298,6 +286,18 @@ public class ProductDto implements Serializable {
 	} else if (!vat.equals(other.vat))
 	    return false;
 	return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+	return "ProductDto [id=" + id + ", name=" + name + ", price=" + price + ", vat=" + vat + ", amount=" + amount
+		+ ", status=" + status + ", isIngredient=" + isIngredient + ", ingredients=" + ingredients + ", family="
+		+ family + "]";
     }
 
 }

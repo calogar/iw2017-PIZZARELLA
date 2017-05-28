@@ -11,12 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.calogardev.pizzarella.dto.Dto;
 import com.calogardev.pizzarella.dto.ProductDto;
+import com.calogardev.pizzarella.dto.ProductFamilyDto;
 import com.calogardev.pizzarella.enums.Status;
 import com.calogardev.pizzarella.exception.CustomValidationException;
 import com.calogardev.pizzarella.exception.IngredientWithProductsException;
 import com.calogardev.pizzarella.exception.ProductNotFoundException;
 import com.calogardev.pizzarella.exception.ProductWithoutFamilyException;
 import com.calogardev.pizzarella.model.Product;
+import com.calogardev.pizzarella.model.ProductFamily;
 import com.calogardev.pizzarella.service.UtilsService;
 
 /**
@@ -50,8 +52,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ProductDto> findAllIngredients() {
-	return utilsService.transform(productDao.findAllIngredients(), ProductDto.class);
+    public List<ProductDto> findAllIngredientsExcept(ProductDto dto) {
+	if (dto == null || dto.getId() == null) {
+	    return utilsService.transform(productDao.findAllIngredients(), ProductDto.class);
+	} else {
+	    return utilsService.transform(productDao.findAllIngredientsExcept(dto.getId()), ProductDto.class);
+	}
     }
 
     @Override
@@ -89,6 +95,17 @@ public class ProductServiceImpl implements ProductService {
 	Product product = utilsService.transform(dto, Product.class);
 	product.setStatus(Status.ACTIVE);
 	Product persisted = productDao.save(product);
+
+	// // Now we create the reverse associations (if needed)
+	// if (dto.getIngredients() != null) {
+	//
+	// for (ProductDto ingredient : dto.getIngredients()) {
+	// ingredient.setComposedProduct(utilsService.transform(persisted,
+	// ProductDto.class));
+	// save(ingredient);
+	// }
+	// }
+
 	log.info("Saved Product: " + product);
 	return utilsService.transform(persisted, ProductDto.class);
     }
@@ -124,4 +141,17 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto findOne(Long id) {
 	return utilsService.transform(productDao.findOne(id), ProductDto.class);
     }
+
+    @Override
+    public List<ProductDto> findAllIngredients() {
+	return utilsService.transform(productDao.findAllIngredients(), ProductDto.class);
+
+    }
+
+    @Override
+    public List<ProductDto> findAllSellableFromFamily(ProductFamilyDto dto) {
+	ProductFamily pf = utilsService.transform(dto, ProductFamily.class);
+	return utilsService.transform(productDao.findAllSellableFromFamily(pf), ProductDto.class);
+    }
+
 }

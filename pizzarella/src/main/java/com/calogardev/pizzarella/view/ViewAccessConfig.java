@@ -19,24 +19,10 @@ public class ViewAccessConfig implements ViewAccessControl {
 	// System.out.println("User: " +
 	// securityService.findLoggedInUsername());
 
-	if (beanName.equals("homeView")) {
+	if (beanName.equals("homeView") || beanName.equals("ordersView") || beanName.equals("createOrderView")) {
 	    return true;
-	}
-
-	if (securityService.currentUserHasRole("ROLE_MANAGER")) {
-	    // Managers can access all the views
-	    return true;
-	} else if (securityService.currentUserHasRole("ROLE_ATTENDANT")) {
-	    // Attendants can only manage orders
-	    return beanName.equals("ordersView") || beanName.equals("createOrdersView")
-		    || beanName.equals("altOrdersView");
-	} else if (securityService.currentUserHasRole("ROLE_ATTENDANT")) {
-	    // Attendants can only manage orders
-	    return beanName.equals("ordersView") || beanName.equals("createOrdersView")
-		    || beanName.equals("altOrdersView");
 	} else {
-	    return false;
+	    return securityService.currentUserHasRole("ROLE_MANAGER");
 	}
-
     }
 }

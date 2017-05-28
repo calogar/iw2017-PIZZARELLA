@@ -87,6 +87,7 @@ public class PizzarellaApplication implements CommandLineRunner {
 	Set<ProductDto> ingredients = new HashSet<ProductDto>();
 	ingredients.add(carbonnaraSauce);
 	ingredients.add(mushrooms);
+
 	carbonnaraPizza.setIngredients(ingredients);
 	productService.save(carbonnaraPizza);
 	cocacola = productService.save(cocacola);

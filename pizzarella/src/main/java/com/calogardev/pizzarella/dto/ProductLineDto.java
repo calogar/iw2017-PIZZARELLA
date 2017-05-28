@@ -3,6 +3,8 @@ package com.calogardev.pizzarella.dto;
 import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 
+import com.calogardev.pizzarella.enums.Status;
+
 public class ProductLineDto {
 
     private Long id;
@@ -16,16 +18,24 @@ public class ProductLineDto {
     @Column(nullable = false, length = 999)
     private Integer amount;
 
+    private Float price;
+
+    private Status status;
+
+    public String getProductName() {
+	return product.getName();
+    }
+
     public ProductLineDto() {
 
     }
 
-    public ProductLineDto(Long id, ProductDto product, OrderDto order, Integer amount) {
+    public ProductLineDto(ProductDto product, OrderDto order, Integer amount, Float price) {
 	super();
-	this.id = id;
 	this.product = product;
 	this.order = order;
 	this.amount = amount;
+	this.price = price;
     }
 
     /**
@@ -88,6 +98,29 @@ public class ProductLineDto {
 	this.amount = amount;
     }
 
+    /**
+     * @return the status
+     */
+    public Status getStatus() {
+	return status;
+    }
+
+    /**
+     * @param status
+     *            the status to set
+     */
+    public void setStatus(Status status) {
+	this.status = status;
+    }
+
+    public Float getPrice() {
+	return price;
+    }
+
+    public void setPrice(Float price) {
+	this.price = price;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -95,7 +128,8 @@ public class ProductLineDto {
      */
     @Override
     public String toString() {
-	return "ProductLineDto [id=" + id + ", product=" + product + ", order=" + order + ", amount=" + amount + "]";
+	return "ProductLineDto [id=" + id + ", product=" + product + ", order=" + order + ", amount=" + amount
+		+ ", price=" + price + ", status=" + status + "]";
     }
 
 }

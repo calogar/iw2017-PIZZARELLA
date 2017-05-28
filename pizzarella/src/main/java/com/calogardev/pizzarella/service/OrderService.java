@@ -3,6 +3,7 @@ package com.calogardev.pizzarella.service;
 import java.util.List;
 
 import com.calogardev.pizzarella.dto.OrderDto;
+import com.calogardev.pizzarella.exception.CustomValidationException;
 import com.calogardev.pizzarella.exception.OrderNotFoundException;
 
 /**
@@ -15,8 +16,10 @@ public interface OrderService {
 
     /**
      * Saves an Order by its OrderDto
+     * 
+     * @throws CustomValidationException
      */
-    public void save(OrderDto order);
+    public void save(OrderDto order) throws CustomValidationException;
 
     /**
      * Finds an Order by its id and returns an OrderDto
@@ -41,4 +44,6 @@ public interface OrderService {
      * @return the sum of incomes
      */
     public Float getTotalIncomes();
+
+    public void delete(OrderDto orderDto);
 }

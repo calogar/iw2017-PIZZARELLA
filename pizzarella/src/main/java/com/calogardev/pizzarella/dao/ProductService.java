@@ -3,6 +3,7 @@ package com.calogardev.pizzarella.dao;
 import java.util.List;
 
 import com.calogardev.pizzarella.dto.ProductDto;
+import com.calogardev.pizzarella.dto.ProductFamilyDto;
 import com.calogardev.pizzarella.exception.CustomValidationException;
 import com.calogardev.pizzarella.exception.IngredientWithProductsException;
 import com.calogardev.pizzarella.exception.ProductNotFoundException;
@@ -56,7 +57,11 @@ public interface ProductService extends GenericService {
 
     public ProductDto findOne(Long id);
 
+    List<ProductDto> findAll();
+
+    List<ProductDto> findAllIngredientsExcept(ProductDto dto);
+
     List<ProductDto> findAllIngredients();
 
-    List<ProductDto> findAll();
+    List<ProductDto> findAllSellableFromFamily(ProductFamilyDto dto);
 }

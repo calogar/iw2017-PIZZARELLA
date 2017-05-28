@@ -5,9 +5,13 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+
+import com.calogardev.pizzarella.enums.Status;
 
 @Entity
 public class ProductLine implements Serializable {
@@ -27,8 +31,14 @@ public class ProductLine implements Serializable {
     @ManyToOne
     private Order order;
 
+    private Float price;
+
     @Column(nullable = false, length = 999)
     private Integer amount;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Status status;
 
     public ProductLine() {
 
@@ -40,11 +50,6 @@ public class ProductLine implements Serializable {
 	this.product = product;
 	this.order = order;
 	this.amount = amount;
-    }
-
-    @Override
-    public String toString() {
-	return "ProductLine [id=" + id + ", product=" + product + ", order=" + order + ", amount=" + amount + "]";
     }
 
     /**
@@ -106,4 +111,46 @@ public class ProductLine implements Serializable {
     public void setAmount(Integer amount) {
 	this.amount = amount;
     }
+
+    /**
+     * @return the status
+     */
+    public Status getStatus() {
+	return status;
+    }
+
+    /**
+     * @param status
+     *            the status to set
+     */
+    public void setStatus(Status status) {
+	this.status = status;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+	return "ProductLine [id=" + id + ", product=" + product + ", order=" + order + ", price=" + price + ", amount="
+		+ amount + ", status=" + status + "]";
+    }
+
+    /**
+     * @return the price
+     */
+    public Float getPrice() {
+	return price;
+    }
+
+    /**
+     * @param price
+     *            the price to set
+     */
+    public void setPrice(Float price) {
+	this.price = price;
+    }
+
 }
