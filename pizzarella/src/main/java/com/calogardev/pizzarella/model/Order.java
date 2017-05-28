@@ -19,6 +19,7 @@ import javax.persistence.TemporalType;
 
 import com.calogardev.pizzarella.enums.OrderPlace;
 import com.calogardev.pizzarella.enums.OrderStatus;
+import com.calogardev.pizzarella.enums.OrderType;
 import com.calogardev.pizzarella.enums.Status;
 
 /**
@@ -41,6 +42,10 @@ public class Order implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private OrderPlace place;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private OrderType type;
 
     @Column(length = 10)
     private Integer tableNumber;
@@ -216,6 +221,21 @@ public class Order implements Serializable {
 	this.client = client;
     }
 
+    /**
+     * @return the type
+     */
+    public OrderType getType() {
+	return type;
+    }
+
+    /**
+     * @param type
+     *            the type to set
+     */
+    public void setType(OrderType type) {
+	this.type = type;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -223,8 +243,8 @@ public class Order implements Serializable {
      */
     @Override
     public String toString() {
-	return "FoodOrder [id=" + id + ", place=" + place + ", tableNumber=" + tableNumber + ", totalPrice="
-		+ totalPrice + ", orderedAt=" + orderedAt + ", notes=" + notes + ", orderStatus=" + orderStatus
-		+ ", status=" + status + ", productLines=" + productLines + ", client=" + client + "]";
+	return "Order [id=" + id + ", place=" + place + ", type=" + type + ", tableNumber=" + tableNumber
+		+ ", totalPrice=" + totalPrice + ", orderedAt=" + orderedAt + ", notes=" + notes + ", orderStatus="
+		+ orderStatus + ", status=" + status + ", productLines=" + productLines + ", client=" + client + "]";
     }
 }

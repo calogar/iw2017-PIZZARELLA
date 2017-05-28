@@ -10,6 +10,7 @@ import javax.validation.constraints.Size;
 
 import com.calogardev.pizzarella.enums.OrderPlace;
 import com.calogardev.pizzarella.enums.OrderStatus;
+import com.calogardev.pizzarella.enums.OrderType;
 import com.calogardev.pizzarella.enums.Status;
 
 public class OrderDto implements Serializable {
@@ -20,6 +21,9 @@ public class OrderDto implements Serializable {
 
     @NotNull
     private OrderPlace place;
+
+    @NotNull
+    private OrderType type;
 
     @NotNull
     @Size(min = 0, max = 10)
@@ -138,6 +142,21 @@ public class OrderDto implements Serializable {
 	return b.toString();
     }
 
+    /**
+     * @return the type
+     */
+    public OrderType getType() {
+	return type;
+    }
+
+    /**
+     * @param type
+     *            the type to set
+     */
+    public void setType(OrderType type) {
+	this.type = type;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -145,8 +164,9 @@ public class OrderDto implements Serializable {
      */
     @Override
     public String toString() {
-	return "OrderDto [id=" + id + ", place=" + place + ", tableNumber=" + tableNumber + ", totalPrice=" + totalPrice
-		+ ", orderedAt=" + orderedAt + ", notes=" + notes + ", orderStatus=" + orderStatus + ", status="
-		+ status + ", productLines=" + productLines + ", client=" + client + "]";
+	return "OrderDto [id=" + id + ", place=" + place + ", type=" + type + ", tableNumber=" + tableNumber
+		+ ", totalPrice=" + totalPrice + ", orderedAt=" + orderedAt + ", notes=" + notes + ", orderStatus="
+		+ orderStatus + ", status=" + status + ", productLines=" + productLines + ", client=" + client + "]";
     }
+
 }

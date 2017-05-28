@@ -1,6 +1,8 @@
 package com.calogardev.pizzarella.view.order;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -12,6 +14,8 @@ import com.calogardev.pizzarella.dto.OrderDto;
 import com.calogardev.pizzarella.dto.ProductDto;
 import com.calogardev.pizzarella.dto.ProductFamilyDto;
 import com.calogardev.pizzarella.dto.ProductLineDto;
+import com.calogardev.pizzarella.enums.OrderPlace;
+import com.calogardev.pizzarella.enums.OrderType;
 import com.calogardev.pizzarella.exception.CustomValidationException;
 import com.calogardev.pizzarella.exception.OrderNotFoundException;
 import com.calogardev.pizzarella.service.OrderService;
@@ -24,12 +28,14 @@ import com.vaadin.server.Page;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.themes.ValoTheme;
@@ -74,8 +80,7 @@ public class OrderEditor extends VerticalLayout {
 	buildSelectProductFamily();
 	buildSelectProduct();
 	buildProductLinesGrid();
-
-	addComponents(actions);
+	buildOrderForm();
 
 	// Configure and style components
 	setSpacing(true);
@@ -91,6 +96,7 @@ public class OrderEditor extends VerticalLayout {
 
 	orderArea.addComponents(orderForm);
 	addComponents(selectProduct, orderArea);
+	addComponents(actions);
     }
 
     private void buildSelectProductFamily() {
@@ -138,6 +144,39 @@ public class OrderEditor extends VerticalLayout {
 
 	productLinesGrid.setWidth("100%");
 	orderArea.addComponents(productLinesTitle, productLinesGrid);
+    }
+
+    private void buildOrderForm() {
+
+	ComboBox<OrderType> orderType = new ComboBox<>("Order Type");
+	orderType.setItems(EnumSet.allOf(OrderType.class));
+	binder.bind(orderType, "type");
+
+	// TODO not checking that tables are already taken
+	ComboBox<Integer> orderTable = new ComboBox<>("Table Number");
+	orderTable.setItems(Arrays.asList(1, 2, 3, 4, 5, 6));
+	binder.bind(orderType, "tableNumber");
+
+	ComboBox<OrderPlace> orderPlace = new ComboBox<>("Place");
+	orderPlace.setItems(EnumSet.allOf(OrderPlace.class));
+	binder.bind(orderPlace, "place");
+
+	RichTextArea notes = new RichTextArea("Additional notes");
+	binder.bind(notes, "notes");
+
+	orderType.addSelectionListener(e -> {
+	    if (e.getSelectedItem().get() != OrderType.LOCAL) {
+		// Disable table and place if order is to take away
+		// TODO manually set to null place and table in save
+		orderTable.setVisible(false);
+		orderPlace.setVisible(false);
+	    } else {
+		orderTable.setVisible(true);
+		orderPlace.setVisible(true);
+	    }
+	});
+
+	orderForm.addComponents(orderType, orderTable, orderPlace, notes);
     }
 
     /**
