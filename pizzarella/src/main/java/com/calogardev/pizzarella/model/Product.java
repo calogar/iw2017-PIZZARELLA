@@ -46,6 +46,7 @@ public class Product implements Serializable, Dto {
     private Boolean isIngredient;
 
     @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ingredient_id")
     private Set<Product> ingredients;
 
     @ManyToOne(fetch = FetchType.EAGER)
