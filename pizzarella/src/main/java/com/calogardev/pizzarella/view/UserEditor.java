@@ -97,10 +97,6 @@ public class UserEditor extends VerticalLayout {
 
     private void saveUser(UserDto userDto) {
 
-	// Check password again for safety
-	System.out.println(password.getValue());
-	System.out.println(passwordConfirm.getValue());
-
 	if (!password.getValue().equals(passwordConfirm.getValue())) {
 	    Notification n = new Notification("Passwords don't match", null, Notification.Type.ERROR_MESSAGE, true);
 	    n.show(Page.getCurrent());

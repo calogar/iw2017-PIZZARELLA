@@ -3,6 +3,7 @@ package com.calogardev.pizzarella.service;
 import java.util.List;
 
 import com.calogardev.pizzarella.dto.RoleDto;
+import com.calogardev.pizzarella.exception.CustomValidationException;
 import com.calogardev.pizzarella.exception.RoleNotFoundException;
 
 /*
@@ -16,7 +17,7 @@ public interface RoleService {
      * 
      * @param roleDto
      */
-    public void save(RoleDto roleDto);
+    public RoleDto save(RoleDto roleDto) throws CustomValidationException;
 
     /**
      * Finds an active Role by its name

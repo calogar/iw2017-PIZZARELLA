@@ -3,7 +3,9 @@ package com.calogardev.pizzarella.dao;
 import java.util.List;
 
 import com.calogardev.pizzarella.dto.ProductDto;
+import com.calogardev.pizzarella.exception.CustomValidationException;
 import com.calogardev.pizzarella.exception.IngredientWithProductsException;
+import com.calogardev.pizzarella.exception.ProductNotFoundException;
 import com.calogardev.pizzarella.exception.ProductWithoutFamilyException;
 import com.calogardev.pizzarella.service.GenericService;
 
@@ -20,7 +22,7 @@ public interface ProductService extends GenericService {
      * 
      * @return a list of productDtos
      */
-    public List<ProductDto> findAll();
+    public List<ProductDto> findAllSellable();
 
     /**
      * Finds all available products except the one with the specific id.
@@ -36,18 +38,25 @@ public interface ProductService extends GenericService {
      * 
      * @param productDto
      *            The dto with the required data
+     * @return
      * @throws ProductWithoutFamilyException
      * @throws IngredientWithProductsException
+     * @throws CustomValidationException
      */
-    public void save(ProductDto productDto) throws ProductWithoutFamilyException, IngredientWithProductsException;
+    public ProductDto save(ProductDto productDto) throws CustomValidationException;
 
     /**
      * Deletes a product
      * 
      * @param productDto
      *            The product to delete
+     * @throws ProductNotFoundException
      */
-    public void delete(ProductDto productDto);
+    public void delete(ProductDto productDto) throws ProductNotFoundException;
 
     public ProductDto findOne(Long id);
+
+    List<ProductDto> findAllIngredients();
+
+    List<ProductDto> findAll();
 }

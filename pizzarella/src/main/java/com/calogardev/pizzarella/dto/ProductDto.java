@@ -1,11 +1,13 @@
 package com.calogardev.pizzarella.dto;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.calogardev.pizzarella.enums.Status;
 
 /**
  * The main Dto for Products. Needs the id because it's the only unique
@@ -33,28 +35,43 @@ public class ProductDto implements Serializable {
     private Float vat;
 
     @NotNull
-    @Size(min = 1, max = 999)
+    // @Size(min = 1, max = 200)
     private Integer amount;
 
-    private List<ProductDto> products;
+    @NotNull
+    private Status status;
+
+    private Boolean isIngredient;
+
+    private Set<ProductDto> ingredients;
 
     private ProductFamilyDto family;
 
     public ProductDto() {
+	super();
+	// TODO Auto-generated constructor stub
+    }
 
+    public ProductDto(String name, Float price, Float vat, Integer amount, Boolean isIngredient,
+	    ProductFamilyDto family) {
+	super();
+	this.name = name;
+	this.price = price;
+	this.vat = vat;
+	this.amount = amount;
+	this.isIngredient = isIngredient;
+	this.family = family;
     }
 
     public String getFormattedIngredients() {
 	String result;
-	if (products.size() == 0) {
+	if (ingredients.size() == 0) {
 	    result = "This product has no ingredients.";
 	} else {
 	    result = "";
-	    for (ProductDto product : products) {
-		result = product.getName() + ", ";
+	    for (ProductDto ingredient : ingredients) {
+		result = ingredient.getName() + ", " + result;
 	    }
-	    // Remove the last separator
-	    result.substring(0, result.length() - 3);
 	}
 	return result;
     }
@@ -135,18 +152,33 @@ public class ProductDto implements Serializable {
     }
 
     /**
-     * @return the products
+     * @return the isIngredient
      */
-    public List<ProductDto> getProducts() {
-	return products;
+    public Boolean getIsIngredient() {
+	return isIngredient;
     }
 
     /**
-     * @param products
-     *            the products to set
+     * @param isIngredient
+     *            the isIngredient to set
      */
-    public void setProducts(List<ProductDto> products) {
-	this.products = products;
+    public void setIsIngredient(Boolean isIngredient) {
+	this.isIngredient = isIngredient;
+    }
+
+    /**
+     * @return the ingredients
+     */
+    public Set<ProductDto> getIngredients() {
+	return ingredients;
+    }
+
+    /**
+     * @param ingredients
+     *            the ingredients to set
+     */
+    public void setIngredients(Set<ProductDto> ingredients) {
+	this.ingredients = ingredients;
     }
 
     /**
@@ -172,7 +204,100 @@ public class ProductDto implements Serializable {
     @Override
     public String toString() {
 	return "ProductDto [id=" + id + ", name=" + name + ", price=" + price + ", vat=" + vat + ", amount=" + amount
-		+ ", products=" + products + ", family=" + family + "]";
+		+ ", status=" + status + ", isIngredient=" + isIngredient + ", ingredients=" + ingredients + ", family="
+		+ family + "]";
+    }
+
+    /**
+     * @return the status
+     */
+    public Status getStatus() {
+	return status;
+    }
+
+    /**
+     * @param status
+     *            the status to set
+     */
+    public void setStatus(Status status) {
+	this.status = status;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((amount == null) ? 0 : amount.hashCode());
+	result = prime * result + ((family == null) ? 0 : family.hashCode());
+	result = prime * result + ((id == null) ? 0 : id.hashCode());
+	result = prime * result + ((ingredients == null) ? 0 : ingredients.hashCode());
+	result = prime * result + ((isIngredient == null) ? 0 : isIngredient.hashCode());
+	result = prime * result + ((name == null) ? 0 : name.hashCode());
+	result = prime * result + ((price == null) ? 0 : price.hashCode());
+	result = prime * result + ((vat == null) ? 0 : vat.hashCode());
+	return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	ProductDto other = (ProductDto) obj;
+	if (amount == null) {
+	    if (other.amount != null)
+		return false;
+	} else if (!amount.equals(other.amount))
+	    return false;
+	if (family == null) {
+	    if (other.family != null)
+		return false;
+	} else if (!family.equals(other.family))
+	    return false;
+	if (id == null) {
+	    if (other.id != null)
+		return false;
+	} else if (!id.equals(other.id))
+	    return false;
+	if (ingredients == null) {
+	    if (other.ingredients != null)
+		return false;
+	} else if (!ingredients.equals(other.ingredients))
+	    return false;
+	if (isIngredient == null) {
+	    if (other.isIngredient != null)
+		return false;
+	} else if (!isIngredient.equals(other.isIngredient))
+	    return false;
+	if (name == null) {
+	    if (other.name != null)
+		return false;
+	} else if (!name.equals(other.name))
+	    return false;
+	if (price == null) {
+	    if (other.price != null)
+		return false;
+	} else if (!price.equals(other.price))
+	    return false;
+	if (vat == null) {
+	    if (other.vat != null)
+		return false;
+	} else if (!vat.equals(other.vat))
+	    return false;
+	return true;
     }
 
 }

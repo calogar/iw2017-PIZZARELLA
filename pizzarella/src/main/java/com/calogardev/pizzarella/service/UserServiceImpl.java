@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
 
     // TODO: Check if some fields contain numbers
     @Override
-    public void save(UserDto u) throws CustomValidationException {
+    public UserDto save(UserDto u) throws CustomValidationException {
 
 	if (u.getId() == null) {
 
@@ -95,8 +95,9 @@ public class UserServiceImpl implements UserService {
 	user.setStatus(Status.ACTIVE);
 	// TODO ensure password is encrypted
 	user.setPassword(bcrypt.encode(u.getPassword()));
-	userDao.save(user);
-	log.info("Saved User: " + user.toString());
+	User persistedUser = userDao.save(user);
+	log.info("Saved User: " + persistedUser);
+	return utilsService.transform(persistedUser, UserDto.class);
     }
 
     @Override

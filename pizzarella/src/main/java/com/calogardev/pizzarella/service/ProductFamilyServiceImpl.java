@@ -35,16 +35,29 @@ public class ProductFamilyServiceImpl implements ProductFamilyService {
     }
 
     @Override
-    public void save(ProductFamilyDto dto) throws CustomValidationException {
+    public ProductFamilyDto save(ProductFamilyDto dto) throws CustomValidationException {
+
+	if (dto.getId() == null) {
+	    // Perform create
+	    if (productFamilyDao.existsByCode(dto.getCode())) {
+		throw new CustomValidationException("A product family already has this code");
+	    }
+	} else {
+	    // Perform update
+	    if (productFamilyDao.findOne(dto.getId()).getStatus() != Status.ACTIVE) {
+		throw new CustomValidationException("That Product Family is deleted and cannot be updated");
+	    }
+	}
+
 	if (isEmpty(dto.getName()) || isEmpty(dto.getCode())) {
 	    throw new CustomValidationException("Some fields are empty");
-	} else if (productFamilyDao.existsByCode(dto.getCode())) {
-	    throw new CustomValidationException("A product family already has this code");
 	}
+
 	ProductFamily productFamily = utilsService.transform(dto, ProductFamily.class);
 	productFamily.setStatus(Status.ACTIVE);
-	productFamilyDao.save(productFamily);
-	log.info("Saved Product: " + productFamily.toString());
+	ProductFamily persisted = productFamilyDao.save(productFamily);
+	log.info("Saved Product: " + persisted);
+	return utilsService.transform(persisted, ProductFamilyDto.class);
     }
 
     @Override

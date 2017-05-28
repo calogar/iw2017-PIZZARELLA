@@ -12,9 +12,12 @@ import com.calogardev.pizzarella.model.Role;
 @Repository
 public interface RoleDao extends CrudRepository<Role, Long> {
 
-	@Query("SELECT r FROM Role r WHERE r.status = 'ACTIVE' AND r.name = :name")
-	public Role findByName(@Param("name") String name);
+    @Query("SELECT r FROM Role r WHERE r.status = 'ACTIVE' AND r.name = :name")
+    public Role findByName(@Param("name") String name);
 
-	@Query("SELECT r FROM Role r WHERE r.status = 'ACTIVE'")
-	public List<Role> findAll();
+    @Override
+    @Query("SELECT r FROM Role r WHERE r.status = 'ACTIVE'")
+    public List<Role> findAll();
+
+    public Boolean existsByName(String name);
 }

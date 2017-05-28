@@ -39,13 +39,13 @@ public interface UserService extends GenericService {
     public void deleteByDni(String dni);
 
     /**
-     * Saves a User by its CreateUserDto
+     * Saves a User by its CreateUserDto and returns the persisted object
      * 
      * @param createUserDto
      *            Dto with the needed data
      * @throws CustomValidationException
      */
-    public void save(UserDto userDto) throws CustomValidationException;
+    public UserDto save(UserDto userDto) throws CustomValidationException;
 
     /**
      * Finds a User by its nickname (username)

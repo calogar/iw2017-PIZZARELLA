@@ -2,9 +2,8 @@ package com.calogardev.pizzarella.model;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.List;
+import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -12,6 +11,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -27,7 +27,7 @@ public class Product implements Serializable, Dto {
     @GeneratedValue
     private Long id;
 
-    @Column(length = 50, nullable = false)
+    @Column(length = 50, nullable = false, unique = true)
     private String name;
 
     @Column(nullable = false)
@@ -40,14 +40,21 @@ public class Product implements Serializable, Dto {
     @Column(nullable = false, precision = 3, scale = 2)
     private Float vat;
 
-    @Column(length = 999, nullable = false)
+    @Column(/* length = 200, */ nullable = false)
     private Integer amount;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<Product> products;
+    private Boolean isIngredient;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH })
+    @OneToMany(fetch = FetchType.EAGER)
+    private Set<Product> ingredients;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "product_family_id")
     private ProductFamily family;
+
+    public Product() {
+	super();
+    }
 
     /**
      * @return the id
@@ -140,18 +147,33 @@ public class Product implements Serializable, Dto {
     }
 
     /**
-     * @return the products
+     * @return the isIngredient
      */
-    public List<Product> getProducts() {
-	return products;
+    public Boolean getIsIngredient() {
+	return isIngredient;
     }
 
     /**
-     * @param products
-     *            the products to set
+     * @param isIngredient
+     *            the isIngredient to set
      */
-    public void setProducts(List<Product> products) {
-	this.products = products;
+    public void setIsIngredient(Boolean isIngredient) {
+	this.isIngredient = isIngredient;
+    }
+
+    /**
+     * @return the ingredients
+     */
+    public Set<Product> getIngredients() {
+	return ingredients;
+    }
+
+    /**
+     * @param ingredients
+     *            the ingredients to set
+     */
+    public void setIngredients(Set<Product> ingredients) {
+	this.ingredients = ingredients;
     }
 
     /**
@@ -177,13 +199,85 @@ public class Product implements Serializable, Dto {
     @Override
     public String toString() {
 	return "Product [id=" + id + ", name=" + name + ", status=" + status + ", price=" + price + ", vat=" + vat
-		+ ", amount=" + amount + ", products=" + products + ", family=" + family + "]";
+		+ ", amount=" + amount + ", isIngredient=" + isIngredient + ", ingredients=" + ingredients + ", family="
+		+ family + "]";
     }
 
     @Override
     public Field[] getDeclaredFields() {
 	// TODO Auto-generated method stub
 	return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((family == null) ? 0 : family.hashCode());
+	result = prime * result + ((id == null) ? 0 : id.hashCode());
+	result = prime * result + ((ingredients == null) ? 0 : ingredients.hashCode());
+	result = prime * result + ((isIngredient == null) ? 0 : isIngredient.hashCode());
+	result = prime * result + ((name == null) ? 0 : name.hashCode());
+	result = prime * result + ((price == null) ? 0 : price.hashCode());
+	result = prime * result + ((vat == null) ? 0 : vat.hashCode());
+	return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	Product other = (Product) obj;
+	if (family == null) {
+	    if (other.family != null)
+		return false;
+	} else if (!family.equals(other.family))
+	    return false;
+	if (id == null) {
+	    if (other.id != null)
+		return false;
+	} else if (!id.equals(other.id))
+	    return false;
+	if (ingredients == null) {
+	    if (other.ingredients != null)
+		return false;
+	} else if (!ingredients.equals(other.ingredients))
+	    return false;
+	if (isIngredient == null) {
+	    if (other.isIngredient != null)
+		return false;
+	} else if (!isIngredient.equals(other.isIngredient))
+	    return false;
+	if (name == null) {
+	    if (other.name != null)
+		return false;
+	} else if (!name.equals(other.name))
+	    return false;
+	if (price == null) {
+	    if (other.price != null)
+		return false;
+	} else if (!price.equals(other.price))
+	    return false;
+	if (vat == null) {
+	    if (other.vat != null)
+		return false;
+	} else if (!vat.equals(other.vat))
+	    return false;
+	return true;
     }
 
 }

@@ -25,9 +25,10 @@ public interface ProductFamilyService extends GenericService {
      * 
      * @param productFamilyDto
      *            The dto with the required data
+     * @return
      * @throws CustomValidationException
      */
-    public void save(ProductFamilyDto dto) throws CustomValidationException;
+    public ProductFamilyDto save(ProductFamilyDto dto) throws CustomValidationException;
 
     public void deleteByCode(String code);
 }
