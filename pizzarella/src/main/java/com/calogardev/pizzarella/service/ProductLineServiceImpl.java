@@ -27,4 +27,12 @@ public class ProductLineServiceImpl implements ProductLineService {
 	pl.setStatus(Status.DELETED);
 	productLineDao.save(pl);
     }
+
+    @Override
+    public ProductLineDto save(ProductLineDto plDto) {
+	ProductLine pl = utilsService.transform(plDto, ProductLine.class);
+	pl = productLineDao.save(pl);
+	System.out.println("Saved Product Line: " + pl);
+	return utilsService.transform(pl, ProductLineDto.class);
+    }
 }

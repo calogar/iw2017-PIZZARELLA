@@ -56,7 +56,7 @@ public class DashboardLayout extends HorizontalLayout {
 	menuArea.addComponent(menu);
 
 	// Add title to menu
-	Layout top = createTopTitle("Pizarella");
+	Layout top = createTopTitle("Pizzarella");
 	menu.addComponent(top);
 
 	menuItems = navigationBar;

@@ -35,7 +35,7 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.RichTextArea;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.themes.ValoTheme;
@@ -100,6 +100,7 @@ public class OrderEditor extends VerticalLayout {
     }
 
     private void buildSelectProductFamily() {
+	selectProductGrid.setItems(productService.findAllSellable());
 	for (ProductFamilyDto family : productFamilyService.findAll()) {
 	    Button select = new Button(family.getName(), e -> {
 		selectProductGrid.setItems(productService.findAllSellableFromFamily(family));
@@ -155,14 +156,21 @@ public class OrderEditor extends VerticalLayout {
 	// TODO not checking that tables are already taken
 	ComboBox<Integer> orderTable = new ComboBox<>("Table Number");
 	orderTable.setItems(Arrays.asList(1, 2, 3, 4, 5, 6));
-	binder.bind(orderType, "tableNumber");
+	binder.bind(orderTable, "tableNumber");
 
 	ComboBox<OrderPlace> orderPlace = new ComboBox<>("Place");
 	orderPlace.setItems(EnumSet.allOf(OrderPlace.class));
 	binder.bind(orderPlace, "place");
+	// binder.forField(orderPlace).withValidator(dto -> dto.getTableNumber()
+	// < 50 && dto.getTableNumber() > 1, "Table number must be between 1 and
+	// 50").bind("place");
 
-	RichTextArea notes = new RichTextArea("Additional notes");
-	binder.bind(notes, "notes");
+	TextField telephone = new TextField("Contact telephone");
+	binder.bind(telephone, "telephone");
+	telephone.setVisible(false);
+
+	// RichTextArea notes = new RichTextArea("Additional notes");
+	// binder.bind(notes, "notes");
 
 	orderType.addSelectionListener(e -> {
 	    if (e.getSelectedItem().get() != OrderType.LOCAL) {
@@ -170,13 +178,16 @@ public class OrderEditor extends VerticalLayout {
 		// TODO manually set to null place and table in save
 		orderTable.setVisible(false);
 		orderPlace.setVisible(false);
+		telephone.setVisible(true);
 	    } else {
 		orderTable.setVisible(true);
 		orderPlace.setVisible(true);
+		telephone.setVisible(false);
 	    }
 	});
 
-	orderForm.addComponents(orderType, orderTable, orderPlace, notes);
+	orderForm.addComponents(orderType, orderTable, orderPlace, telephone);// ,
+									      // notes);
     }
 
     /**
@@ -272,18 +283,18 @@ public class OrderEditor extends VerticalLayout {
 
     private void saveOrder(OrderDto orderDto) {
 
-	if (binder.validate().isOk()) {
-	    try {
-		binder.writeBean(orderDto);
-		orderService.save(orderDto);
-		Notification.show("Record created correctly.");
+	// if (binder.validate().isOk()) {
+	try {
+	    binder.writeBean(orderDto);
+	    orderService.save(orderDto);
+	    Notification.show("Record created correctly.");
 
-	    } catch (CustomValidationException | ValidationException e) {
-		Notification n = new Notification(e.getMessage(), null, Notification.Type.ERROR_MESSAGE, true);
-		n.show(Page.getCurrent());
-		return;
-	    }
+	} catch (CustomValidationException | ValidationException e) {
+	    Notification n = new Notification(e.getMessage(), null, Notification.Type.ERROR_MESSAGE, true);
+	    n.show(Page.getCurrent());
+	    return;
 	}
+	// }
     }
 
     private void deleteOrder(OrderDto orderDto) {

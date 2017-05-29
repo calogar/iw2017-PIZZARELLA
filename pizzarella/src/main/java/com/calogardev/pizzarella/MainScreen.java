@@ -71,10 +71,10 @@ public class MainScreen extends HorizontalLayout implements ViewDisplay {
 	navigationBar.addComponent(createNavButton(OrdersView.VIEW_NAME, OrdersView.VIEW_ROUTE));
 
 	if (securityService.currentUserHasRole("ROLE_MANAGER")) {
-	    Button managerOptions = new Button("MANAGER OPTIONS");
-	    managerOptions.setPrimaryStyleName(ValoTheme.MENU_ITEM);
-	    managerOptions.setEnabled(false);
-	    navigationBar.addComponent(managerOptions);
+	    // Button managerOptions = new Button("MANAGER OPTIONS");
+	    // managerOptions.setPrimaryStyleName(ValoTheme.MENU_ITEM);
+	    // managerOptions.setEnabled(false);
+	    // navigationBar.addComponent(managerOptions);
 
 	    navigationBar.addComponent(createNavButton(ProductsView.VIEW_NAME, ProductsView.VIEW_ROUTE));
 	    navigationBar.addComponent(createNavButton(ProductFamiliesView.VIEW_NAME, ProductFamiliesView.VIEW_ROUTE));

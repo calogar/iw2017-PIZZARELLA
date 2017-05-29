@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -11,7 +12,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -40,14 +40,12 @@ public class Order implements Serializable {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private OrderPlace place;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private OrderType type;
 
-    @Column(length = 10)
     private Integer tableNumber;
 
     @Column(nullable = false, precision = 3, scale = 2)
@@ -65,11 +63,10 @@ public class Order implements Serializable {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ProductLine> productLines;
 
-    @ManyToOne
-    private Client client;
+    private String telephone;
 
     /**
      * @return the id
@@ -207,21 +204,6 @@ public class Order implements Serializable {
     }
 
     /**
-     * @return the client
-     */
-    public Client getClient() {
-	return client;
-    }
-
-    /**
-     * @param client
-     *            the client to set
-     */
-    public void setClient(Client client) {
-	this.client = client;
-    }
-
-    /**
      * @return the type
      */
     public OrderType getType() {
@@ -236,6 +218,21 @@ public class Order implements Serializable {
 	this.type = type;
     }
 
+    /**
+     * @return the telephone
+     */
+    public String getTelephone() {
+	return telephone;
+    }
+
+    /**
+     * @param telephone
+     *            the telephone to set
+     */
+    public void setTelephone(String telephone) {
+	this.telephone = telephone;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -245,6 +242,8 @@ public class Order implements Serializable {
     public String toString() {
 	return "Order [id=" + id + ", place=" + place + ", type=" + type + ", tableNumber=" + tableNumber
 		+ ", totalPrice=" + totalPrice + ", orderedAt=" + orderedAt + ", notes=" + notes + ", orderStatus="
-		+ orderStatus + ", status=" + status + ", productLines=" + productLines + ", client=" + client + "]";
+		+ orderStatus + ", status=" + status + ", productLines=" + productLines + ", telephone=" + telephone
+		+ "]";
     }
+
 }

@@ -1,5 +1,6 @@
 package com.calogardev.pizzarella.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import com.calogardev.pizzarella.dto.OrderDto;
 import com.calogardev.pizzarella.dto.ProductLineDto;
 import com.calogardev.pizzarella.enums.OrderPlace;
 import com.calogardev.pizzarella.enums.OrderStatus;
+import com.calogardev.pizzarella.enums.OrderType;
 import com.calogardev.pizzarella.enums.Status;
 import com.calogardev.pizzarella.exception.CustomValidationException;
 import com.calogardev.pizzarella.exception.OrderNotFoundException;
@@ -52,11 +54,50 @@ public class OrderServiceImpl implements OrderService {
 	    }
 	}
 
+	if (dto.getProductLines() == null) {
+	    throw new CustomValidationException("An Order must have at least one Product");
+	}
+	if (dto.getType() == OrderType.LOCAL) {
+	    if (dto.getPlace() == null) {
+		throw new CustomValidationException("Place for a local Order can't be empty");
+	    } else if (dto.getTableNumber() == null) {
+		throw new CustomValidationException("table number for a local Order can't be empty");
+	    }
+	} else {
+	    dto.setPlace(null);
+	    dto.setTableNumber(null);
+	    if (dto.getTelephone() == null) {
+		throw new CustomValidationException("Telephone for a non local Order can't be empty");
+	    }
+	}
+
+	Float totalPrice = 0f;
+	List<ProductLineDto> persistedPls = new ArrayList<ProductLineDto>();
+	for (ProductLineDto plDto : dto.getProductLines()) {
+
+	    // Calculate total price
+	    totalPrice = totalPrice + plDto.getPrice();
+
+	    // Save them without order and update it later
+	    // persistedPls.add(productLineService.save(plDto));
+	}
+
+	// Set the persisted pls to the order
+	// dto.setProductLines(persistedPls);
 	Order order = utilsService.transform(dto, Order.class);
+	order.setTotalPrice(totalPrice);
 	order.setOrderedAt(new Date());
 	order.setStatus(Status.ACTIVE);
 	order.setOrderStatus(OrderStatus.SENT_TO_KITCHEN);
-	orderDao.save(order);
+
+	order = orderDao.save(order);
+
+	// Now that we have the order id, update the pls
+	for (ProductLine pl : order.getProductLines()) {
+	    pl.setOrder(order);
+	    productLineService.save(utilsService.transform(pl, ProductLineDto.class));
+	    log.info("Saved Product Line: " + pl);
+	}
 	log.info("Saved Order: " + order);
     }
 

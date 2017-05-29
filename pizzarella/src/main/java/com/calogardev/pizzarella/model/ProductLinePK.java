@@ -18,7 +18,6 @@ public class ProductLinePK implements Serializable {
 
     public ProductLinePK() {
 	super();
-	// TODO Auto-generated constructor stub
     }
 
     /**

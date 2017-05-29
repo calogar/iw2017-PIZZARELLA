@@ -1,13 +1,17 @@
 package com.calogardev.pizzarella.dto;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 
 import com.calogardev.pizzarella.enums.Status;
 
-public class ProductLineDto {
+public class ProductLineDto implements Serializable {
 
-    private Long id;
+    private static final long serialVersionUID = -4073065623017991679L;
+
+    private ProductLinePKDto id;
 
     @NotNull
     private ProductDto product;
@@ -36,21 +40,7 @@ public class ProductLineDto {
 	this.order = order;
 	this.amount = amount;
 	this.price = price;
-    }
-
-    /**
-     * @return the id
-     */
-    public Long getId() {
-	return id;
-    }
-
-    /**
-     * @param id
-     *            the id to set
-     */
-    public void setId(Long id) {
-	this.id = id;
+	this.id = new ProductLinePKDto();
     }
 
     /**
@@ -130,6 +120,21 @@ public class ProductLineDto {
     public String toString() {
 	return "ProductLineDto [id=" + id + ", product=" + product + ", order=" + order + ", amount=" + amount
 		+ ", price=" + price + ", status=" + status + "]";
+    }
+
+    /**
+     * @return the id
+     */
+    public ProductLinePKDto getId() {
+	return id;
+    }
+
+    /**
+     * @param id
+     *            the id to set
+     */
+    public void setId(ProductLinePKDto id) {
+	this.id = id;
     }
 
 }

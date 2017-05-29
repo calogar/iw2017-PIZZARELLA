@@ -19,21 +19,16 @@ public class OrderDto implements Serializable {
 
     private Long id;
 
-    @NotNull
     private OrderPlace place;
 
     @NotNull
     private OrderType type;
 
-    @NotNull
-    @Size(min = 0, max = 10)
     private Integer tableNumber;
 
-    @NotNull
     @Digits(integer = 3, fraction = 2)
     private Float totalPrice;
 
-    @NotNull
     private Date orderedAt;
 
     @Size(min = 0, max = 255)
@@ -45,7 +40,7 @@ public class OrderDto implements Serializable {
 
     private List<ProductLineDto> productLines;
 
-    private ClientDto client;
+    private String telephone;
 
     public Long getId() {
 	return id;
@@ -111,14 +106,6 @@ public class OrderDto implements Serializable {
 	this.status = status;
     }
 
-    public ClientDto getClient() {
-	return client;
-    }
-
-    public void setClient(ClientDto client) {
-	this.client = client;
-    }
-
     /**
      * @return the productLines
      */
@@ -166,7 +153,23 @@ public class OrderDto implements Serializable {
     public String toString() {
 	return "OrderDto [id=" + id + ", place=" + place + ", type=" + type + ", tableNumber=" + tableNumber
 		+ ", totalPrice=" + totalPrice + ", orderedAt=" + orderedAt + ", notes=" + notes + ", orderStatus="
-		+ orderStatus + ", status=" + status + ", productLines=" + productLines + ", client=" + client + "]";
+		+ orderStatus + ", status=" + status + ", productLines=" + productLines + ", telephone=" + telephone
+		+ "]";
+    }
+
+    /**
+     * @return the telephone
+     */
+    public String getTelephone() {
+	return telephone;
+    }
+
+    /**
+     * @param telephone
+     *            the telephone to set
+     */
+    public void setTelephone(String telephone) {
+	this.telephone = telephone;
     }
 
 }
