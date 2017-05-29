@@ -1,6 +1,5 @@
 package com.calogardev.pizzarella.service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -72,18 +71,14 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	Float totalPrice = 0f;
-	List<ProductLineDto> persistedPls = new ArrayList<ProductLineDto>();
 	for (ProductLineDto plDto : dto.getProductLines()) {
 
+	    plDto.setOrder(dto);
 	    // Calculate total price
 	    totalPrice = totalPrice + plDto.getPrice();
 
-	    // Save them without order and update it later
-	    // persistedPls.add(productLineService.save(plDto));
 	}
 
-	// Set the persisted pls to the order
-	// dto.setProductLines(persistedPls);
 	Order order = utilsService.transform(dto, Order.class);
 	order.setTotalPrice(totalPrice);
 	order.setOrderedAt(new Date());

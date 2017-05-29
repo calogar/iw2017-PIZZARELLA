@@ -31,6 +31,7 @@ public class ProductLineServiceImpl implements ProductLineService {
     @Override
     public ProductLineDto save(ProductLineDto plDto) {
 	ProductLine pl = utilsService.transform(plDto, ProductLine.class);
+	pl.setStatus(Status.ACTIVE);
 	pl = productLineDao.save(pl);
 	System.out.println("Saved Product Line: " + pl);
 	return utilsService.transform(pl, ProductLineDto.class);
