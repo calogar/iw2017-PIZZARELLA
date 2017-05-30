@@ -143,6 +143,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Product findOneNoConversion(Long id) {
+	return productDao.findOne(id);
+    }
+
+    @Override
     public List<ProductDto> findAllIngredients() {
 	return utilsService.transform(productDao.findAllIngredients(), ProductDto.class);
 

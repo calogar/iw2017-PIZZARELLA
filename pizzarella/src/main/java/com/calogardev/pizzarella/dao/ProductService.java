@@ -8,6 +8,7 @@ import com.calogardev.pizzarella.exception.CustomValidationException;
 import com.calogardev.pizzarella.exception.IngredientWithProductsException;
 import com.calogardev.pizzarella.exception.ProductNotFoundException;
 import com.calogardev.pizzarella.exception.ProductWithoutFamilyException;
+import com.calogardev.pizzarella.model.Product;
 import com.calogardev.pizzarella.service.GenericService;
 
 /**
@@ -64,4 +65,6 @@ public interface ProductService extends GenericService {
     List<ProductDto> findAllIngredients();
 
     List<ProductDto> findAllSellableFromFamily(ProductFamilyDto dto);
+
+    Product findOneNoConversion(Long id);
 }

@@ -39,8 +39,9 @@ public class OrdersView extends VerticalLayout implements View {
 
     // Contains all the OrdesView screen login so we can set it visible or not
     private VerticalLayout displayOrders = new VerticalLayout();
-    private Grid<OrderDto> openOrdersGrid = new Grid<OrderDto>();
-    private Grid<OrderDto> closedOrdersGrid = new Grid<OrderDto>();
+    private static Grid<OrderDto> openOrdersGrid = new Grid<OrderDto>();
+    private static Grid<OrderDto> kitchenOrdersGrid = new Grid<OrderDto>();
+    private static Grid<OrderDto> closedOrdersGrid = new Grid<OrderDto>();
     private HorizontalLayout menu = new HorizontalLayout();
 
     @PostConstruct
@@ -104,6 +105,10 @@ public class OrdersView extends VerticalLayout implements View {
 	Label title = new Label(VIEW_NAME);
 	title.addStyleName(ValoTheme.LABEL_H1);
 	addComponent(title);
+    }
+
+    public static void refreshGrids() {
+
     }
 
     @Override

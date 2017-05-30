@@ -33,221 +33,269 @@ import com.calogardev.pizzarella.enums.Status;
 @Table(name = "orders") // To avoid keyword conflicts in SQL
 public class Order implements Serializable {
 
-	private static final long serialVersionUID = 3311526638346833028L;
+    private static final long serialVersionUID = 3311526638346833028L;
 
-	@Id
-	@GeneratedValue
-	private Long id;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-	@Enumerated(EnumType.STRING)
-	private OrderPlace place;
+    @Enumerated(EnumType.STRING)
+    private OrderPlace place;
 
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private OrderType type;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private OrderType type;
 
-	private Integer tableNumber;
+    private Integer tableNumber;
 
-	@Column(nullable = false, precision = 3, scale = 2)
-	private Float totalPrice;
+    @Column(nullable = false, precision = 3, scale = 2)
+    private Float totalPrice;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date orderedAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date orderedAt;
 
-	@Column(length = 255)
-	private String notes;
+    @Column(length = 255)
+    private String notes;
 
-	@Enumerated(EnumType.STRING)
-	private OrderStatus orderStatus;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
 
-	@Enumerated(EnumType.STRING)
-	private Status status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private List<ProductLine> productLines;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<ProductLine> productLines;
 
-	private String telephone;
+    private String telephone;
 
-	/**
-	 * @return the id
-	 */
-	public Long getId() {
-		return id;
-	}
+    public Order() {
+	super();
+	// TODO Auto-generated constructor stub
+    }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(Long id) {
-		this.id = id;
-	}
+    /**
+     * @return the id
+     */
+    public Long getId() {
+	return id;
+    }
 
-	/**
-	 * @return the place
-	 */
-	public OrderPlace getPlace() {
-		return place;
-	}
+    /**
+     * @param id
+     *            the id to set
+     */
+    public void setId(Long id) {
+	this.id = id;
+    }
 
-	public Order(OrderType type, Float totalPrice, Date orderedAt, OrderStatus orderStatus, Status status,
-			List<ProductLine> productLines, String telephone) {
-		super();
-		this.type = type;
-		this.totalPrice = totalPrice;
-		this.orderedAt = orderedAt;
-		this.orderStatus = orderStatus;
-		this.status = status;
-		this.productLines = productLines;
-		this.telephone = telephone;
-	}
+    /**
+     * @return the place
+     */
+    public OrderPlace getPlace() {
+	return place;
+    }
 
-	/**
-	 * @param place
-	 *            the place to set
-	 */
-	public void setPlace(OrderPlace place) {
-		this.place = place;
-	}
+    public Order(OrderType type, Float totalPrice, Date orderedAt, OrderStatus orderStatus, Status status,
+	    List<ProductLine> productLines, String telephone) {
+	super();
+	this.type = type;
+	this.totalPrice = totalPrice;
+	this.orderedAt = orderedAt;
+	this.orderStatus = orderStatus;
+	this.status = status;
+	this.productLines = productLines;
+	this.telephone = telephone;
+    }
 
-	/**
-	 * @return the tableNumber
-	 */
-	public Integer getTableNumber() {
-		return tableNumber;
-	}
+    /**
+     * @param place
+     *            the place to set
+     */
+    public void setPlace(OrderPlace place) {
+	this.place = place;
+    }
 
-	/**
-	 * @param tableNumber
-	 *            the tableNumber to set
-	 */
-	public void setTableNumber(Integer tableNumber) {
-		this.tableNumber = tableNumber;
-	}
+    /**
+     * @return the tableNumber
+     */
+    public Integer getTableNumber() {
+	return tableNumber;
+    }
 
-	/**
-	 * @return the totalPrice
-	 */
-	public Float getTotalPrice() {
-		return totalPrice;
-	}
+    /**
+     * @param tableNumber
+     *            the tableNumber to set
+     */
+    public void setTableNumber(Integer tableNumber) {
+	this.tableNumber = tableNumber;
+    }
 
-	/**
-	 * @param totalPrice
-	 *            the totalPrice to set
-	 */
-	public void setTotalPrice(Float totalPrice) {
-		this.totalPrice = totalPrice;
-	}
+    /**
+     * @return the totalPrice
+     */
+    public Float getTotalPrice() {
+	return totalPrice;
+    }
 
-	/**
-	 * @return the orderedAt
-	 */
-	public Date getOrderedAt() {
-		return orderedAt;
-	}
+    /**
+     * @param totalPrice
+     *            the totalPrice to set
+     */
+    public void setTotalPrice(Float totalPrice) {
+	this.totalPrice = totalPrice;
+    }
 
-	/**
-	 * @param orderedAt
-	 *            the orderedAt to set
-	 */
-	public void setOrderedAt(Date orderedAt) {
-		this.orderedAt = orderedAt;
-	}
+    /**
+     * @return the orderedAt
+     */
+    public Date getOrderedAt() {
+	return orderedAt;
+    }
 
-	/**
-	 * @return the notes
-	 */
-	public String getNotes() {
-		return notes;
-	}
+    /**
+     * @param orderedAt
+     *            the orderedAt to set
+     */
+    public void setOrderedAt(Date orderedAt) {
+	this.orderedAt = orderedAt;
+    }
 
-	/**
-	 * @param notes
-	 *            the notes to set
-	 */
-	public void setNotes(String notes) {
-		this.notes = notes;
-	}
+    /**
+     * @return the notes
+     */
+    public String getNotes() {
+	return notes;
+    }
 
-	/**
-	 * @return the orderStatus
-	 */
-	public OrderStatus getOrderStatus() {
-		return orderStatus;
-	}
+    /**
+     * @param notes
+     *            the notes to set
+     */
+    public void setNotes(String notes) {
+	this.notes = notes;
+    }
 
-	/**
-	 * @param orderStatus
-	 *            the orderStatus to set
-	 */
-	public void setOrderStatus(OrderStatus orderStatus) {
-		this.orderStatus = orderStatus;
-	}
+    /**
+     * @return the orderStatus
+     */
+    public OrderStatus getOrderStatus() {
+	return orderStatus;
+    }
 
-	/**
-	 * @return the status
-	 */
-	public Status getStatus() {
-		return status;
-	}
+    /**
+     * @param orderStatus
+     *            the orderStatus to set
+     */
+    public void setOrderStatus(OrderStatus orderStatus) {
+	this.orderStatus = orderStatus;
+    }
 
-	/**
-	 * @param status
-	 *            the status to set
-	 */
-	public void setStatus(Status status) {
-		this.status = status;
-	}
+    /**
+     * @return the status
+     */
+    public Status getStatus() {
+	return status;
+    }
 
-	/**
-	 * @return the productLines
-	 */
-	public List<ProductLine> getProductLines() {
-		return productLines;
-	}
+    /**
+     * @param status
+     *            the status to set
+     */
+    public void setStatus(Status status) {
+	this.status = status;
+    }
 
-	/**
-	 * @param productLines
-	 *            the productLines to set
-	 */
-	public void setProductLines(List<ProductLine> productLines) {
-		this.productLines = productLines;
-	}
+    /**
+     * @return the productLines
+     */
+    public List<ProductLine> getProductLines() {
+	return productLines;
+    }
 
-	/**
-	 * @return the type
-	 */
-	public OrderType getType() {
-		return type;
-	}
+    /**
+     * @param productLines
+     *            the productLines to set
+     */
+    public void setProductLines(List<ProductLine> productLines) {
+	this.productLines = productLines;
+    }
 
-	/**
-	 * @param type
-	 *            the type to set
-	 */
-	public void setType(OrderType type) {
-		this.type = type;
-	}
+    /**
+     * @return the type
+     */
+    public OrderType getType() {
+	return type;
+    }
 
-	/**
-	 * @return the telephone
-	 */
-	public String getTelephone() {
-		return telephone;
-	}
+    /**
+     * @param type
+     *            the type to set
+     */
+    public void setType(OrderType type) {
+	this.type = type;
+    }
 
-	/**
-	 * @param telephone
-	 *            the telephone to set
-	 */
-	public void setTelephone(String telephone) {
-		this.telephone = telephone;
-	}
+    /**
+     * @return the telephone
+     */
+    public String getTelephone() {
+	return telephone;
+    }
 
-	@Override
-	public String toString() {
-		return "Order [id=" + id;
-	}
+    /**
+     * @param telephone
+     *            the telephone to set
+     */
+    public void setTelephone(String telephone) {
+	this.telephone = telephone;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((id == null) ? 0 : id.hashCode());
+	return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	Order other = (Order) obj;
+	if (id == null) {
+	    if (other.id != null)
+		return false;
+	} else if (!id.equals(other.id))
+	    return false;
+	return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+	return "Order [id=" + id + ", place=" + place + ", type=" + type + ", tableNumber=" + tableNumber
+		+ ", totalPrice=" + totalPrice + ", orderedAt=" + orderedAt + ", notes=" + notes + ", orderStatus="
+		+ orderStatus + ", status=" + status + ", productLines=" + productLines + ", telephone=" + telephone
+		+ "]";
+    }
 
 }
