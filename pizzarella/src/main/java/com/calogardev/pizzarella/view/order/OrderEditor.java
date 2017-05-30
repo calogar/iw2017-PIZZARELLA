@@ -292,6 +292,8 @@ public class OrderEditor extends VerticalLayout {
 	    binder.writeBean(orderDto);
 	    orderService.save(orderDto);
 	    Notification.show("Record created correctly.");
+	    OrdersView.refreshGrids();
+	    OrdersView.refreshTotalIncomes();
 
 	} catch (CustomValidationException | ValidationException e) {
 	    Notification n = new Notification(e.getMessage(), null, Notification.Type.ERROR_MESSAGE, true);

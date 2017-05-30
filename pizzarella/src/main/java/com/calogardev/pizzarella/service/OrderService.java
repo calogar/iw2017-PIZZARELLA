@@ -3,6 +3,7 @@ package com.calogardev.pizzarella.service;
 import java.util.List;
 
 import com.calogardev.pizzarella.dto.OrderDto;
+import com.calogardev.pizzarella.enums.OrderStatus;
 import com.calogardev.pizzarella.exception.CustomValidationException;
 import com.calogardev.pizzarella.exception.OrderNotFoundException;
 
@@ -46,4 +47,8 @@ public interface OrderService {
     public Float getTotalIncomes();
 
     public void delete(OrderDto orderDto);
+
+    public List<OrderDto> findAllWithStatus(OrderStatus status);
+
+    public OrderDto updateStatus(Long id, OrderStatus status);
 }

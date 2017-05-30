@@ -107,7 +107,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 	order.setProductLines(pls);
 	order = orderDao.save(order);
-	log.info("Saved Order: " + order);
+	// log.info("Saved Order: " + order);
     }
 
     @Override
@@ -125,6 +125,13 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderDto> findAll() {
 	log.info("Finding all active Orders");
 	final List<Order> orders = orderDao.findAll();
+	List<OrderDto> orderDtos = utilsService.transform(orders, OrderDto.class);
+	return orderDtos;
+    }
+
+    @Override
+    public List<OrderDto> findAllWithStatus(OrderStatus status) {
+	final List<Order> orders = orderDao.findAllWithStatus(status);
 	List<OrderDto> orderDtos = utilsService.transform(orders, OrderDto.class);
 	return orderDtos;
     }
@@ -180,6 +187,12 @@ public class OrderServiceImpl implements OrderService {
 	}
 	order.setStatus(Status.DELETED);
 	orderDao.save(order);
+    }
 
+    @Override
+    public OrderDto updateStatus(Long id, OrderStatus status) {
+	Order order = orderDao.findOne(id);
+	order.setOrderStatus(status);
+	return utilsService.transform(orderDao.save(order), OrderDto.class);
     }
 }
