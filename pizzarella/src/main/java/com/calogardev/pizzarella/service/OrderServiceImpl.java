@@ -30,142 +30,143 @@ import com.calogardev.pizzarella.model.ProductLine;
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    private static final Logger log = LoggerFactory.getLogger(OrderServiceImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(OrderServiceImpl.class);
 
-    @Autowired
-    private OrderDao orderDao;
+	@Autowired
+	private OrderDao orderDao;
 
-    @Autowired
-    private ProductLineService productLineService;
+	@Autowired
+	private ProductLineService productLineService;
 
-    @Autowired
-    private UtilsService utilsService;
+	@Autowired
+	private UtilsService utilsService;
 
-    @Override
-    public void save(OrderDto dto) throws CustomValidationException {
+	@Override
+	public void save(OrderDto dto) throws CustomValidationException {
 
-	if (dto.getId() == null) {
-	    // Perform create
-	} else {
-	    // Perform update
-	    if (orderDao.findOne(dto.getId()).getStatus() != Status.ACTIVE) {
-		throw new CustomValidationException("That Order is deleted and cannot be updated");
-	    }
+		if (dto.getId() == null) {
+			// Perform create
+		} else {
+			// Perform update
+			if (orderDao.findOne(dto.getId()).getStatus() != Status.ACTIVE) {
+				throw new CustomValidationException("That Order is deleted and cannot be updated");
+			}
+		}
+
+		if (dto.getProductLines() == null) {
+			throw new CustomValidationException("An Order must have at least one Product");
+		}
+		if (dto.getType() == OrderType.LOCAL) {
+			if (dto.getPlace() == null) {
+				throw new CustomValidationException("Place for a local Order can't be empty");
+			} else if (dto.getTableNumber() == null) {
+				throw new CustomValidationException("table number for a local Order can't be empty");
+			}
+		} else {
+			dto.setPlace(null);
+			dto.setTableNumber(null);
+			if (dto.getTelephone() == null) {
+				throw new CustomValidationException("Telephone for a non local Order can't be empty");
+			}
+		}
+
+		Float totalPrice = 0f;
+		for (ProductLineDto plDto : dto.getProductLines()) {
+
+			plDto.setOrder(dto);
+			// Calculate total price
+			totalPrice = totalPrice + plDto.getPrice();
+
+		}
+
+		Order order = utilsService.transform(dto, Order.class);
+		order.setTotalPrice(totalPrice);
+		order.setOrderedAt(new Date());
+		order.setStatus(Status.ACTIVE);
+		order.setOrderStatus(OrderStatus.SENT_TO_KITCHEN);
+
+		order = orderDao.save(order);
+
+		// // Now that we have the order id, update the pls
+		// for (ProductLine pl : order.getProductLines()) {
+		// pl.setOrder(order);
+		// productLineService.save(utilsService.transform(pl,
+		// ProductLineDto.class));
+		// log.info("Saved Product Line: " + pl);
+		// }
+		// log.info("Saved Order: " + order);
 	}
 
-	if (dto.getProductLines() == null) {
-	    throw new CustomValidationException("An Order must have at least one Product");
-	}
-	if (dto.getType() == OrderType.LOCAL) {
-	    if (dto.getPlace() == null) {
-		throw new CustomValidationException("Place for a local Order can't be empty");
-	    } else if (dto.getTableNumber() == null) {
-		throw new CustomValidationException("table number for a local Order can't be empty");
-	    }
-	} else {
-	    dto.setPlace(null);
-	    dto.setTableNumber(null);
-	    if (dto.getTelephone() == null) {
-		throw new CustomValidationException("Telephone for a non local Order can't be empty");
-	    }
+	@Override
+	@Transactional(readOnly = true)
+	public OrderDto findOne(Long id) throws OrderNotFoundException {
+		final Order order = orderDao.findOne(id);
+		if (order == null) {
+			throw new OrderNotFoundException();
+		}
+		log.info("Finding Order: " + order);
+		return utilsService.transform(order, OrderDto.class);
 	}
 
-	Float totalPrice = 0f;
-	for (ProductLineDto plDto : dto.getProductLines()) {
-
-	    plDto.setOrder(dto);
-	    // Calculate total price
-	    totalPrice = totalPrice + plDto.getPrice();
-
+	@Override
+	public List<OrderDto> findAll() {
+		log.info("Finding all active Orders");
+		final List<Order> orders = orderDao.findAll();
+		List<OrderDto> orderDtos = utilsService.transform(orders, OrderDto.class);
+		return orderDtos;
 	}
 
-	Order order = utilsService.transform(dto, Order.class);
-	order.setTotalPrice(totalPrice);
-	order.setOrderedAt(new Date());
-	order.setStatus(Status.ACTIVE);
-	order.setOrderStatus(OrderStatus.SENT_TO_KITCHEN);
+	//
+	// public String getFormattedLocation(OrderDto o) {
+	//
+	// StringBuilder location = new StringBuilder();
+	// location.append("From restnaurant '");
+	// // location.append(o.getRestaurant().getName());
+	// if (o.getTableNumber() != null) {
+	// // The order was taken locally
+	// location.append(" in " + formatPlace(o.getOrderPlace()) + " at table " +
+	// o.getTableNumber());
+	// } else {
+	// // The order was taken remotely (it has an associated client)
+	// // Rework client, make it exclusively external and add telephone
+	// location.append(" by client ");
+	// }
+	// return location;
+	// }
 
-	order = orderDao.save(order);
-
-	// Now that we have the order id, update the pls
-	for (ProductLine pl : order.getProductLines()) {
-	    pl.setOrder(order);
-	    productLineService.save(utilsService.transform(pl, ProductLineDto.class));
-	    log.info("Saved Product Line: " + pl);
+	@Override
+	public Float getTotalIncomes() {
+		Float total = 0f;
+		for (OrderDto orderDto : findAll()) {
+			total = total + orderDto.getTotalPrice();
+		}
+		return total;
 	}
-	log.info("Saved Order: " + order);
-    }
 
-    @Override
-    @Transactional(readOnly = true)
-    public OrderDto findOne(Long id) throws OrderNotFoundException {
-	final Order order = orderDao.findOne(id);
-	if (order == null) {
-	    throw new OrderNotFoundException();
+	private String formatPlace(OrderPlace place) {
+		if (place == OrderPlace.HALL) {
+			return "the hall";
+		} else if (place == OrderPlace.BAR) {
+			return "the bar";
+		} else {
+			return "the terrace";
+		}
 	}
-	log.info("Finding Order: " + order);
-	return utilsService.transform(order, OrderDto.class);
-    }
 
-    @Override
-    public List<OrderDto> findAll() {
-	log.info("Finding all active Orders");
-	final List<Order> orders = orderDao.findAll();
-	List<OrderDto> orderDtos = utilsService.transform(orders, OrderDto.class);
-	return orderDtos;
-    }
+	@Override
+	public void delete(OrderDto orderDto) {
+		if (orderDto.getId() == null) {
+			return;
+		}
+		Order order = orderDao.findOne(orderDto.getId());
 
-    //
-    // public String getFormattedLocation(OrderDto o) {
-    //
-    // StringBuilder location = new StringBuilder();
-    // location.append("From restnaurant '");
-    // // location.append(o.getRestaurant().getName());
-    // if (o.getTableNumber() != null) {
-    // // The order was taken locally
-    // location.append(" in " + formatPlace(o.getOrderPlace()) + " at table " +
-    // o.getTableNumber());
-    // } else {
-    // // The order was taken remotely (it has an associated client)
-    // // Rework client, make it exclusively external and add telephone
-    // location.append(" by client ");
-    // }
-    // return location;
-    // }
+		// Delete all product lines
+		for (ProductLine pl : order.getProductLines()) {
+			productLineService.delete(utilsService.transform(pl, ProductLineDto.class));
 
-    @Override
-    public Float getTotalIncomes() {
-	Float total = 0f;
-	for (OrderDto orderDto : findAll()) {
-	    total = total + orderDto.getTotalPrice();
-	}
-	return total;
-    }
-
-    private String formatPlace(OrderPlace place) {
-	if (place == OrderPlace.HALL) {
-	    return "the hall";
-	} else if (place == OrderPlace.BAR) {
-	    return "the bar";
-	} else {
-	    return "the terrace";
-	}
-    }
-
-    @Override
-    public void delete(OrderDto orderDto) {
-	if (orderDto.getId() == null) {
-	    return;
-	}
-	Order order = orderDao.findOne(orderDto.getId());
-
-	// Delete all product lines
-	for (ProductLine pl : order.getProductLines()) {
-	    productLineService.delete(utilsService.transform(pl, ProductLineDto.class));
+		}
+		order.setStatus(Status.DELETED);
+		orderDao.save(order);
 
 	}
-	order.setStatus(Status.DELETED);
-	orderDao.save(order);
-
-    }
 }

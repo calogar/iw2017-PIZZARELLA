@@ -44,270 +44,274 @@ import com.vaadin.ui.themes.ValoTheme;
 @UIScope
 public class OrderEditor extends VerticalLayout {
 
-    @Autowired
-    private OrderService orderService;
+	@Autowired
+	private OrderService orderService;
 
-    @Autowired
-    private ProductService productService;
+	@Autowired
+	private ProductService productService;
 
-    @Autowired
-    private ProductFamilyService productFamilyService;
+	@Autowired
+	private ProductFamilyService productFamilyService;
 
-    private OrderDto orderDto;
+	private OrderDto orderDto;
 
-    private BeanValidationBinder<OrderDto> binder = new BeanValidationBinder(OrderDto.class);
+	private BeanValidationBinder<OrderDto> binder = new BeanValidationBinder(OrderDto.class);
 
-    private HorizontalLayout selectProductFamily = new HorizontalLayout();
-    private VerticalLayout selectProduct = new VerticalLayout();
-    private Grid<ProductDto> selectProductGrid = new Grid<ProductDto>();
-    private VerticalLayout orderArea = new VerticalLayout();
-    private Grid<ProductLineDto> productLinesGrid = new Grid<ProductLineDto>();
-    private FormLayout orderForm = new FormLayout();
+	private HorizontalLayout selectProductFamily = new HorizontalLayout();
+	private VerticalLayout selectProduct = new VerticalLayout();
+	private Grid<ProductDto> selectProductGrid = new Grid<ProductDto>();
+	private VerticalLayout orderArea = new VerticalLayout();
+	private Grid<ProductLineDto> productLinesGrid = new Grid<ProductLineDto>();
+	private FormLayout orderForm = new FormLayout();
 
-    /* Action buttons */
-    Button save = new Button("Save", FontAwesome.SAVE);
-    Button cancel = new Button("Cancel");
-    Button delete = new Button("Delete", FontAwesome.TRASH_O);
-    CssLayout actions = new CssLayout(save, cancel, delete);
+	/* Action buttons */
+	Button save = new Button("Save", FontAwesome.SAVE);
+	Button cancel = new Button("Cancel");
+	Button delete = new Button("Delete", FontAwesome.TRASH_O);
+	CssLayout actions = new CssLayout(save, cancel, delete);
 
-    @Autowired
-    public OrderEditor() {
-    }
+	List<ProductDto> currentProducts = new ArrayList<ProductDto>();
 
-    @PostConstruct
-    void init() {
-
-	buildSelectProductFamily();
-	buildSelectProduct();
-	buildProductLinesGrid();
-	buildOrderForm();
-
-	// Configure and style components
-	setSpacing(true);
-	actions.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
-	save.setStyleName(ValoTheme.BUTTON_PRIMARY);
-	save.setClickShortcut(ShortcutAction.KeyCode.ENTER);
-
-	// wire action buttons to save, delete and reset
-	save.addClickListener(e -> saveOrder(orderDto));
-	delete.addClickListener(e -> deleteOrder(orderDto));
-	cancel.addClickListener(e -> editOrder(orderDto));
-	setVisible(false);
-
-	orderArea.addComponents(orderForm);
-	addComponents(selectProduct, orderArea);
-	addComponents(actions);
-    }
-
-    private void buildSelectProductFamily() {
-	selectProductGrid.setItems(productService.findAllSellable());
-	for (ProductFamilyDto family : productFamilyService.findAll()) {
-	    Button select = new Button(family.getName(), e -> {
-		selectProductGrid.setItems(productService.findAllSellableFromFamily(family));
-	    });
-	    selectProductFamily.addComponent(select);
+	@Autowired
+	public OrderEditor() {
 	}
-    }
 
-    private void buildSelectProduct() {
-	Label title = new Label("Products");
-	title.addStyleName(ValoTheme.LABEL_H2);
+	@PostConstruct
+	void init() {
 
-	selectProductGrid.addColumn(ProductDto::getName).setCaption("Name");
-	selectProductGrid.addColumn(ProductDto::getFormattedIngredients).setCaption("Ingredients");
-	selectProductGrid.addColumn(ProductDto::getPrice).setCaption("Price (€)");
+		buildSelectProductFamily();
+		buildSelectProduct();
+		buildProductLinesGrid();
+		buildOrderForm();
 
-	selectProductGrid.addItemClickListener(e -> {
-	    updateProductLines(e.getItem(), 1);
-	});
+		// Configure and style components
+		setSpacing(true);
+		actions.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
+		save.setStyleName(ValoTheme.BUTTON_PRIMARY);
+		save.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 
-	selectProductGrid.setWidth("100%");
-	selectProduct.addComponents(title, selectProductFamily, selectProductGrid);
-    }
+		// wire action buttons to save, delete and reset
+		save.addClickListener(e -> saveOrder(orderDto));
+		delete.addClickListener(e -> deleteOrder(orderDto));
+		cancel.addClickListener(e -> editOrder(orderDto));
+		setVisible(false);
 
-    private void buildProductLinesGrid() {
+		orderArea.addComponents(orderForm);
+		addComponents(selectProduct, orderArea);
+		addComponents(actions);
+	}
 
-	Label productLinesTitle = new Label("Product Lines");
-	productLinesTitle.setStyleName(ValoTheme.LABEL_H2);
-	productLinesGrid.addColumn(ProductLineDto::getProductName).setCaption("Product");
-	productLinesGrid.addColumn(ProductLineDto::getAmount).setCaption("Amount");
-	productLinesGrid.addColumn(ProductLineDto::getPrice).setCaption("Price");
-	productLinesGrid.addColumn(pl -> "Increase", new ButtonRenderer<ProductLineDto>(e -> {
-	    updateProductLines(e.getItem().getProduct(), 1);
-	}));
-	productLinesGrid.addColumn(pl -> "Decrease", new ButtonRenderer<ProductLineDto>(e -> {
-	    updateProductLines(e.getItem().getProduct(), -1);
-	}));
-	productLinesGrid.addColumn(pl -> "Remove", new ButtonRenderer<ProductLineDto>(e -> {
-	    deleteProductLine(e.getItem());
-	    productLinesGrid.setItems(orderDto.getProductLines());
-	}));
+	private void buildSelectProductFamily() {
+		selectProductGrid.setItems(productService.findAllSellable());
+		for (ProductFamilyDto family : productFamilyService.findAll()) {
+			Button select = new Button(family.getName(), e -> {
 
-	productLinesGrid.setWidth("100%");
-	orderArea.addComponents(productLinesTitle, productLinesGrid);
-    }
-
-    private void buildOrderForm() {
-
-	ComboBox<OrderType> orderType = new ComboBox<>("Order Type");
-	orderType.setItems(EnumSet.allOf(OrderType.class));
-	binder.bind(orderType, "type");
-
-	// TODO not checking that tables are already taken
-	ComboBox<Integer> orderTable = new ComboBox<>("Table Number");
-	orderTable.setItems(Arrays.asList(1, 2, 3, 4, 5, 6));
-	binder.bind(orderTable, "tableNumber");
-
-	ComboBox<OrderPlace> orderPlace = new ComboBox<>("Place");
-	orderPlace.setItems(EnumSet.allOf(OrderPlace.class));
-	binder.bind(orderPlace, "place");
-	// binder.forField(orderPlace).withValidator(dto -> dto.getTableNumber()
-	// < 50 && dto.getTableNumber() > 1, "Table number must be between 1 and
-	// 50").bind("place");
-
-	TextField telephone = new TextField("Contact telephone");
-	binder.bind(telephone, "telephone");
-	telephone.setVisible(false);
-
-	// RichTextArea notes = new RichTextArea("Additional notes");
-	// binder.bind(notes, "notes");
-
-	orderType.addSelectionListener(e -> {
-	    if (e.getSelectedItem().get() != OrderType.LOCAL) {
-		// Disable table and place if order is to take away
-		// TODO manually set to null place and table in save
-		orderTable.setVisible(false);
-		orderPlace.setVisible(false);
-		telephone.setVisible(true);
-	    } else {
-		orderTable.setVisible(true);
-		orderPlace.setVisible(true);
-		telephone.setVisible(false);
-	    }
-	});
-
-	orderForm.addComponents(orderType, orderTable, orderPlace, telephone);// ,
-									      // notes);
-    }
-
-    /**
-     * Add one line product if product is new or update one if existent
-     */
-    private void updateProductLines(ProductDto productDto, Integer amount) {
-
-	Boolean productHasOrderLine = false;
-	ProductLineDto setForDelete = null;
-
-	if (orderDto.getProductLines() == null) {
-	    // Create the first product line of the order
-	    addNewProductLine(productDto, amount);
-	} else {
-
-	    for (ProductLineDto plDto : orderDto.getProductLines()) {
-		if (plDto.getProduct().getId() == productDto.getId()) {
-
-		    // If product already has a product line, update it
-		    plDto.setAmount(plDto.getAmount() + amount);
-		    plDto.setPrice(productDto.getPrice() * plDto.getAmount());
-
-		    // If amount is zero, delete product line
-		    // We can't delete it while looping
-		    if (plDto.getAmount() == 0) {
-			setForDelete = plDto;
-		    }
-
-		    productHasOrderLine = true;
+				selectProductGrid.setItems(productService.findAllSellableFromFamily(family));
+			});
+			selectProductFamily.addComponent(select);
 		}
-	    }
-	    if (!productHasOrderLine) {
-		// It's the first order line for this product
-		addNewProductLine(productDto, amount);
-	    }
 	}
 
-	if (setForDelete != null) {
-	    deleteProductLine(setForDelete);
+	private void buildSelectProduct() {
+		Label title = new Label("Products");
+		title.addStyleName(ValoTheme.LABEL_H2);
+
+		selectProductGrid.addColumn(ProductDto::getName).setCaption("Name");
+		selectProductGrid.addColumn(ProductDto::getFormattedIngredients).setCaption("Ingredients");
+		selectProductGrid.addColumn(ProductDto::getPrice).setCaption("Price (€)");
+
+		selectProductGrid.addItemClickListener(e -> {
+
+			updateProductLines(productService.findOne(e.getItem().getId()), 1);
+		});
+
+		selectProductGrid.setWidth("100%");
+		selectProduct.addComponents(title, selectProductFamily, selectProductGrid);
 	}
 
-	productLinesGrid.setItems(orderDto.getProductLines());
-    }
+	private void buildProductLinesGrid() {
 
-    private void addNewProductLine(ProductDto productDto, Integer amount) {
-	List<ProductLineDto> pls = orderDto.getProductLines();
-	if (pls == null) {
-	    // It's the first product line for this product
-	    pls = new ArrayList<ProductLineDto>();
+		Label productLinesTitle = new Label("Product Lines");
+		productLinesTitle.setStyleName(ValoTheme.LABEL_H2);
+		productLinesGrid.addColumn(ProductLineDto::getProductName).setCaption("Product");
+		productLinesGrid.addColumn(ProductLineDto::getAmount).setCaption("Amount");
+		productLinesGrid.addColumn(ProductLineDto::getPrice).setCaption("Price");
+		productLinesGrid.addColumn(pl -> "Increase", new ButtonRenderer<ProductLineDto>(e -> {
+			updateProductLines(e.getItem().getProduct(), 1);
+		}));
+		productLinesGrid.addColumn(pl -> "Decrease", new ButtonRenderer<ProductLineDto>(e -> {
+			updateProductLines(e.getItem().getProduct(), -1);
+		}));
+		productLinesGrid.addColumn(pl -> "Remove", new ButtonRenderer<ProductLineDto>(e -> {
+			deleteProductLine(e.getItem());
+			productLinesGrid.setItems(orderDto.getProductLines());
+		}));
+
+		productLinesGrid.setWidth("100%");
+		orderArea.addComponents(productLinesTitle, productLinesGrid);
 	}
-	Float price = amount * productDto.getPrice();
-	pls.add(new ProductLineDto(productDto, null, amount, price));
-	orderDto.setProductLines(pls);
 
-    }
+	private void buildOrderForm() {
 
-    private void deleteProductLine(ProductLineDto dto) {
-	List<ProductLineDto> pls = orderDto.getProductLines();
-	pls.remove(dto);
-	orderDto.setProductLines(pls);
-    }
+		ComboBox<OrderType> orderType = new ComboBox<>("Order Type");
+		orderType.setItems(EnumSet.allOf(OrderType.class));
+		binder.bind(orderType, "type");
 
-    public interface ChangeHandler {
-	void onChange();
-    }
+		// TODO not checking that tables are already taken
+		ComboBox<Integer> orderTable = new ComboBox<>("Table Number");
+		orderTable.setItems(Arrays.asList(1, 2, 3, 4, 5, 6));
+		binder.bind(orderTable, "tableNumber");
 
-    public void editOrder(OrderDto dto) {
+		ComboBox<OrderPlace> orderPlace = new ComboBox<>("Place");
+		orderPlace.setItems(EnumSet.allOf(OrderPlace.class));
+		binder.bind(orderPlace, "place");
+		// binder.forField(orderPlace).withValidator(dto -> dto.getTableNumber()
+		// < 50 && dto.getTableNumber() > 1, "Table number must be between 1 and
+		// 50").bind("place");
 
-	if (dto == null) {
-	    setVisible(false);
-	    return;
+		TextField telephone = new TextField("Contact telephone");
+		binder.bind(telephone, "telephone");
+		telephone.setVisible(false);
+
+		// RichTextArea notes = new RichTextArea("Additional notes");
+		// binder.bind(notes, "notes");
+
+		orderType.addSelectionListener(e -> {
+			if (e.getSelectedItem().get() != OrderType.LOCAL) {
+				// Disable table and place if order is to take away
+				// TODO manually set to null place and table in save
+				orderTable.setVisible(false);
+				orderPlace.setVisible(false);
+				telephone.setVisible(true);
+			} else {
+				orderTable.setVisible(true);
+				orderPlace.setVisible(true);
+				telephone.setVisible(false);
+			}
+		});
+
+		orderForm.addComponents(orderType, orderTable, orderPlace, telephone);// ,
+		// notes);
 	}
-	final boolean persisted = dto.getId() != null;
-	if (persisted) {
-	    // Perform update (needs id)
-	    try {
-		orderDto = orderService.findOne(dto.getId());
-	    } catch (OrderNotFoundException e) {
-		e.printStackTrace();
-	    }
-	} else {
-	    // Perform create
-	    orderDto = dto;
+
+	/**
+	 * Add one line product if product is new or update one if existent
+	 */
+	private void updateProductLines(ProductDto productDto, Integer amount) {
+
+		Boolean productHasOrderLine = false;
+		ProductLineDto setForDelete = null;
+
+		if (orderDto.getProductLines() == null) {
+			// Create the first product line of the order
+			addNewProductLine(productDto, amount);
+		} else {
+
+			for (ProductLineDto plDto : orderDto.getProductLines()) {
+				if (plDto.getProduct().getId() == productDto.getId()) {
+
+					// If product already has a product line, update it
+					plDto.setAmount(plDto.getAmount() + amount);
+					plDto.setPrice(productDto.getPrice() * plDto.getAmount());
+
+					// If amount is zero, delete product line
+					// We can't delete it while looping
+					if (plDto.getAmount() == 0) {
+						setForDelete = plDto;
+					}
+
+					productHasOrderLine = true;
+				}
+			}
+			if (!productHasOrderLine) {
+				// It's the first order line for this product
+				addNewProductLine(productDto, amount);
+			}
+		}
+
+		if (setForDelete != null) {
+			deleteProductLine(setForDelete);
+		}
+
+		productLinesGrid.setItems(orderDto.getProductLines());
 	}
-	cancel.setVisible(persisted);
 
-	binder.setBean(orderDto);
+	private void addNewProductLine(ProductDto productDto, Integer amount) {
+		List<ProductLineDto> pls = orderDto.getProductLines();
+		if (pls == null) {
+			// It's the first product line for this product
+			pls = new ArrayList<ProductLineDto>();
+		}
+		Float price = amount * productDto.getPrice();
+		pls.add(new ProductLineDto(productDto, null, amount, price));
+		orderDto.setProductLines(pls);
 
-	setVisible(true);
-	// A hack to ensure the whole form is visible
-	save.focus();
-    }
-
-    private void saveOrder(OrderDto orderDto) {
-
-	// if (binder.validate().isOk()) {
-	try {
-	    binder.writeBean(orderDto);
-	    orderService.save(orderDto);
-	    Notification.show("Record created correctly.");
-
-	} catch (CustomValidationException | ValidationException e) {
-	    Notification n = new Notification(e.getMessage(), null, Notification.Type.ERROR_MESSAGE, true);
-	    n.show(Page.getCurrent());
-	    return;
 	}
-	// }
-    }
 
-    private void deleteOrder(OrderDto orderDto) {
+	private void deleteProductLine(ProductLineDto dto) {
+		List<ProductLineDto> pls = orderDto.getProductLines();
+		pls.remove(dto);
+		orderDto.setProductLines(pls);
+	}
 
-	orderService.delete(orderDto);
+	public interface ChangeHandler {
+		void onChange();
+	}
 
-    }
+	public void editOrder(OrderDto dto) {
 
-    public void setChangeHandler(ChangeHandler h) {
-	// ChangeHandler is notified when either save or delete
-	// is clicked
-	save.addClickListener(e -> h.onChange());
-	delete.addClickListener(e -> h.onChange());
-    }
+		if (dto == null) {
+			setVisible(false);
+			return;
+		}
+		final boolean persisted = dto.getId() != null;
+		if (persisted) {
+			// Perform update (needs id)
+			try {
+				orderDto = orderService.findOne(dto.getId());
+			} catch (OrderNotFoundException e) {
+				e.printStackTrace();
+			}
+		} else {
+			// Perform create
+			orderDto = dto;
+		}
+		cancel.setVisible(persisted);
+
+		binder.setBean(orderDto);
+
+		setVisible(true);
+		// A hack to ensure the whole form is visible
+		save.focus();
+	}
+
+	private void saveOrder(OrderDto orderDto) {
+
+		// if (binder.validate().isOk()) {
+		try {
+			binder.writeBean(orderDto);
+			orderService.save(orderDto);
+			Notification.show("Record created correctly.");
+
+		} catch (CustomValidationException | ValidationException e) {
+			Notification n = new Notification(e.getMessage(), null, Notification.Type.ERROR_MESSAGE, true);
+			n.show(Page.getCurrent());
+			return;
+		}
+		// }
+	}
+
+	private void deleteOrder(OrderDto orderDto) {
+
+		orderService.delete(orderDto);
+
+	}
+
+	public void setChangeHandler(ChangeHandler h) {
+		// ChangeHandler is notified when either save or delete
+		// is clicked
+		save.addClickListener(e -> h.onChange());
+		delete.addClickListener(e -> h.onChange());
+	}
 
 }
