@@ -15,165 +15,177 @@ import com.calogardev.pizzarella.enums.Status;
 
 public class OrderDto implements Serializable {
 
-    private static final long serialVersionUID = 5423676356922359348L;
+	private static final long serialVersionUID = 5423676356922359348L;
 
-    private Long id;
+	private Long id;
 
-    private OrderPlace place;
+	private OrderPlace place;
 
-    @NotNull
-    private OrderType type;
+	@NotNull
+	private OrderType type;
 
-    private Integer tableNumber;
+	private Integer tableNumber;
 
-    @Digits(integer = 3, fraction = 2)
-    private Float totalPrice;
+	@Digits(integer = 3, fraction = 2)
+	private Float totalPrice;
 
-    private Date orderedAt;
+	private Date orderedAt;
 
-    @Size(min = 0, max = 255)
-    private String notes;
+	@Size(min = 0, max = 255)
+	private String notes;
 
-    private OrderStatus orderStatus;
+	private OrderStatus orderStatus;
 
-    private Status status;
+	private Status status;
 
-    private List<ProductLineDto> productLines;
+	private List<ProductLineDto> productLines;
 
-    private String telephone;
+	private String telephone;
 
-    public String formatProducts() {
-	StringBuilder b = new StringBuilder();
-	for (ProductLineDto productLineDto : getProductLines()) {
-	    b.append(productLineDto.getProduct().getName() + ", ");
+	public String formatProducts() {
+		StringBuilder b = new StringBuilder();
+		for (ProductLineDto productLineDto : getProductLines()) {
+			b.append(productLineDto.getProduct().getName() + ", ");
+		}
+		return b.toString();
 	}
-	return b.toString();
-    }
 
-    public String toFormattedString() {
-	return formatProducts() + " price: " + totalPrice;
-    }
+	public String formatOrderStatus() {
+		return orderStatus.name();
+	}
 
-    public Long getId() {
-	return id;
-    }
+	public String toFormattedString() {
+		return formatProducts() + " price: " + totalPrice;
+	}
 
-    public void setId(Long id) {
-	this.id = id;
-    }
+	public String getFormattedLocation() {
+		if (type == OrderType.LOCAL) {
+			return orderStatus.name() + " in " + place.name() + ", table " + tableNumber;
+		} else {
+			return type.name() + " with telephone " + telephone;
+		}
+	}
 
-    public OrderPlace getPlace() {
-	return place;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setPlace(OrderPlace place) {
-	this.place = place;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public Integer getTableNumber() {
-	return tableNumber;
-    }
+	public OrderPlace getPlace() {
+		return place;
+	}
 
-    public void setTableNumber(Integer tableNumber) {
-	this.tableNumber = tableNumber;
-    }
+	public void setPlace(OrderPlace place) {
+		this.place = place;
+	}
 
-    public Float getTotalPrice() {
-	return totalPrice;
-    }
+	public Integer getTableNumber() {
+		return tableNumber;
+	}
 
-    public void setTotalPrice(Float totalPrice) {
-	this.totalPrice = totalPrice;
-    }
+	public void setTableNumber(Integer tableNumber) {
+		this.tableNumber = tableNumber;
+	}
 
-    public Date getOrderedAt() {
-	return orderedAt;
-    }
+	public Float getTotalPrice() {
+		return totalPrice;
+	}
 
-    public void setOrderedAt(Date orderedAt) {
-	this.orderedAt = orderedAt;
-    }
+	public void setTotalPrice(Float totalPrice) {
+		this.totalPrice = totalPrice;
+	}
 
-    public String getNotes() {
-	return notes;
-    }
+	public Date getOrderedAt() {
+		return orderedAt;
+	}
 
-    public void setNotes(String notes) {
-	this.notes = notes;
-    }
+	public void setOrderedAt(Date orderedAt) {
+		this.orderedAt = orderedAt;
+	}
 
-    public OrderStatus getOrderStatus() {
-	return orderStatus;
-    }
+	public String getNotes() {
+		return notes;
+	}
 
-    public void setOrderStatus(OrderStatus orderStatus) {
-	this.orderStatus = orderStatus;
-    }
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
 
-    public Status getStatus() {
-	return status;
-    }
+	public OrderStatus getOrderStatus() {
+		return orderStatus;
+	}
 
-    public void setStatus(Status status) {
-	this.status = status;
-    }
+	public void setOrderStatus(OrderStatus orderStatus) {
+		this.orderStatus = orderStatus;
+	}
 
-    /**
-     * @return the productLines
-     */
-    public List<ProductLineDto> getProductLines() {
-	return productLines;
-    }
+	public Status getStatus() {
+		return status;
+	}
 
-    /**
-     * @param productLines
-     *            the productLines to set
-     */
-    public void setProductLines(List<ProductLineDto> productLines) {
-	this.productLines = productLines;
-    }
+	public void setStatus(Status status) {
+		this.status = status;
+	}
 
-    /**
-     * @return the type
-     */
-    public OrderType getType() {
-	return type;
-    }
+	/**
+	 * @return the productLines
+	 */
+	public List<ProductLineDto> getProductLines() {
+		return productLines;
+	}
 
-    /**
-     * @param type
-     *            the type to set
-     */
-    public void setType(OrderType type) {
-	this.type = type;
-    }
+	/**
+	 * @param productLines
+	 *            the productLines to set
+	 */
+	public void setProductLines(List<ProductLineDto> productLines) {
+		this.productLines = productLines;
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-	return "OrderDto [id=" + id + ", place=" + place + ", type=" + type + ", tableNumber=" + tableNumber
-		+ ", totalPrice=" + totalPrice + ", orderedAt=" + orderedAt + ", notes=" + notes + ", orderStatus="
-		+ orderStatus + ", status=" + status + ", productLines=" + productLines + ", telephone=" + telephone
-		+ "]";
-    }
+	/**
+	 * @return the type
+	 */
+	public OrderType getType() {
+		return type;
+	}
 
-    /**
-     * @return the telephone
-     */
-    public String getTelephone() {
-	return telephone;
-    }
+	/**
+	 * @param type
+	 *            the type to set
+	 */
+	public void setType(OrderType type) {
+		this.type = type;
+	}
 
-    /**
-     * @param telephone
-     *            the telephone to set
-     */
-    public void setTelephone(String telephone) {
-	this.telephone = telephone;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "OrderDto [id=" + id + ", place=" + place + ", type=" + type + ", tableNumber=" + tableNumber
+				+ ", totalPrice=" + totalPrice + ", orderedAt=" + orderedAt + ", notes=" + notes + ", orderStatus="
+				+ orderStatus + ", status=" + status + ", productLines=" + productLines + ", telephone=" + telephone
+				+ "]";
+	}
+
+	/**
+	 * @return the telephone
+	 */
+	public String getTelephone() {
+		return telephone;
+	}
+
+	/**
+	 * @param telephone
+	 *            the telephone to set
+	 */
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
 
 }

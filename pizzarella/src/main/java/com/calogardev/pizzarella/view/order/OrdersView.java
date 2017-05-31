@@ -1,11 +1,12 @@
 package com.calogardev.pizzarella.view.order;
 
+import java.util.Locale;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.calogardev.pizzarella.dto.OrderDto;
-import com.calogardev.pizzarella.enums.OrderStatus;
 import com.calogardev.pizzarella.service.OrderService;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -18,128 +19,118 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SpringView(name = OrdersView.VIEW_ROUTE)
 @UIScope
 public class OrdersView extends VerticalLayout implements View {
 
-    private static final long serialVersionUID = -6578065161603628034L;
+	private static final long serialVersionUID = -6578065161603628034L;
 
-    public static final String VIEW_NAME = "Orders";
-    public static final String VIEW_ROUTE = "orders";
+	public static final String VIEW_NAME = "Orders";
+	public static final String VIEW_ROUTE = "orders";
 
-    @Autowired
-    OrderService orderService;
+	@Autowired
+	OrderService orderService;
 
-    static OrderService staticOrderService;
+	static OrderService staticOrderService;
 
-    @Autowired
-    private OrderEditor orderEditor;
+	@Autowired
+	private OrderEditor orderEditor;
 
-    // Contains all the OrdesView screen login so we can set it visible or not
-    private HorizontalLayout displayOrders = new HorizontalLayout();
-    private static Grid<OrderDto> openOrdersGrid = new Grid<OrderDto>();
-    private static Grid<OrderDto> kitchenOrdersGrid = new Grid<OrderDto>();
-    private static Grid<OrderDto> closedOrdersGrid = new Grid<OrderDto>();
-    private HorizontalLayout menu = new HorizontalLayout();
-
-    private static Label totalIncomesLabel = new Label();
-
-    @PostConstruct
-    void init() {
-	staticOrderService = orderService;
-
-	commonSettings();
-
-	buildMenu();
-
-	VerticalLayout openLayout = buildGrid(openOrdersGrid, "Open orders");
-	VerticalLayout kitchenLayout = buildGrid(kitchenOrdersGrid, "Sent to kitchen");
-	VerticalLayout closedLayout = buildGrid(closedOrdersGrid, "Closed orders");
-	displayOrders.addComponents(openLayout, kitchenLayout, closedLayout);
-	addComponents(menu, displayOrders);
-
-	addComponent(orderEditor);
-
-	openOrdersGrid.setSelectionMode(SelectionMode.SINGLE);
-	kitchenOrdersGrid.setSelectionMode(SelectionMode.SINGLE);
-	closedOrdersGrid.setSelectionMode(SelectionMode.NONE);
-
-	openOrdersGrid.addItemClickListener(e -> {
-	    orderService.updateStatus(e.getItem().getId(), OrderStatus.SENT_TO_KITCHEN);
-	    refreshGrids();
-	});
-
-	kitchenOrdersGrid.addItemClickListener(e -> {
-	    orderService.updateStatus(e.getItem().getId(), OrderStatus.CLOSED);
-	    refreshGrids();
-	});
-
-	totalIncomesLabel.addStyleName(ValoTheme.LABEL_H2);
-    }
-
-    private void createOrder(OrderDto orderDto) {
-	// Call the editor (it will display itself)
-	orderEditor.editOrder(orderDto);
-	// getUI().getNavigator().navigateTo(CreateOrderView.VIEW_ROUTE);
-    }
-
-    private VerticalLayout buildGrid(Grid<OrderDto> grid, String titleStr) {
-
-	Label title = new Label(titleStr);
-	title.addStyleName(ValoTheme.LABEL_H2);
-
-	// grid.addColumn(OrderDto::formatProducts).setCaption("Products");
-	// grid.addColumn(OrderDto::getOrderedAt, new DateRenderer("%1$tB %1$te,
-	// %1$tY", Locale.ENGLISH))
-	// .setCaption("Order Time");
-	// grid.addColumn(OrderDto::getTotalPrice).setCaption("Price");
-	// // TODO create a custom getter that displays the place and table if
-	// // local user or the client info if not
-	// //
-	// grid.addColumn(OrderDto::getFormattedLocation).setCaption("Location");
-	// grid.addColumn(OrderDto::getNotes).setCaption("Notes");
-	// grid.setHeight("250px");
-	// grid.setWidth("100%");
-
-	grid.addColumn(OrderDto::formatProducts).setCaption("Products");
-	grid.addColumn(OrderDto::getTotalPrice).setCaption("Price");
-	grid.setWidth("250px");
-
-	return new VerticalLayout(title, grid);
-    }
-
-    private void buildMenu() {
+	// Contains all the OrdesView screen login so we can set it visible or not
+	private Grid<OrderDto> ordersGrid = new Grid<OrderDto>();
+	private HorizontalLayout menu = new HorizontalLayout();
+	private HorizontalLayout submenu = new HorizontalLayout();
 
 	Button createOrder = new Button("New order", FontAwesome.PLUS);
-	createOrder.addClickListener(e -> createOrder(new OrderDto()));
-	menu.addComponent(createOrder);
-	refreshTotalIncomes();
-	totalIncomesLabel.setStyleName(ValoTheme.LABEL_H2);
-	menu.addComponent(totalIncomesLabel);
-    }
+	Button calculateIncomes = new Button("Calculate total incomes", FontAwesome.MONEY);
 
-    private void commonSettings() {
-	Page.getCurrent().setTitle(VIEW_NAME);
-	Label title = new Label(VIEW_NAME);
-	title.addStyleName(ValoTheme.LABEL_H1);
-	addComponent(title);
-    }
+	@PostConstruct
+	void init() {
+		staticOrderService = orderService;
 
-    public static void refreshGrids() {
-	openOrdersGrid.setItems(staticOrderService.findAllWithStatus(OrderStatus.OPEN));
-	kitchenOrdersGrid.setItems(staticOrderService.findAllWithStatus(OrderStatus.SENT_TO_KITCHEN));
-	closedOrdersGrid.setItems(staticOrderService.findAllWithStatus(OrderStatus.CLOSED));
-    }
+		commonSettings();
+		buildMenu();
+		Label subtitle = new Label("Click on the 'Status' tab to rearrange orders");
+		subtitle.addStyleName(ValoTheme.LABEL_H2);
+		buildGrid();
 
-    public static void refreshTotalIncomes() {
-	Float totalIncomes = staticOrderService.getTotalIncomes();
-	totalIncomesLabel.setCaption("Total incomes: " + totalIncomes + "€");
-    }
+		addComponents(menu, subtitle, ordersGrid, submenu);
 
-    @Override
-    public void enter(ViewChangeEvent event) {
-    }
+		orderEditor.setViewReference(this);
+		addComponent(orderEditor);
+
+		// ordersGrid.addItemClickListener(e -> {
+		// orderService.updateStatus(e.getItem().getId(),
+		// OrderStatus.SENT_TO_KITCHEN);
+		// refreshGrids();
+		// });
+		//
+		// kitchenOrdersGrid.addItemClickListener(e -> {
+		// orderService.updateStatus(e.getItem().getId(), OrderStatus.CLOSED);
+		// refreshGrids();
+		// });
+
+	}
+
+	private void createOrder(OrderDto orderDto) {
+		// Call the editor (it will display itself)
+		orderEditor.editOrder(orderDto);
+		// getUI().getNavigator().navigateTo(CreateOrderView.VIEW_ROUTE);
+	}
+
+	private void buildGrid() {
+		ordersGrid.addColumn(OrderDto::formatOrderStatus).setCaption("Status");
+		ordersGrid.addColumn(OrderDto::formatProducts).setCaption("Products");
+		ordersGrid.addColumn(OrderDto::getOrderedAt, new DateRenderer("%1$tB %1$te,%1$tY", Locale.ENGLISH))
+				.setCaption("Order Time");
+		ordersGrid.addColumn(OrderDto::getTotalPrice).setCaption("Price");
+		// ordersGrid.addColumn(OrderDto::getFormattedLocation).setCaption("Location");
+		ordersGrid.addColumn(OrderDto::getPlace).setCaption("Place");
+		ordersGrid.addColumn(OrderDto::getTableNumber).setCaption("Table number");
+		ordersGrid.addColumn(OrderDto::getTelephone).setCaption("Telephone");
+
+		ordersGrid.setWidth("100%");
+		ordersGrid.setSelectionMode(SelectionMode.SINGLE);
+
+		ordersGrid.setItems(orderService.findAll());
+		ordersGrid.addItemClickListener(e -> {
+			orderEditor.editOrder(e.getItem());
+		});
+	}
+
+	private void buildMenu() {
+
+		createOrder.addClickListener(e -> createOrder(new OrderDto()));
+		calculateIncomes.addClickListener(e -> {
+			Notification n = new Notification("Total incomes: " + orderService.calculateTotalIncomes(), null,
+					Notification.Type.ASSISTIVE_NOTIFICATION, true);
+			n.show(Page.getCurrent());
+
+		});
+		menu.addComponents(createOrder, calculateIncomes);
+	}
+
+	private void buildSubmenu() {
+		submenu = new HorizontalLayout();
+	}
+
+	private void commonSettings() {
+		Page.getCurrent().setTitle(VIEW_NAME);
+		Label title = new Label(VIEW_NAME);
+		title.addStyleName(ValoTheme.LABEL_H1);
+		addComponent(title);
+	}
+
+	public void refreshGrid() {
+		ordersGrid.setItems(staticOrderService.findAll());
+	}
+
+	@Override
+	public void enter(ViewChangeEvent event) {
+	}
 }
