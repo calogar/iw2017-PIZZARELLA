@@ -19,7 +19,6 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.themes.ValoTheme;
@@ -47,7 +46,7 @@ public class OrdersView extends VerticalLayout implements View {
 	private HorizontalLayout submenu = new HorizontalLayout();
 
 	Button createOrder = new Button("New order", FontAwesome.PLUS);
-	Button calculateIncomes = new Button("Calculate total incomes", FontAwesome.MONEY);
+	Button calculateIncomes = new Button();
 
 	@PostConstruct
 	void init() {
@@ -55,6 +54,8 @@ public class OrdersView extends VerticalLayout implements View {
 
 		commonSettings();
 		buildMenu();
+		buildTotalIncomes();
+
 		Label subtitle = new Label("Click on the 'Status' tab to rearrange orders");
 		subtitle.addStyleName(ValoTheme.LABEL_H2);
 		buildGrid();
@@ -85,11 +86,13 @@ public class OrdersView extends VerticalLayout implements View {
 
 	private void buildGrid() {
 		ordersGrid.addColumn(OrderDto::formatOrderStatus).setCaption("Status");
+
 		ordersGrid.addColumn(OrderDto::formatProducts).setCaption("Products");
 		ordersGrid.addColumn(OrderDto::getOrderedAt, new DateRenderer("%1$tB %1$te,%1$tY", Locale.ENGLISH))
 				.setCaption("Order Time");
 		ordersGrid.addColumn(OrderDto::getTotalPrice).setCaption("Price");
 		// ordersGrid.addColumn(OrderDto::getFormattedLocation).setCaption("Location");
+		ordersGrid.addColumn(OrderDto::getType).setCaption("Type");
 		ordersGrid.addColumn(OrderDto::getPlace).setCaption("Place");
 		ordersGrid.addColumn(OrderDto::getTableNumber).setCaption("Table number");
 		ordersGrid.addColumn(OrderDto::getTelephone).setCaption("Telephone");
@@ -107,16 +110,13 @@ public class OrdersView extends VerticalLayout implements View {
 
 		createOrder.addClickListener(e -> createOrder(new OrderDto()));
 		calculateIncomes.addClickListener(e -> {
-			Notification n = new Notification("Total incomes: " + orderService.calculateTotalIncomes(), null,
-					Notification.Type.ASSISTIVE_NOTIFICATION, true);
-			n.show(Page.getCurrent());
-
+			buildTotalIncomes();
 		});
 		menu.addComponents(createOrder, calculateIncomes);
 	}
 
-	private void buildSubmenu() {
-		submenu = new HorizontalLayout();
+	private void buildTotalIncomes() {
+		calculateIncomes.setCaption("Calculate total incomes: " + orderService.calculateTotalIncomes());
 	}
 
 	private void commonSettings() {

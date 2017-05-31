@@ -105,6 +105,7 @@ public class OrderServiceImpl implements OrderService {
 		}
 
 		order.setTotalPrice(totalPrice);
+		order.setTableNumber(dto.getTableNumber());
 
 		if (dto.getOrderStatus() == null) {
 			order.setOrderStatus(OrderStatus.OPEN);
@@ -114,6 +115,15 @@ public class OrderServiceImpl implements OrderService {
 
 		order.setStatus(Status.ACTIVE);
 		order.setTelephone(dto.getTelephone());
+		order.setType(dto.getType());
+		order.setPlace(dto.getPlace());
+
+		if (order.getType() == OrderType.LOCAL) {
+			order.setTelephone(null);
+		} else {
+			order.setTableNumber(null);
+			order.setPlace(null);
+		}
 
 		List<ProductLine> pls = new ArrayList<>();
 		for (ProductLineDto plDto : dto.getProductLines()) {

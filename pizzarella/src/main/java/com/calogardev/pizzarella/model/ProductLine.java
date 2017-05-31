@@ -3,13 +3,13 @@ package com.calogardev.pizzarella.model;
 import java.io.Serializable;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
 
 import com.calogardev.pizzarella.enums.Status;
 
@@ -18,15 +18,19 @@ public class ProductLine implements Serializable {
 
 	private static final long serialVersionUID = -5228253338512822202L;
 
-	@EmbeddedId
-	private ProductLinePK id;
+	// @EmbeddedId
+	// private ProductLinePK id;
 
-	@MapsId("productId")
+	@Id
+	@GeneratedValue
+	private Long id;
+
+	// @MapsId("productId")
 	@JoinColumn(name = "product_id")
 	@ManyToOne
 	private Product product;
 
-	@MapsId("orderId")
+	// @MapsId("orderId")
 	@JoinColumn(name = "order_id")
 	@ManyToOne
 	private Order order;
@@ -51,10 +55,10 @@ public class ProductLine implements Serializable {
 		this.price = price;
 		this.amount = amount;
 		this.status = status;
-		id = new ProductLinePK();
+		// id = new ProductLinePK();
 	}
 
-	public ProductLine(ProductLinePK id, Product product, Order order, Integer amount) {
+	public ProductLine(Long id, Product product, Order order, Integer amount) {
 		super();
 		this.id = id;
 		this.product = product;
@@ -62,18 +66,11 @@ public class ProductLine implements Serializable {
 		this.amount = amount;
 	}
 
-	/**
-	 * @return the id
-	 */
-	public ProductLinePK getId() {
+	public Long getId() {
 		return id;
 	}
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(ProductLinePK id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
