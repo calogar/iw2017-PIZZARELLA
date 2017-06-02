@@ -1,4 +1,4 @@
-package com.calogardev.pizzarella;
+package com.calogardev.pizzarella.vaadin;
 
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

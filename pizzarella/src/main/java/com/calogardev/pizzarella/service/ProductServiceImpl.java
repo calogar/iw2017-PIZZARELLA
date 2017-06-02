@@ -1,4 +1,4 @@
-package com.calogardev.pizzarella.dao;
+package com.calogardev.pizzarella.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.calogardev.pizzarella.dao.ProductDao;
 import com.calogardev.pizzarella.dto.Dto;
 import com.calogardev.pizzarella.dto.ProductDto;
 import com.calogardev.pizzarella.dto.ProductFamilyDto;
@@ -19,7 +20,6 @@ import com.calogardev.pizzarella.exception.ProductNotFoundException;
 import com.calogardev.pizzarella.exception.ProductWithoutFamilyException;
 import com.calogardev.pizzarella.model.Product;
 import com.calogardev.pizzarella.model.ProductFamily;
-import com.calogardev.pizzarella.service.UtilsService;
 
 /**
  * ProductService implementation.

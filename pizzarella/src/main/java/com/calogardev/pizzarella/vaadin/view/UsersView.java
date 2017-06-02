@@ -1,4 +1,4 @@
-package com.calogardev.pizzarella.view.user;
+package com.calogardev.pizzarella.vaadin.view;
 
 import javax.annotation.PostConstruct;
 
@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.calogardev.pizzarella.dto.UserDto;
 import com.calogardev.pizzarella.service.UserService;
-import com.calogardev.pizzarella.view.UserEditor;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;

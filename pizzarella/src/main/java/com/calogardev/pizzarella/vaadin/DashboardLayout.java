@@ -1,4 +1,4 @@
-package com.calogardev.pizzarella.view;
+package com.calogardev.pizzarella.vaadin;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

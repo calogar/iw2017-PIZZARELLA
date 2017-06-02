@@ -1,4 +1,4 @@
-package com.calogardev.pizzarella.view.product;
+package com.calogardev.pizzarella.vaadin.view;
 
 import javax.annotation.PostConstruct;
 
@@ -6,8 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.calogardev.pizzarella.dao.ProductService;
 import com.calogardev.pizzarella.dto.ProductDto;
+import com.calogardev.pizzarella.service.ProductService;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;

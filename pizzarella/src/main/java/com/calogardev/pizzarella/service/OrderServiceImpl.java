@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.calogardev.pizzarella.dao.OrderDao;
 import com.calogardev.pizzarella.dao.ProductDao;
-import com.calogardev.pizzarella.dao.ProductService;
 import com.calogardev.pizzarella.dto.OrderDto;
 import com.calogardev.pizzarella.dto.ProductLineDto;
 import com.calogardev.pizzarella.enums.OrderPlace;

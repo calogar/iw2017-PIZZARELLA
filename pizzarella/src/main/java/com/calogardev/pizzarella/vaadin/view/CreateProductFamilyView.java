@@ -1,10 +1,11 @@
-package com.calogardev.pizzarella.view.productfamily;
+package com.calogardev.pizzarella.vaadin.view;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.calogardev.pizzarella.dto.ProductFamilyDto;
+import com.calogardev.pizzarella.vaadin.productfamily.ProductFamilyForm;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;

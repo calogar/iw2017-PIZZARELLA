@@ -1,12 +1,12 @@
-package com.calogardev.pizzarella;
+package com.calogardev.pizzarella.vaadin;
 
 import javax.servlet.annotation.WebServlet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.calogardev.pizzarella.service.SecurityService;
-import com.calogardev.pizzarella.view.ErrorView;
-import com.calogardev.pizzarella.view.UnauthorizedView;
+import com.calogardev.pizzarella.vaadin.view.ErrorView;
+import com.calogardev.pizzarella.vaadin.view.UnauthorizedView;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;

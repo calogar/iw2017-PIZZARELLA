@@ -1,15 +1,14 @@
-package com.calogardev.pizzarella;
+package com.calogardev.pizzarella.vaadin;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.calogardev.pizzarella.service.SecurityService;
-import com.calogardev.pizzarella.view.DashboardLayout;
-import com.calogardev.pizzarella.view.order.OrdersView;
-import com.calogardev.pizzarella.view.product.ProductsView;
-import com.calogardev.pizzarella.view.productfamily.ProductFamiliesView;
-import com.calogardev.pizzarella.view.user.UsersView;
+import com.calogardev.pizzarella.vaadin.view.OrdersView;
+import com.calogardev.pizzarella.vaadin.view.ProductFamiliesView;
+import com.calogardev.pizzarella.vaadin.view.ProductsView;
+import com.calogardev.pizzarella.vaadin.view.UsersView;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewDisplay;
 import com.vaadin.server.FontAwesome;

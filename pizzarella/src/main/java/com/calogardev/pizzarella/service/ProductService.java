@@ -1,4 +1,4 @@
-package com.calogardev.pizzarella.dao;
+package com.calogardev.pizzarella.service;
 
 import java.util.List;
 
@@ -9,7 +9,6 @@ import com.calogardev.pizzarella.exception.IngredientWithProductsException;
 import com.calogardev.pizzarella.exception.ProductNotFoundException;
 import com.calogardev.pizzarella.exception.ProductWithoutFamilyException;
 import com.calogardev.pizzarella.model.Product;
-import com.calogardev.pizzarella.service.GenericService;
 
 /**
  * The main service used to control Products.

@@ -1,4 +1,4 @@
-package com.calogardev.pizzarella.view;
+package com.calogardev.pizzarella.vaadin.view;
 
 import javax.annotation.PostConstruct;
 

@@ -17,7 +17,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import com.calogardev.pizzarella.dao.OrderDao;
 import com.calogardev.pizzarella.dao.ProductDao;
 import com.calogardev.pizzarella.dao.ProductFamilyDao;
-import com.calogardev.pizzarella.dao.ProductService;
 import com.calogardev.pizzarella.dto.ProductDto;
 import com.calogardev.pizzarella.dto.ProductFamilyDto;
 import com.calogardev.pizzarella.dto.RoleDto;
@@ -30,6 +29,7 @@ import com.calogardev.pizzarella.model.Order;
 import com.calogardev.pizzarella.model.Product;
 import com.calogardev.pizzarella.model.ProductLine;
 import com.calogardev.pizzarella.service.ProductFamilyService;
+import com.calogardev.pizzarella.service.ProductService;
 import com.calogardev.pizzarella.service.RoleService;
 import com.calogardev.pizzarella.service.UserService;
 
@@ -103,6 +103,8 @@ public class PizzarellaApplication implements CommandLineRunner {
 		ProductDto tuna = new ProductDto("Tuna", 0.3f, 1.1f, 80, true, ingredient);
 		ProductDto onion = new ProductDto("Onion", 0.3f, 1.1f, 80, true, ingredient);
 		ProductDto ketchup = new ProductDto("Ketchup", 0.3f, 1.1f, 80, true, ingredient);
+		ProductDto bbqSauce = new ProductDto("BBQ Sauce", 0.3f, 1.1f, 80, true, ingredient);
+		ProductDto lettuce = new ProductDto("Lettuce", 0.3f, 1.1f, 80, true, ingredient);
 
 		ProductDto carbonnaraPizza = new ProductDto("Carbonnara Pizza", 6.5f, 1.2f, 15, false, pizza);
 		ProductDto bbqPizza = new ProductDto("BBQ Pizza", 6.0f, 1.1f, 15, false, pizza);
@@ -122,18 +124,20 @@ public class PizzarellaApplication implements CommandLineRunner {
 		tuna = productService.save(tuna);
 		onion = productService.save(onion);
 		ketchup = productService.save(ketchup);
+		bbqSauce = productService.save(bbqSauce);
+		lettuce = productService.save(lettuce);
 
 		carbonnaraPizza.setIngredients(Arrays.asList(carbonnaraSauce, mushrooms));
-		bbqPizza.setIngredients(Arrays.asList(ketchup, beef, tuna));
-		beefBurguer.setIngredients(Arrays.asList(beef, mushrooms));
-		forestBurguer.setIngredients(Arrays.asList(mushrooms));
-		weirdBurguer.setIngredients(Arrays.asList(tuna, onion, ketchup));
+		bbqPizza.setIngredients(Arrays.asList(bbqSauce, beef));
+		beefBurguer.setIngredients(Arrays.asList(tuna, mushrooms));
+		// forestBurguer.setIngredients(Arrays.asList(mushrooms));
+		// weirdBurguer.setIngredients(Arrays.asList(onion));
 
 		Product p1 = productService.saveReturnEntity(carbonnaraPizza);
 		Product p2 = productService.saveReturnEntity(bbqPizza);
 		Product p3 = productService.saveReturnEntity(beefBurguer);
-		Product p4 = productService.saveReturnEntity(forestBurguer);
-		Product p5 = productService.saveReturnEntity(weirdBurguer);
+		// Product p4 = productService.saveReturnEntity(forestBurguer);
+		// Product p5 = productService.saveReturnEntity(weirdBurguer);
 
 		Product product = pDao.findOne(cocacola.getId());
 		List<Order> orders = new ArrayList<Order>();
@@ -151,8 +155,9 @@ public class PizzarellaApplication implements CommandLineRunner {
 
 		// Create second
 		ProductLine pl3 = new ProductLine(p2, orders.get(1), 13f, 6, Status.ACTIVE);
-		ProductLine pl4 = new ProductLine(p4, orders.get(1), 17f, 4, Status.ACTIVE);
-		orders.get(1).setProductLines(Arrays.asList(pl3, pl4));
+		// ProductLine pl4 = new ProductLine(p4, orders.get(1), 17f, 4,
+		// Status.ACTIVE);
+		orders.get(1).setProductLines(Arrays.asList(pl3));
 
 		// Save all orders
 		for (Order order : orders) {

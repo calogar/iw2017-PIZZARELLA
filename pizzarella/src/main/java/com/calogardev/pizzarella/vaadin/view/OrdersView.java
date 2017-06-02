@@ -1,4 +1,4 @@
-package com.calogardev.pizzarella.view.order;
+package com.calogardev.pizzarella.vaadin.view;
 
 import java.util.Locale;
 
@@ -64,18 +64,6 @@ public class OrdersView extends VerticalLayout implements View {
 
 		orderEditor.setViewReference(this);
 		addComponent(orderEditor);
-
-		// ordersGrid.addItemClickListener(e -> {
-		// orderService.updateStatus(e.getItem().getId(),
-		// OrderStatus.SENT_TO_KITCHEN);
-		// refreshGrids();
-		// });
-		//
-		// kitchenOrdersGrid.addItemClickListener(e -> {
-		// orderService.updateStatus(e.getItem().getId(), OrderStatus.CLOSED);
-		// refreshGrids();
-		// });
-
 	}
 
 	private void createOrder(OrderDto orderDto) {
@@ -86,7 +74,6 @@ public class OrdersView extends VerticalLayout implements View {
 
 	private void buildGrid() {
 		ordersGrid.addColumn(OrderDto::formatOrderStatus).setCaption("Status");
-
 		ordersGrid.addColumn(OrderDto::formatProducts).setCaption("Products");
 		ordersGrid.addColumn(OrderDto::getOrderedAt, new DateRenderer("%1$tB %1$te,%1$tY", Locale.ENGLISH))
 				.setCaption("Order Time");

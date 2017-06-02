@@ -1,4 +1,4 @@
-package com.calogardev.pizzarella.view;
+package com.calogardev.pizzarella.vaadin;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

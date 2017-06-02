@@ -1,4 +1,4 @@
-package com.calogardev.pizzarella.view.productfamily;
+package com.calogardev.pizzarella.vaadin.view;
 
 import java.util.List;
 

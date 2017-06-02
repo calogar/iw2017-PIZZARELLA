@@ -1,4 +1,4 @@
-package com.calogardev.pizzarella.view.order;
+package com.calogardev.pizzarella.vaadin.view;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,7 +9,6 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.calogardev.pizzarella.dao.ProductService;
 import com.calogardev.pizzarella.dto.OrderDto;
 import com.calogardev.pizzarella.dto.ProductDto;
 import com.calogardev.pizzarella.dto.ProductFamilyDto;
@@ -21,6 +20,7 @@ import com.calogardev.pizzarella.exception.CustomValidationException;
 import com.calogardev.pizzarella.exception.OrderNotFoundException;
 import com.calogardev.pizzarella.service.OrderService;
 import com.calogardev.pizzarella.service.ProductFamilyService;
+import com.calogardev.pizzarella.service.ProductService;
 import com.vaadin.data.BeanValidationBinder;
 import com.vaadin.data.ValidationException;
 import com.vaadin.event.ShortcutAction;
@@ -316,9 +316,7 @@ public class OrderEditor extends VerticalLayout {
 	}
 
 	private void deleteOrder(OrderDto orderDto) {
-
 		orderService.delete(orderDto);
-
 	}
 
 	public void setViewReference(OrdersView view) {
