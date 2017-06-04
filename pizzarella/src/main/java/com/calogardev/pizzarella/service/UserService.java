@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.calogardev.pizzarella.dto.UserDto;
 import com.calogardev.pizzarella.exception.CustomValidationException;
 import com.calogardev.pizzarella.exception.UserNotFoundException;
+import com.calogardev.pizzarella.model.User;
 
 /**
  * Main interface to handle the User entity. Contains the business logic.
@@ -14,57 +14,19 @@ import com.calogardev.pizzarella.exception.UserNotFoundException;
  * @author calogar
  *
  */
-public interface UserService extends GenericService {
+public interface UserService {
 
-    /**
-     * Gets a User by id
-     * 
-     * @param id
-     * @return UserDto
-     */
-    public UserDto findOne(Long id);
+    public User findOne(Long id) throws UserNotFoundException;
 
-    /**
-     * Gets all active Users
-     * 
-     * @return List<UserDto>
-     */
-    public List<UserDto> findAll();
+    public List<User> findAll();
 
-    /**
-     * Deletes a User by it's unique DNI
-     * 
-     * @param dni
-     */
-    public void deleteByDni(String dni);
+    public void deleteByDni(String dni) throws UserNotFoundException;
 
-    /**
-     * Saves a User by its CreateUserDto and returns the persisted object
-     * 
-     * @param createUserDto
-     *            Dto with the needed data
-     * @throws CustomValidationException
-     */
-    public UserDto save(UserDto userDto) throws CustomValidationException;
+    public User save(User user) throws CustomValidationException;
 
-    /**
-     * Finds a User by its nickname (username)
-     * 
-     * @param username
-     * @return the User Dto
-     * @throws UserNotFoundException
-     */
-    UserDto findByUsername(String username) throws UsernameNotFoundException;
+    public User findByUsername(String username) throws UsernameNotFoundException;
 
-    /**
-     * Performs logical delete on user
-     * 
-     * @param dto
-     * @throws UserNotFoundException
-     */
-    public void delete(UserDto dto) throws UserNotFoundException;
+    public void delete(User dto) throws UserNotFoundException;
 
-    // public Collection<UserDto> findByLastNameStartsWithIgnoreCase(String
-    // filterText);
-
+    public List<User> filterBySurnames(String filterText);
 }

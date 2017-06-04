@@ -2,13 +2,10 @@ package com.calogardev.pizzarella.service;
 
 import java.util.List;
 
-import com.calogardev.pizzarella.dto.ProductDto;
-import com.calogardev.pizzarella.dto.ProductFamilyDto;
 import com.calogardev.pizzarella.exception.CustomValidationException;
-import com.calogardev.pizzarella.exception.IngredientWithProductsException;
 import com.calogardev.pizzarella.exception.ProductNotFoundException;
-import com.calogardev.pizzarella.exception.ProductWithoutFamilyException;
 import com.calogardev.pizzarella.model.Product;
+import com.calogardev.pizzarella.model.ProductFamily;
 
 /**
  * The main service used to control Products.
@@ -16,56 +13,24 @@ import com.calogardev.pizzarella.model.Product;
  * @author calogar
  *
  */
-public interface ProductService extends GenericService {
+public interface ProductService {
 
-	/**
-	 * Finds all available products
-	 * 
-	 * @return a list of productDtos
-	 */
-	public List<ProductDto> findAllSellable();
+    public Product findOne(Long id);
 
-	/**
-	 * Finds all available products except the one with the specific id.
-	 * 
-	 * @param id
-	 *            The id of the excluded product
-	 * @return a list of productDtos
-	 */
-	public List<ProductDto> findAllExceptOne(Long id);
+    public List<Product> findAll();
 
-	/**
-	 * Saves a product
-	 * 
-	 * @param productDto
-	 *            The dto with the required data
-	 * @return
-	 * @throws ProductWithoutFamilyException
-	 * @throws IngredientWithProductsException
-	 * @throws CustomValidationException
-	 */
-	public ProductDto save(ProductDto productDto) throws CustomValidationException;
+    public List<Product> findAllSellable();
 
-	/**
-	 * Deletes a product
-	 * 
-	 * @param productDto
-	 *            The product to delete
-	 * @throws ProductNotFoundException
-	 */
-	public void delete(ProductDto productDto) throws ProductNotFoundException;
+    public List<Product> findAllIngredients();
 
-	public ProductDto findOne(Long id);
+    public List<Product> findAllExceptOne(Product product);
 
-	List<ProductDto> findAll();
+    public List<Product> findAllIngredientsExcept(Product product);
 
-	List<ProductDto> findAllIngredientsExcept(ProductDto dto);
+    public List<Product> findAllSellableFromFamily(ProductFamily pf);
 
-	List<ProductDto> findAllIngredients();
+    public Product save(Product product) throws CustomValidationException;
 
-	List<ProductDto> findAllSellableFromFamily(ProductFamilyDto dto);
+    public void delete(Product product) throws ProductNotFoundException;
 
-	Product findOneNoConversion(Long id);
-
-	Product saveReturnEntity(ProductDto dto) throws CustomValidationException;
 }

@@ -5,12 +5,13 @@ import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 
-import com.calogardev.pizzarella.dto.UserDto;
+import com.calogardev.pizzarella.model.User;
 import com.calogardev.pizzarella.service.UserService;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.spring.annotation.SpringView;
@@ -32,74 +33,49 @@ public class UsersView extends VerticalLayout implements View {
     public static final String VIEW_ROUTE = "users";
     public static final String VIEW_NAME = "Users";
 
-    private Grid<UserDto> grid;
-
     @Autowired
     private UserService userService;
 
     @Autowired
     private UserEditor userEditor;
 
-    private TextField filterBySurnames;
+    private Grid<User> grid = new Grid<User>();
+
+    /* Action options */
+    private TextField filterBySurnames = new TextField();
+    private Button newButton = new Button("New user", VaadinIcons.PLUS_CIRCLE_O);
+    private HorizontalLayout menu = new HorizontalLayout(newButton, filterBySurnames);
 
     @PostConstruct
     void init() {
-	commonsSettings();
-	setSizeFull();
+	commonSettings();
 
-	Button addNewButton = new Button("New user", FontAwesome.PLUS);
-	addNewButton.addClickListener(e -> userEditor.editUser(new UserDto()));
-
+	newButton.addClickListener(e -> userEditor.edit(new User()));
 	buildFilterBySurnames();
-	HorizontalLayout menu = new HorizontalLayout(addNewButton, filterBySurnames);
-	addComponent(menu);
+	buildColumns();
 
-	// Build the grid
-	buildGrid();
+	// Connect selected User to editor
+	grid.asSingleSelect().addValueChangeListener(e -> {
+	    userEditor.edit(e.getValue());
+	});
 
-	addComponent(userEditor);
+	addComponents(menu, grid, userEditor);
 
 	// Populate grid with all the data
 	listUsers(null);
     }
 
     /**
-     * Apply common setting to the page. this will be refactored in the future.
-     */
-    private void commonsSettings() {
-	Page.getCurrent().setTitle(VIEW_NAME);
-	Label title = new Label(VIEW_NAME);
-	title.addStyleName(ValoTheme.LABEL_H1);
-	addComponent(title);
-    }
-
-    private void buildGrid() {
-	grid = new Grid<UserDto>();
-	grid.setHeight(300, Unit.PIXELS);
-	grid.setSizeFull();
-	addComponent(grid);
-	setExpandRatio(grid, 1);
-	grid.setItems(userService.findAll());
-	buildColumns();
-
-	// Connect selected User to editor or hide if none is selected
-	grid.asSingleSelect().addValueChangeListener(e -> {
-	    userEditor.editUser(e.getValue());
-	});
-    }
-
-    /**
      * Declares which columns are going to be displayed.
      */
     private void buildColumns() {
-	grid.addColumn(UserDto::getName).setCaption("Name");
-	grid.addColumn(UserDto::getSurnames).setCaption("Surnames");
-	grid.addColumn(UserDto::getNickname).setCaption("Username");
-	grid.addColumn(UserDto::getDni).setCaption("DNI");
+	grid.addColumn(User::getName).setCaption("Name");
+	grid.addColumn(User::getSurnames).setCaption("Surnames");
+	grid.addColumn(User::getUsername).setCaption("Username");
+	grid.addColumn(User::getDni).setCaption("DNI");
     }
 
     private void buildFilterBySurnames() {
-	filterBySurnames = new TextField();
 	filterBySurnames.setPlaceholder("Filter by surname");
 	filterBySurnames.setValueChangeMode(ValueChangeMode.LAZY);
 	filterBySurnames.addValueChangeListener(e -> listUsers(e.getValue()));
@@ -111,21 +87,36 @@ public class UsersView extends VerticalLayout implements View {
 	});
     }
 
-    // TODO: add querydsl to implement filtering
     private void listUsers(String filterText) {
-	//
-	// if (StringUtils.isEmpty(filterText)) {
-	// grid.setItems(userService.findAll());
-	// } else {
-	// grid.setItems(userService.findByLastNameStartsWithIgnoreCase(filterText));
-	// }
+
+	if (StringUtils.isEmpty(filterText)) {
+	    grid.setItems(userService.findAll());
+	} else {
+	    grid.setItems(userService.filterBySurnames(filterText));
+	}
 	grid.setItems(userService.findAll());
 
     }
 
+    private void styleComponents() {
+	setSizeFull();
+	grid.setHeight(300, Unit.PIXELS);
+	grid.setSizeFull();
+	setExpandRatio(grid, 1);
+	grid.setItems(userService.findAll());
+    }
+
+    /**
+     * Apply common setting to the page. this will be refactored in the future.
+     */
+    private void commonSettings() {
+	Page.getCurrent().setTitle(VIEW_NAME);
+	Label title = new Label(VIEW_NAME);
+	title.addStyleName(ValoTheme.LABEL_H1);
+	addComponent(title);
+    }
+
     @Override
     public void enter(ViewChangeEvent event) {
-	// TODO Auto-generated method stub
-
     }
 }

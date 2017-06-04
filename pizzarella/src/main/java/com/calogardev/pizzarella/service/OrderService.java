@@ -2,10 +2,10 @@ package com.calogardev.pizzarella.service;
 
 import java.util.List;
 
-import com.calogardev.pizzarella.dto.OrderDto;
 import com.calogardev.pizzarella.enums.OrderStatus;
 import com.calogardev.pizzarella.exception.CustomValidationException;
 import com.calogardev.pizzarella.exception.OrderNotFoundException;
+import com.calogardev.pizzarella.model.Order;
 
 /**
  * Main interface to handle the Order entity. Contains the business logic.
@@ -15,42 +15,19 @@ import com.calogardev.pizzarella.exception.OrderNotFoundException;
  */
 public interface OrderService {
 
-	/**
-	 * Saves an Order by its OrderDto
-	 * 
-	 * @throws CustomValidationException
-	 */
-	public void save(OrderDto order) throws CustomValidationException;
+    public Order findOne(Long id) throws OrderNotFoundException;
 
-	/**
-	 * Finds an Order by its id and returns an OrderDto
-	 * 
-	 * @param id
-	 * @return orderDto
-	 * @throws OrderNotFoundException
-	 */
-	public OrderDto findOne(Long id) throws OrderNotFoundException;
+    public List<Order> findAll();
 
-	/**
-	 * Finds all active Orders and return them like Dtos
-	 * 
-	 * @param id
-	 * @return List<OrderDto>
-	 */
-	public List<OrderDto> findAll();
+    public List<Order> findAllWithStatus(OrderStatus status);
 
-	/**
-	 * Sums all the prices of all the orders
-	 * 
-	 * @return the sum of incomes
-	 */
-	public Float getTotalIncomes();
+    public void save(Order order) throws CustomValidationException;
 
-	public void delete(OrderDto orderDto);
+    public void delete(Order order);
 
-	public List<OrderDto> findAllWithStatus(OrderStatus status);
+    public Order updateStatus(Long id, OrderStatus status);
 
-	public OrderDto updateStatus(Long id, OrderStatus status);
+    public Float getTotalIncomes();
 
-	public Float calculateTotalIncomes();
+    public Float calculateTotalIncomes();
 }

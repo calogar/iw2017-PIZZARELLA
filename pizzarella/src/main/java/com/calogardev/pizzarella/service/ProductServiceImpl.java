@@ -1,25 +1,18 @@
 package com.calogardev.pizzarella.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.calogardev.pizzarella.dao.ProductDao;
-import com.calogardev.pizzarella.dto.Dto;
-import com.calogardev.pizzarella.dto.ProductDto;
-import com.calogardev.pizzarella.dto.ProductFamilyDto;
-import com.calogardev.pizzarella.enums.Status;
 import com.calogardev.pizzarella.exception.CustomValidationException;
-import com.calogardev.pizzarella.exception.IngredientWithProductsException;
 import com.calogardev.pizzarella.exception.ProductNotFoundException;
-import com.calogardev.pizzarella.exception.ProductWithoutFamilyException;
 import com.calogardev.pizzarella.model.Product;
 import com.calogardev.pizzarella.model.ProductFamily;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * ProductService implementation.
@@ -28,161 +21,104 @@ import com.calogardev.pizzarella.model.ProductFamily;
  *
  */
 @Service
+@Slf4j
 public class ProductServiceImpl implements ProductService {
 
-	private static final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
+    @Autowired
+    private ProductDao productDao;
 
-	@Autowired
-	private ProductDao productDao;
+    @Override
+    @Transactional(readOnly = true)
+    public Product findOne(Long id) {
+	log.info("Finding product wit id: " + id);
+	return productDao.findOne(id);
+    }
 
-	@Autowired
-	private UtilsService utilsService;
+    @Override
+    public List<Product> findAllIngredients() {
+	log.info("Finding all ingredients");
+	return productDao.findAllIngredients();
+    }
 
-	@Override
-	@Transactional(readOnly = true)
-	public List<ProductDto> findAll() {
-		return utilsService.transform(productDao.findAll(), ProductDto.class);
+    @Override
+    public List<Product> findAllSellableFromFamily(ProductFamily pf) {
+	log.info("Finding all products from a family that can be sold");
+	return productDao.findAllSellableFromFamily(pf);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Product> findAll() {
+	log.info("Finding all products");
+	return productDao.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Product> findAllSellable() {
+	log.info("Finding all products that can be sold");
+	return productDao.findAllSellable();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Product> findAllIngredientsExcept(Product product) {
+	if (product == null || product.getId() == null) {
+	    log.info("Finding all products that are ingredients");
+	    return productDao.findAllIngredients();
+	} else {
+	    log.info("Finding all products that are ingredients except the one with id " + product.getId());
+	    return productDao.findAllIngredientsExcept(product.getId());
+	}
+    }
+
+    // TODO needs revision
+    @Override
+    @Transactional(readOnly = true)
+    public List<Product> findAllExceptOne(Product product) {
+	log.info("Finding all products except the one with id " + product.getId());
+	return productDao.findAllExceptOne(product.getId());
+    }
+
+    @Override
+    public Product save(Product product) throws CustomValidationException {
+
+	if (product.getId() == null) {
+	    // Perform create
+	    if (productDao.existsByName(product.getName())) {
+		throw new CustomValidationException("A product already has this name");
+	    }
 	}
 
-	@Override
-	@Transactional(readOnly = true)
-	public List<ProductDto> findAllSellable() {
-		return utilsService.transform(productDao.findAllSellable(), ProductDto.class);
+	// We allow ingredients composed of other ingredients
+	// We allow products that aren't composed but can be sold (water)
+	if (product.getFamily() == null) {
+	    throw new CustomValidationException("A product can't exist without a product family");
 	}
 
-	@Override
-	@Transactional(readOnly = true)
-	public List<ProductDto> findAllIngredientsExcept(ProductDto dto) {
-		if (dto == null || dto.getId() == null) {
-			return utilsService.transform(productDao.findAllIngredients(), ProductDto.class);
-		} else {
-			return utilsService.transform(productDao.findAllIngredientsExcept(dto.getId()), ProductDto.class);
+	// Check that product doesn't have itself as ingredient
+	if (product.getIngredients() != null) {
+	    for (Product ingredient : product.getIngredients()) {
+		if (product.equals(ingredient)) {
+		    throw new CustomValidationException("A product can't contain itself as ingredient");
 		}
+	    }
 	}
 
-	@Override
-	@Transactional(readOnly = true)
-	public List<ProductDto> findAllExceptOne(Long id) {
-		return utilsService.transform(productDao.findAllExceptOne(id), ProductDto.class);
+	product = productDao.save(product);
+	log.info("Saved product: " + product);
+	return product;
+    }
+
+    @Override
+    public void delete(Product product) throws ProductNotFoundException {
+
+	if (product.getId() == null) {
+	    // If it hasn't got id, it's not persisted
+	    throw new ProductNotFoundException();
 	}
-
-	@Override
-	public ProductDto save(ProductDto dto) throws CustomValidationException {
-
-		if (dto.getId() == null) {
-			// Perform create
-			if (productDao.findByName(dto.getName()) != null) {
-				throw new CustomValidationException("A Product can't have a repeated name");
-			}
-		} else {
-			// Perform update
-			if (productDao.findOne(dto.getId()).getStatus() != Status.ACTIVE) {
-				throw new CustomValidationException("That Product is deleted and cannot be updated");
-			}
-		}
-
-		// We allow ingredients composed of other ingredients
-		// We allow products that aren't composed but can be sold (water)
-		if (dto.getFamily() == null) {
-			throw new CustomValidationException("A Product can't exist without a Product Family");
-		}
-
-		// Check that product doesn't have itself as ingredient
-		if (dto.getIngredients() == null) {
-			dto.setIngredients(new ArrayList());
-		}
-
-		Product product = utilsService.transform(dto, Product.class);
-		product.setStatus(Status.ACTIVE);
-		Product persisted = productDao.save(product);
-
-		log.info("Saved Product: " + product);
-		return utilsService.transform(persisted, ProductDto.class);
-	}
-
-	@Override
-	public void delete(ProductDto dto) throws ProductNotFoundException {
-
-		Product product = productDao.findByName(dto.getName());
-		if (product == null) {
-			throw new ProductNotFoundException();
-		}
-		product.setStatus(Status.DELETED);
-		productDao.save(product);
-
-		productDao.delete(utilsService.transform(dto, Product.class));
-	}
-
-	// TODO remove this in the future
-	@Override
-	public Product saveReturnEntity(ProductDto dto) throws CustomValidationException {
-
-		if (dto.getId() == null) {
-			// Perform create
-			if (productDao.findByName(dto.getName()) != null) {
-				throw new CustomValidationException("A Product can't have a repeated name");
-			}
-		} else {
-			// Perform update
-			if (productDao.findOne(dto.getId()).getStatus() != Status.ACTIVE) {
-				throw new CustomValidationException("That Product is deleted and cannot be updated");
-			}
-		}
-
-		// We allow ingredients composed of other ingredients
-		// We allow products that aren't composed but can be sold (water)
-		if (dto.getFamily() == null) {
-			throw new CustomValidationException("A Product can't exist without a Product Family");
-		}
-
-		// Check that product doesn't have itself as ingredient
-		if (dto.getIngredients() == null) {
-			dto.setIngredients(new ArrayList());
-		}
-
-		Product product = utilsService.transform(dto, Product.class);
-		product.setStatus(Status.ACTIVE);
-		Product persisted = productDao.save(product);
-
-		log.info("Saved Product: " + product);
-		return persisted;
-	}
-
-	/**
-	 * Implementation of the generic Service interface.
-	 * 
-	 * @throws CustomValidationException
-	 * @throws IngredientWithProductsException
-	 * @throws ProductWithoutFamilyException
-	 */
-	@Override
-	public void save(Dto dto)
-			throws CustomValidationException, ProductWithoutFamilyException, IngredientWithProductsException {
-		save((ProductDto) dto);
-	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public ProductDto findOne(Long id) {
-		return utilsService.transform(productDao.findOne(id), ProductDto.class);
-	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public Product findOneNoConversion(Long id) {
-		return productDao.findOne(id);
-	}
-
-	@Override
-	public List<ProductDto> findAllIngredients() {
-		return utilsService.transform(productDao.findAllIngredients(), ProductDto.class);
-
-	}
-
-	@Override
-	public List<ProductDto> findAllSellableFromFamily(ProductFamilyDto dto) {
-		ProductFamily pf = utilsService.transform(dto, ProductFamily.class);
-		return utilsService.transform(productDao.findAllSellableFromFamily(pf), ProductDto.class);
-	}
-
+	String name = product.getName();
+	productDao.delete(product);
+	log.info("Deleted product with name: " + name);
+    }
 }

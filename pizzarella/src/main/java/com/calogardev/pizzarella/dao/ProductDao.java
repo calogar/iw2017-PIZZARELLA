@@ -35,4 +35,7 @@ public interface ProductDao extends CrudRepository<Product, Long> {
 
     @Query("SELECT p FROM Product p WHERE p.id != :id")
     public List<Product> findAllExceptOne(@Param("id") Long id);
+
+    public Boolean existsByName(String name);
+
 }
