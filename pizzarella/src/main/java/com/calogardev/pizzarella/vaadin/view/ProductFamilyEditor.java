@@ -1,7 +1,6 @@
 package com.calogardev.pizzarella.vaadin.view;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.vaadin.dialogs.ConfirmDialog;
 
 import com.calogardev.pizzarella.exception.CustomValidationException;
 import com.calogardev.pizzarella.exception.ProductFamilyNotFoundException;
@@ -16,10 +15,11 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SpringComponent
@@ -38,27 +38,28 @@ public class ProductFamilyEditor extends VerticalLayout {
     /* Editor fields */
     private TextField name = new TextField("Name");
     private TextField code = new TextField("Code");
-    private Label nameStatus = new Label();
-    private Label codeStatus = new Label();
 
     /* Editor actions */
-    Button saveButton = new Button("Save", VaadinIcons.CHECK);
-    Button cancelButton = new Button("Cancel", VaadinIcons.CLOSE);
-    Button deleteButton = new Button("Delete", VaadinIcons.TRASH);
-    private CssLayout actions = new CssLayout(saveButton, cancelButton, deleteButton);
+    private Button saveButton = new Button("Save", VaadinIcons.CHECK);
+    private Button resetButton = new Button("Reset", VaadinIcons.CLOSE);
+    private Button deleteButton = new Button("Delete", VaadinIcons.TRASH);
+    private CssLayout actions = new CssLayout(saveButton, resetButton, deleteButton);
+
+    private Grid grid;
 
     @Autowired
     public ProductFamilyEditor() {
 
-	addComponents(name, nameStatus, code, codeStatus, actions);
+	addComponents(name, code, actions);
 
 	// Add behavior to menu buttons
 	saveButton.addClickListener(e -> save(productFamily));
 	deleteButton.addClickListener(e -> delete(productFamily));
-	cancelButton.addClickListener(e -> edit(productFamily));
+	resetButton.addClickListener(e -> edit(productFamily));
 
 	createBindings();
 	styleComponents();
+	setDebugIds();
 	setVisible(false);
     }
 
@@ -76,7 +77,7 @@ public class ProductFamilyEditor extends VerticalLayout {
 	if (pf.getId() == null) {
 	    // Perform create
 	    productFamily = pf;
-	    cancelButton.setVisible(false);
+	    resetButton.setVisible(false);
 	} else {
 	    // Perform update (needs id)
 	    try {
@@ -84,7 +85,7 @@ public class ProductFamilyEditor extends VerticalLayout {
 	    } catch (ProductFamilyNotFoundException e) {
 		e.printStackTrace();
 	    }
-	    cancelButton.setVisible(true);
+	    resetButton.setVisible(true);
 	}
 
 	// Automatically updates bean when fields are changed
@@ -94,14 +95,13 @@ public class ProductFamilyEditor extends VerticalLayout {
 	setVisible(true);
 	// A hack to ensure the whole form is visible
 	saveButton.focus();
+	name.selectAll();
     }
 
     private void save(ProductFamily pf) {
 
 	if (binder.validate().isOk()) {
 	    try {
-		// TODO Should not be necessary
-		// binder.writeBean(pf);
 		pfService.save(pf);
 		new SuccessNotification();
 
@@ -109,42 +109,66 @@ public class ProductFamilyEditor extends VerticalLayout {
 		new ErrorNotification(e.getMessage());
 		return;
 	    }
+	} else {
+	    new ErrorNotification("There are errors in the form.<br>Please enter all required fields.");
+	    return;
 	}
     }
 
     private void delete(ProductFamily pf) {
 
-	ConfirmDialog.show(UI.getCurrent(), "Are you sure?", new ConfirmDialog.Listener() {
-	    @Override
-	    public void onClose(ConfirmDialog dialog) {
-		if (dialog.isConfirmed()) {
-		    try {
-			pfService.delete(pf);
-		    } catch (ProductFamilyNotFoundException e) {
-			new ErrorNotification(e.getMessage());
-		    }
-		}
+	Window window = new Window("Delete");
+	window.setModal(true);
+	window.setDraggable(false);
+	window.setResizable(false);
+	window.setWidth(300.0f, Unit.PIXELS);
+
+	Label message = new Label("Are you sure?");
+	Button deleteButton = new Button("Delete", e -> {
+	    try {
+		pfService.delete(pf);
+		grid.setItems(pfService.findAll());
+		window.close();
+	    } catch (ProductFamilyNotFoundException e1) {
+		window.close();
+		new ErrorNotification(e1.getMessage());
 	    }
 	});
+	Button cancelButton = new Button("Cancel", e -> {
+	    window.close();
+	});
+
+	message.addStyleName(ValoTheme.LABEL_H2);
+	message.setWidth("100%");
+	deleteButton.addStyleName(ValoTheme.BUTTON_DANGER);
+	deleteButton.setWidth("100%");
+	cancelButton.setWidth("100%");
+
+	window.setContent(new VerticalLayout(message, deleteButton, cancelButton));
+	getUI().getUI().addWindow(window);
+    }
+
+    public void setGrid(Grid grid) {
+	this.grid = grid;
     }
 
     private void createBindings() {
-	binder.forField(name)
-		.withValidator(
-			name -> name.length() > ProductFamily.MIN_LENGTH && name.length() < ProductFamily.MAX_LENGTH,
-			"The name must be between " + ProductFamily.MIN_LENGTH + " and " + ProductFamily.MAX_LENGTH)
-		.withStatusLabel(nameStatus).bind("name");
-	binder.forField(code)
-		.withValidator(
-			code -> code.length() > ProductFamily.MIN_LENGTH && code.length() < ProductFamily.MAX_LENGTH,
-			"The code must be between " + ProductFamily.MIN_LENGTH + " and " + ProductFamily.MAX_LENGTH)
-		.withStatusLabel(codeStatus).bind("code");
+	binder.bindInstanceFields(this);
+
+	binder.addStatusChangeListener(event -> {
+	    boolean isValid = event.getBinder().isValid();
+	    saveButton.setEnabled(isValid);
+	});
     }
 
     private void styleComponents() {
 	actions.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
 	saveButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
 	saveButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+    }
+
+    private void setDebugIds() {
+	saveButton.setId("pf-save");
     }
 
     public void setChangeHandler(ChangeHandler h) {

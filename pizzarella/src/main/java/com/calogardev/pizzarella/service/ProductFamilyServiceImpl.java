@@ -29,6 +29,16 @@ public class ProductFamilyServiceImpl implements ProductFamilyService {
     }
 
     @Override
+    public ProductFamily findOne(Long id) throws ProductFamilyNotFoundException {
+	final ProductFamily pf = productFamilyDao.findOne(id);
+	if (pf == null) {
+	    throw new ProductFamilyNotFoundException();
+	}
+	log.info("Found product family: " + pf);
+	return pf;
+    }
+
+    @Override
     public ProductFamily save(ProductFamily pf) throws CustomValidationException {
 
 	if (pf.getId() == null) {
@@ -50,16 +60,6 @@ public class ProductFamilyServiceImpl implements ProductFamilyService {
     }
 
     @Override
-    public ProductFamily findOne(Long id) throws ProductFamilyNotFoundException {
-	final ProductFamily pf = productFamilyDao.findOne(id);
-	if (pf == null) {
-	    throw new ProductFamilyNotFoundException();
-	}
-	log.info("Found product family: " + pf);
-	return pf;
-    }
-
-    @Override
     public void delete(ProductFamily pf) throws ProductFamilyNotFoundException {
 	if (pf.getId() == null) {
 	    // If it hasn't got id, it's not persisted
@@ -68,5 +68,15 @@ public class ProductFamilyServiceImpl implements ProductFamilyService {
 	String code = pf.getCode();
 	productFamilyDao.delete(pf);
 	log.info("Deleted product family with code: " + code);
+    }
+
+    @Override
+    public ProductFamily findByCode(String code) throws ProductFamilyNotFoundException {
+	ProductFamily pf = productFamilyDao.findByCode(code);
+	if (pf == null) {
+	    throw new ProductFamilyNotFoundException();
+	}
+	log.info("Found product family with code: " + code);
+	return pf;
     }
 }

@@ -36,22 +36,42 @@ public class ProductFamiliesView extends VerticalLayout implements View {
 
     private Grid<ProductFamily> grid = new Grid<ProductFamily>();
 
+    /* Action buttons */
+    private Button newButton = new Button("New product family", VaadinIcons.PLUS_CIRCLE_O);
+    private HorizontalLayout menu = new HorizontalLayout(newButton);
+
     @PostConstruct
     public void init() {
 	commonSettings();
 
-	Button addNewButton = new Button("New product family", VaadinIcons.PLUS_CIRCLE_O);
-	addNewButton.addClickListener(e -> editor.edit(new ProductFamily()));
-	HorizontalLayout menu = new HorizontalLayout(addNewButton);
+	newButton.addClickListener(e -> editor.edit(new ProductFamily()));
 
-	grid.setItems(pfService.findAll());
 	// Connect selected pf to editor
+	buildGrid();
+
+	addComponents(menu, grid, editor);
+	grid.setItems(pfService.findAll());
+
+	// Reload grid on editor submit
+	editor.setChangeHandler(() -> {
+	    editor.setVisible(false);
+	    grid.setItems(pfService.findAll());
+	});
+
+	editor.setGrid(grid);
+
+	styleComponents();
+	setDebugIds();
+    }
+
+    private void buildGrid() {
+
+	grid.addColumn(ProductFamily::getName).setCaption("Name");
+	grid.addColumn(ProductFamily::getCode).setCaption("Code");
 	grid.asSingleSelect().addValueChangeListener(e -> {
 	    editor.edit(e.getValue());
 	});
 
-	addComponents(menu, grid);
-	styleComponents();
     }
 
     private void styleComponents() {
@@ -68,6 +88,10 @@ public class ProductFamiliesView extends VerticalLayout implements View {
 	Label title = new Label(VIEW_NAME);
 	title.addStyleName(ValoTheme.LABEL_H1);
 	addComponent(title);
+    }
+
+    private void setDebugIds() {
+	newButton.setId("pf-new");
     }
 
     @Override

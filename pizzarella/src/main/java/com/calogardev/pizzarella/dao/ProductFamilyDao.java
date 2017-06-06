@@ -10,10 +10,12 @@ import com.calogardev.pizzarella.model.ProductFamily;
 @Repository
 public interface ProductFamilyDao extends CrudRepository<ProductFamily, Long> {
 
-	@Override
-	public List<ProductFamily> findAll();
+    @Override
+    public List<ProductFamily> findAll();
 
-	public Boolean existsByCode(String code);
+    public Boolean existsByCode(String code);
 
-	public void deleteByCode(String code);
+    public void deleteByCode(String code);
+
+    public ProductFamily findByCode(String code);
 }

@@ -8,14 +8,16 @@ import com.calogardev.pizzarella.model.ProductFamily;
 
 public interface ProductFamilyService {
 
-    public ProductFamily findOne(Long id) throws ProductFamilyNotFoundException;
+    ProductFamily findOne(Long id) throws ProductFamilyNotFoundException;
 
-    public List<ProductFamily> findAll();
+    List<ProductFamily> findAll();
 
-    public ProductFamily save(ProductFamily dto) throws CustomValidationException;
+    ProductFamily save(ProductFamily dto) throws CustomValidationException;
 
-    public void delete(ProductFamily pf) throws ProductFamilyNotFoundException;
+    void delete(ProductFamily pf) throws ProductFamilyNotFoundException;
 
-    public void deleteByCode(String code);
+    void deleteByCode(String code);
+
+    ProductFamily findByCode(String code) throws ProductFamilyNotFoundException;
 
 }
